@@ -1,7 +1,8 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
 import { useDispatch, useSelector } from "react-redux";
 import { signupUser } from "./redux/slices/authSlice"; // Ensure correct path
+import { useNavigate } from "react-router-dom";
 
 function SignupPage() {
   const dispatch = useDispatch();
@@ -14,15 +15,35 @@ function SignupPage() {
   const [confirmPassword, setConfirmPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+  const [role, setRole] = useState("");
+  const [profileImg, setProfileImg] = useState(null);
+  const navigate = useNavigate();
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async(e) => {
     e.preventDefault();
     if (password !== confirmPassword) {
       alert("Passwords do not match!");
       return;
     }
-    const userData = { fullname, mobile, email, password ,confirmPassword,};
-    dispatch(signupUser(userData));
+    const userData = {
+      fullname,
+      mobile,
+      email,
+      password,
+      confirmPassword,
+      role,
+      profileImg,
+    };
+    const result = await dispatch(signupUser(userData));
+    if (result.payload?.data) {
+      navigate("/verify");
+    }
+  };
+
+  const handleImageChange = (e) => {
+    console.log(e.target.files[0]);
+
+    setProfileImg(e.target.files[0]);
   };
 
   return (
@@ -31,39 +52,110 @@ function SignupPage() {
       <div className="absolute inset-0 bg-gray-900 bg-center blur-lg opacity-30"></div>
 
       <div className="w-full max-w-xl bg-white text-gray-900 p-10 rounded-lg shadow-2xl border border-gy-300 font-serif relative z-10">
-        <h2 className="text-center text-3xl font-semibold mb-6">Create Your Account</h2>
+        <h2 className="text-center text-3xl font-semibold mb-6">
+          Create Your Account
+        </h2>
 
         {error && <p className="text-red-500 text-center">{error}</p>}
 
         <form className="space-y-4" onSubmit={handleSubmit}>
           <div className="w-full border-b-2 border-gray-900 focus-within:border-indigo-500">
-            <input type="text" placeholder="Full Name" value={fullname} onChange={(e) => setFullName(e.target.value)} className="w-full bg-transparent p-2 outline-none placeholder-gray-500 text-gray-900" required />
+            <input
+              type="text"
+              placeholder="Full Name"
+              value={fullname}
+              onChange={(e) => setFullName(e.target.value)}
+              className="w-full bg-transparent p-2 outline-none placeholder-gray-500 text-gray-900"
+              required
+            />
           </div>
 
           <div className="w-full border-b-2 border-gray-900 focus-within:border-indigo-500">
-            <input type="tel" placeholder="Mobile No" value={mobile} onChange={(e) => setMobile(e.target.value)} className="w-full bg-transparent p-2 outline-none placeholder-gray-500 text-gray-900" required />
+            <input
+              type="tel"
+              placeholder="Mobile No"
+              value={mobile}
+              onChange={(e) => setMobile(e.target.value)}
+              className="w-full bg-transparent p-2 outline-none placeholder-gray-500 text-gray-900"
+              required
+            />
           </div>
 
           <div className="w-full border-b-2 border-gray-900 focus-within:border-indigo-500">
-            <input type="email" placeholder="Email Address" value={email} onChange={(e) => setEmail(e.target.value)} className="w-full bg-transparent p-2 outline-none placeholder-gray-500 text-gray-900" required />
+            <input
+              type="email"
+              placeholder="Email Address"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              className="w-full bg-transparent p-2 outline-none placeholder-gray-500 text-gray-900"
+              required
+            />
+          </div>
+
+          <div className="w-full border-b-2 border-gray-900 focus-within:border-indigo-500">
+            <select
+              value={role}
+              onChange={(e) => setRole(e.target.value)}
+              className="w-full bg-transparent p-2 outline-none placeholder-gray-500 text-gray-900 pr-10"
+              required
+            >
+              <option value="" disabled>
+                Select Role
+              </option>
+              <option value="Buyer">Buyer</option>
+              <option value="Seller">Seller</option>
+            </select>
           </div>
 
           <div className="w-full border-b-2 border-gray-900 focus-within:border-indigo-500 relative">
-            <input type={showPassword ? "text" : "password"} placeholder="Password" value={password} onChange={(e) => setPassword(e.target.value)} className="w-full bg-transparent p-2 outline-none placeholder-gray-500 text-gray-900 pr-10" required />
-            <button type="button" className="absolute right-2 top-2 text-gray-600" onClick={() => setShowPassword(!showPassword)}>
+            <input
+              type={showPassword ? "text" : "password"}
+              placeholder="Password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              className="w-full bg-transparent p-2 outline-none placeholder-gray-500 text-gray-900 pr-10"
+              required
+            />
+            <button
+              type="button"
+              className="absolute right-2 top-2 text-gray-600"
+              onClick={() => setShowPassword(!showPassword)}
+            >
               {showPassword ? <FaEyeSlash /> : <FaEye />}
             </button>
           </div>
 
           <div className="w-full border-b-2 border-gray-900 focus-within:border-indigo-500 relative">
-            <input type={showConfirmPassword ? "text" : "password"} placeholder="Confirm Password" value={confirmPassword} onChange={(e) => setConfirmPassword(e.target.value)} className="w-full bg-transparent p-2 outline-none placeholder-gray-500 text-gray-900 pr-10" required />
-            <button type="button" className="absolute right-2 top-2 text-gray-600" onClick={() => setShowConfirmPassword(!showConfirmPassword)}>
+            <input
+              type={showConfirmPassword ? "text" : "password"}
+              placeholder="Confirm Password"
+              value={confirmPassword}
+              onChange={(e) => setConfirmPassword(e.target.value)}
+              className="w-full bg-transparent p-2 outline-none placeholder-gray-500 text-gray-900 pr-10"
+              required
+            />
+            <button
+              type="button"
+              className="absolute right-2 top-2 text-gray-600"
+              onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+            >
               {showConfirmPassword ? <FaEyeSlash /> : <FaEye />}
             </button>
           </div>
-
+          <div className="w-full border-b-2 border-gray-900 focus-within:border-indigo-500">
+            <input
+              type="file"
+              accept="image/*"
+              onChange={handleImageChange}
+              className="w-full bg-transparent p-2 outline-none placeholder-gray-500 text-gray-900 pr-10"
+            />
+          </div>
           <div className="flex justify-center">
-            <button type="submit" className="w-3/4 bg-gray-900 py-2 my-4 rounded-full font-bold text-white transition duration-300 hover:bg-gray-700" disabled={loading}>
+            <button
+              type="submit"
+              className="w-3/4 bg-gray-900 py-2 my-4 rounded-full font-bold text-white transition duration-300 hover:bg-gray-700"
+              disabled={loading}
+            >
               {loading ? "Signing Up..." : "Sign Up"}
             </button>
           </div>
@@ -71,7 +163,9 @@ function SignupPage() {
 
         <p className="text-center text-sm mt-4">
           Already have an account?
-          <a href="/login" className="text-gray-900 hover:underline ml-1">Log in</a>
+          <a href="/login" className="text-gray-900 hover:underline ml-1">
+            Log in
+          </a>
         </p>
       </div>
     </div>

@@ -2,27 +2,57 @@ import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
 import { useDispatch, useSelector } from "react-redux";
-import { loginUser } from "./redux/slices/authSlice";
+import { googleAuth, loginUser } from "./redux/slices/authSlice";
 import { useNavigate } from "react-router-dom";
+import { FcGoogle } from "react-icons/fc";
+import { GoogleOAuthProvider } from "@react-oauth/google";
+import { GoogleLogin } from "@react-oauth/google";
 
 function LoginPage() {
-  const [emailOrUsername, setEmailOrUsername] = useState("");
+  const [emailOrMobile, setEmailOrMobile] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
- 
+
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const { loading, error } = useSelector((state) => state.auth);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const result = await dispatch(loginUser({ emailOrUsername, password ,loading}));
-    if (result.payload?.token) {
+    const result = await dispatch(loginUser({ emailOrMobile, password }));
+    if (result.payload?.data?.token) {
       navigate("/dashboard");
     }
-    // console.log("Login Attempt:", emailOrUsername, password);
   };
 
+  // const handleSubmit = async (e) => {
+  //   e.preventDefault();
+  //   const result = await dispatch(googleAuth({}));
+  //   if (result.payload?.data?.token) {
+  //     navigate("/dashboard");
+  //   }
+  // };
+
+  const LoginWithGoogle = () => {
+    return(
+      <div className="flex justify-center">
+      <button className="py-2 mt-4 flex items-center rounded-full justify-center w-full px-4 py-2 text-gray-900 border-gray-300 shadow-md hover:bg-gray-100 active:bg-gray-200 transition duration-200 mt-2 bg-gray-900 py-2 rounded-full font-bold text-white transition duration-300 hover:bg-gray-700">
+        <FcGoogle className="text-2xl mr-2" />
+        <span className="font-medium">Sign in with Google</span>
+      </button>
+    </div>
+    )
+  }
+
+  const handleGoogleLogin = async (response) => {
+    console.log("Google Auth Response:", response);
+    if (response?.credential) {
+      const result = await dispatch(googleAuth({ tokenId: response.credential }));
+      if (result.payload?.data?.token) {
+        navigate("/dashboard");
+      }
+    }
+  };
   return (
     <div className="flex min-h-screen items-center justify-center bg-gray-900 text-white p-4 relative">
       {/* Background Blur Effect */}
@@ -39,8 +69,8 @@ function LoginPage() {
             <input
               type="text"
               placeholder="Email or Username"
-              value={emailOrUsername}
-              onChange={(e) => setEmailOrUsername(e.target.value)}
+              value={emailOrMobile}
+              onChange={(e) => setEmailOrMobile(e.target.value)}
               className="w-full bg-transparent p-2 outline-none text-gray-800 placeholder-gray-500"
               required
             />
@@ -63,6 +93,12 @@ function LoginPage() {
               {showPassword ? <FaEyeSlash /> : <FaEye />}
             </button>
           </div>
+          <Link
+            to="/forgetPassword"
+            className="block text-end text-sm font-semibold text-gray-500 hover:text-gray-600 mt-4"
+          >
+            FORGOT PASSWORD?
+          </Link>
 
           <div className="flex justify-center">
             <button
@@ -74,12 +110,7 @@ function LoginPage() {
           </div>
         </form>
 
-        <Link
-          to="/forgetPassword"
-          className="block text-center text-sm font-semibold text-gray-500 hover:text-gray-600 mt-4"
-        >
-          FORGOT PASSWORD?
-        </Link>
+        <div></div>
 
         <p className="text-center text-sm mt-4 text-gray-600">
           No account?
@@ -87,6 +118,12 @@ function LoginPage() {
             Create One
           </Link>
         </p>
+        <div className="flex justify-center">
+          <GoogleLogin
+            onSuccess={handleGoogleLogin}
+            onError={() => console.log("Google Login Failed")}
+          />
+          </div>
       </div>
     </div>
   );
