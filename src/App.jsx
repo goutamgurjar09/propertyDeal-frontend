@@ -32,12 +32,12 @@ function App() {
             element={
               <>
                 <HomeSection />
-               <AboutUs/>
-               <Trending_pro/>
+                <AboutUs />
+                <Trending_pro />
                 <Cotegories />
                 <Services />
-                 <Cards/>
-                
+                <Cards />
+
                 <FAQ />
                 <Coustom_contact />
               </>
@@ -67,6 +67,3 @@ function App() {
 }
 
 export default App;
-
-
-
