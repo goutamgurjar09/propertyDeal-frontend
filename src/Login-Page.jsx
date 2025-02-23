@@ -15,7 +15,6 @@ function LoginPage() {
 
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const { loading, error } = useSelector((state) => state.auth);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -24,14 +23,6 @@ function LoginPage() {
       navigate("/dashboard");
     }
   };
-
-  // const handleSubmit = async (e) => {
-  //   e.preventDefault();
-  //   const result = await dispatch(googleAuth({}));
-  //   if (result.payload?.data?.token) {
-  //     navigate("/dashboard");
-  //   }
-  // };
 
   const LoginWithGoogle = () => {
     return(

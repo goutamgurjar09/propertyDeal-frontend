@@ -1,12 +1,13 @@
 import React, { useState, useEffect } from "react";
-import { FaSearch } from "react-icons/fa";
 import { IoMenu, IoClose } from "react-icons/io5";
 import { Link } from "react-router-dom";
+import { getAuthToken } from "../Protected/ProtectedRoute";
 
 function CustomNavbar() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [dropdownOpen, setDropdownOpen] = useState(null);
   const [isScrolled, setIsScrolled] = useState(false);
+  const token = getAuthToken();
 
   useEffect(() => {
     const handleScroll = () => {
@@ -26,20 +27,12 @@ function CustomNavbar() {
     //   }`}
     // >
     <nav
-    className={`fixed ${
-      isScrolled
-        ? "top-0 left-0 right-0 bg-[#005555] bg-opacity-80 shadow-lg rounded-none font-serif"
-        : "top-2 left-10 right-10 bg-transparent border border-[#005555] rounded-full shadow-lg font-serif"
-    } z-50 text-white font-bold px-6 py-3 transition-all duration-700 backdrop-blur-md`}
-  >
-  
-
-
-  
-
-  
-  
-  
+      className={`fixed ${
+        isScrolled
+          ? "top-0 left-0 right-0 bg-[#005555] bg-opacity-80 shadow-lg rounded-none font-serif"
+          : "top-2 left-10 right-10 bg-transparent border border-[#005555] rounded-full shadow-lg font-serif"
+      } z-50 text-white font-bold px-6 py-3 transition-all duration-700 backdrop-blur-md`}
+    >
       <div className="container mx-auto flex items-center justify-between">
         {/* Logo */}
         <Link
@@ -128,18 +121,37 @@ function CustomNavbar() {
             </Link>
           </li>
         </ul>
-
-        {/* Signup Button */}
-        <Link
-          to="/signup"
-          className="bg-yellow-600 text-white px-4 py-2 rounded-md font-medium hover:bg-yellow-400 transition-colors duration-300 shadow-lg"
-        >
-          Sign Up
-        </Link>
+        <div className="flex items-center gap-4">
+          {token ? (
+            <Link
+              to="/login"
+              className="bg-yellow-600 text-white px-4 py-2 rounded-md font-medium hover:bg-yellow-400 transition-colors duration-300 shadow-lg"
+              onClick={() => Cookies.remove("authToken")}
+            >
+              Logout
+            </Link>
+          ) : (
+            <>
+            <Link
+              to="/login"
+              className="bg-yellow-600 text-white px-4 py-2 rounded-md font-medium hover:bg-yellow-400 transition-colors duration-300 shadow-lg"
+            >
+              Sign in
+            </Link>
+         
+          {/* Signup Button */}
+          <Link
+            to="/signup"
+            className="bg-yellow-600 text-white px-4 py-2 rounded-md font-medium hover:bg-yellow-400 transition-colors duration-300 shadow-lg"
+          >
+            Sign Up
+          </Link>
+          </>
+        )}
+        </div>
       </div>
     </nav>
   );
 }
 
 export default CustomNavbar;
-

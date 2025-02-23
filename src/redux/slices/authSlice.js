@@ -1,5 +1,6 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "axios";
+import Cookies from "js-cookie";
 
 const BASE_URL = "http://localhost:8000";
 
@@ -106,7 +107,8 @@ const authSlice = createSlice({
       .addCase(loginUser.fulfilled, (state, action) => {
         state.loading = false;
         state.user = action.payload.data;
-        state.token = action.payload.token;
+        state.token = action.payload.data?.token;
+        Cookies.set("authToken", action.payload.data?.token, {secure: true })        
       })
       .addCase(loginUser.rejected, (state, action) => {
         state.loading = false;
@@ -134,6 +136,19 @@ const authSlice = createSlice({
         state.data = action.payload.data;
       })
       .addCase(forgotPassword.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload;
+      })
+      .addCase(googleAuth.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(googleAuth.fulfilled, (state, action) => {
+        state.loading = false;
+        state.data = action.payload.data;
+        Cookies.set("authToken", action.payload.data?.token, {secure: true })
+      })
+      .addCase(googleAuth.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload;
       });

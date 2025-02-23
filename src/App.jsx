@@ -20,8 +20,9 @@ import Cards from "./Pages/Cards";
 import AboutUs from "./Pages/About_us";
 import Trending_pro from "./Pages/Trending_pro";
 import { GoogleOAuthProvider } from "@react-oauth/google";
+import { ProtectedRoute } from "./Protected/ProtectedRoute";
 
-function App() {
+function App() {  
   const CLIENT_ID = "847941775059-kbbirbkfg0jv8jnodkgqoffu1vdg6d27.apps.googleusercontent.com"
   return (
     <Router>
@@ -66,10 +67,9 @@ function App() {
           <Route path="/luxury" element={<LuxuryPage />} />
           <Route path="/property-details/:id" element={<PropertyDetails />} />
           <Route path="/booking" element={<BookingPage />} />
-          <Route path="/Coustom_contact" element={<Coustom_contact />} />
-          <Route path="/Dashboard" element={<Dashboard />} />
+          <Route path="/Coustom_contact" element={<Coustom_contact/>} />
+          <Route path="/Dashboard" element={ <ProtectedRoute Component={Dashboard} />} />
         </Routes>
-
         <Coustom_Fotter />
       </div>
     </Router>

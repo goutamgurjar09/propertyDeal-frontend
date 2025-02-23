@@ -8,7 +8,6 @@ const ForgotPassword = () => {
   const [otp, setOtp] = useState("");
   const location = useLocation();
   const navigate = useNavigate();
-  const { data, loading, error } = useSelector((state) => state.auth);
   const dispatch = useDispatch();
 
   const handleSubmit = async (e) => {

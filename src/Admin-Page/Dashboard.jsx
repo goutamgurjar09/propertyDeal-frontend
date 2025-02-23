@@ -10,7 +10,8 @@ import {
   ResponsiveContainer,
   Legend,
 } from "recharts";
-
+import Cookies from "js-cookie";
+import { Link } from "react-router-dom";
 const data = [
   { name: "Jan", revenue: 5000 },
   { name: "Feb", revenue: 7000 },
@@ -97,6 +98,11 @@ export default function AdminDashboard() {
           <button className="flex items-center gap-2 p-2 hover:bg-blue-500 rounded">
             <FaChartBar /> Reports & Analytics
           </button>
+          <Link to="/login">
+          <button onClick={() => Cookies.remove("authToken")} className="flex items-center gap-2 p-2 hover:bg-blue-500 rounded">
+            <FaChartBar /> Logout
+          </button>
+          </Link>
         </nav>
       </div>
 
