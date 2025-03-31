@@ -8,7 +8,7 @@ import FAQ from "./Pages/FAQ";
 import LoginPage from "./Login-Page";
 import SignupPage from "./Signup-Page";
 import PropertyDetails from "./Pages/PropertyDetails";
-import Dashboard from "./Admin-Page/Dashboard";
+import AdminDashboard from "./Admin-Page/Dashboard";
 import Services from "./Pages/Services";
 import PropertyCard from "./Pages/PropertyCard";
 import BookingPage from "./Pages/Booking_Page";
@@ -68,7 +68,7 @@ function App() {
           <Route path="/property-details/:id" element={<PropertyDetails />} />
           <Route path="/booking" element={<BookingPage />} />
           <Route path="/Coustom_contact" element={<Coustom_contact/>} />
-          <Route path="/Dashboard" element={ <ProtectedRoute Component={Dashboard} />} />
+          <Route path="/Dashboard" element={ <ProtectedRoute Component={AdminDashboard} />} />
         </Routes>
         <Coustom_Fotter />
       </div>

@@ -126,28 +126,28 @@ function CustomNavbar() {
             <Link
               to="/login"
               className="bg-yellow-600 text-white px-4 py-2 rounded-md font-medium hover:bg-yellow-400 transition-colors duration-300 shadow-lg"
-              onClick={() => Cookies.remove("authToken")}
+              onClick={() => Cookies.remove("accessToken")}
             >
               Logout
             </Link>
           ) : (
             <>
-            <Link
-              to="/login"
-              className="bg-yellow-600 text-white px-4 py-2 rounded-md font-medium hover:bg-yellow-400 transition-colors duration-300 shadow-lg"
-            >
-              Sign in
-            </Link>
-         
-          {/* Signup Button */}
-          <Link
-            to="/signup"
-            className="bg-yellow-600 text-white px-4 py-2 rounded-md font-medium hover:bg-yellow-400 transition-colors duration-300 shadow-lg"
-          >
-            Sign Up
-          </Link>
-          </>
-        )}
+              <Link
+                to="/login"
+                className="bg-yellow-600 text-white px-4 py-2 rounded-md font-medium hover:bg-yellow-400 transition-colors duration-300 shadow-lg"
+              >
+                Sign in
+              </Link>
+
+              {/* Signup Button */}
+              <Link
+                to="/signup"
+                className="bg-yellow-600 text-white px-4 py-2 rounded-md font-medium hover:bg-yellow-400 transition-colors duration-300 shadow-lg"
+              >
+                Sign Up
+              </Link>
+            </>
+          )}
         </div>
       </div>
     </nav>

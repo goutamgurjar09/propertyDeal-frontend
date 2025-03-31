@@ -3,6 +3,7 @@ import { FaEye, FaEyeSlash } from "react-icons/fa";
 import { useDispatch, useSelector } from "react-redux";
 import { signupUser } from "./redux/slices/authSlice"; // Ensure correct path
 import { useNavigate } from "react-router-dom";
+import { showSuccess } from "./Alert";
 
 function SignupPage() {
   const dispatch = useDispatch();
@@ -19,33 +20,45 @@ function SignupPage() {
   const [profileImg, setProfileImg] = useState(null);
   const navigate = useNavigate();
 
-  const handleSubmit = async(e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
+  
     if (password !== confirmPassword) {
       alert("Passwords do not match!");
       return;
     }
-    const userData = {
-      fullname,
-      mobile,
-      email,
-      password,
-      confirmPassword,
-      role,
-      profileImg,
-    };
-    const result = await dispatch(signupUser(userData));
-    if (result.payload?.data) {
-      navigate("/verify");
+  
+    // Create FormData object
+    const formData = new FormData();
+    formData.append("fullname", fullname);
+    formData.append("mobile", mobile);
+    formData.append("email", email);
+    formData.append("password", password);
+    formData.append("confirmPassword", confirmPassword);
+    formData.append("role", role);
+    if (profileImg) {
+      formData.append("profileImg", profileImg);
+    }
+  
+    const result = await dispatch(signupUser(formData));
+    console.log(result);
+  
+    if (result.payload?.status === "Success") {
+      navigate("/login");
+      showSuccess(result.payload?.message);
     }
   };
+  
 
   const handleImageChange = (e) => {
     console.log(e.target.files[0]);
 
     setProfileImg(e.target.files[0]);
   };
-
+  const handleImageChanges = (event) => {
+    const files = Array.from(event.target.files); // Convert FileList to an array
+    console.log(files);
+  };
   return (
     <div className="flex min-h-screen items-center justify-center bg-[#005555] text-white p-4 relative">
       {/* Background Blur */}
@@ -55,9 +68,6 @@ function SignupPage() {
         <h2 className="text-center text-3xl font-semibold mb-6">
           Create Your Account
         </h2>
-
-        {error && <p className="text-red-500 text-center">{error}</p>}
-
         <form className="space-y-4" onSubmit={handleSubmit}>
           <div className="w-full border-b-2 border-gray-900 focus-within:border-indigo-500">
             <input
@@ -150,6 +160,8 @@ function SignupPage() {
               className="w-full bg-transparent p-2 outline-none placeholder-gray-500 text-gray-900 pr-10"
             />
           </div>
+          <input type="file" multiple accept="image/*" onChange={handleImageChanges} />
+
           <div className="flex justify-center">
             <button
               type="submit"

@@ -1,30 +1,68 @@
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Link, useLocation, useNavigate } from "react-router-dom";
-import { forgotPassword, verifyUser } from "./redux/slices/authSlice";
+import {
+  resetPassword,
+  generateOtp,
+  verifyUser,
+} from "./redux/slices/authSlice";
 
 const ForgotPassword = () => {
   const [email, setEmail] = useState("");
-  const [otp, setOtp] = useState("");
+  const [otp_number, setOtpNumber] = useState("");
   const location = useLocation();
   const navigate = useNavigate();
   const dispatch = useDispatch();
+  const [otpField, setOtpField] = useState(false);
+  const [newPasswordField, setNewPasswordField] = useState(false);
+  const [newPassword, setNewPassword] = useState("");
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    let result;
 
-    const result = await dispatch(forgotPassword({ email }));
-    if (result.payload?.status === "success") {
-      navigate("/login");
+    if (!otpField) {
+      // Step 1: Generate OTP
+      result = await dispatch(generateOtp({ otp_type: "forgot", email }));
+      console.log(result, "OTP Generation Result");
+  
+      if (result.payload?.data.otp_send) {
+        setOtpField(true); // Show OTP input field
+      }
+    } else if (!newPasswordField) {
+      // Step 2: Verify OTP
+      result = await dispatch(verifyUser({ otp_number, otp_type: "forgot", email }));
+      console.log(result, "OTP Verification Result");
+  
+      if (result.payload?.data?.otp_verified) {
+        setNewPasswordField(true); // Show new password input field
+      }
+    } else {
+      // Step 3: Reset Password
+      result = await dispatch(resetPassword({ email, otp_type: "forgot", newPassword }));
+      console.log(result, "Password Reset Result");
+  
+      if (result.payload?.status === "success") {
+        navigate("/login");
+      }
     }
   };
-  const handleVerifyUser = async (e) => {
+  const handleGenerateOtpAndVerifyUser = async (e) => {
     e.preventDefault();
 
-    const result = await dispatch(verifyUser({ otp, email }));
-    if (result.payload?.data) {
-      navigate("/login");
+    const result = await dispatch(
+      otpField
+        ? verifyUser({ otp_number, otp_type: "varification", email })
+        : generateOtp({ otp_type: "varification", email })
+    );
+    console.log(result);
+
+    if (result.payload?.data.otp_send) {
+      setOtpField(true);
+    }else if (result.payload?.data?.otp_verified){
+      navigate("/dashboard");
     }
+
   };
 
   return (
@@ -43,7 +81,7 @@ const ForgotPassword = () => {
             </p>
 
             <form onSubmit={handleSubmit} className="mt-6">
-              <div>
+              <div className="w-full border-b-2 border-gray-900 focus-within:border-indigo-500">
                 <label className="block text-sm text-gray-900">Email</label>
                 <input
                   type="email"
@@ -51,15 +89,37 @@ const ForgotPassword = () => {
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   className="w-full px-4 py-2 mt-2 bg-transparent border-b border-gray-900 text-gray-900 focus:outline-none focus:border-indigo-500"
-                  required
                 />
               </div>
-
+              {otpField && (
+              <div className="w-full border-b-2 border-gray-900 focus-within:border-indigo-500">
+                <label className="block text-sm text-gray-900">OTP</label>
+                <input
+                  type="text"
+                  placeholder="Enter Your Otp"
+                  value={otp_number}
+                  onChange={(e) => setOtpNumber(e.target.value)}
+                  className="w-full bg-transparent p-2 outline-none placeholder-gray-500 text-gray-900"
+                />
+              </div>
+            )}
+            {newPasswordField && (
+              <div className="w-full border-b-2 border-gray-900 focus-within:border-indigo-500">
+                <label className="block text-sm text-gray-900">OTP</label>
+                <input
+                  type="password"
+                  placeholder="Enter Your Otp"
+                  value={newPassword}
+                  onChange={(e) => setNewPassword(e.target.value)}
+                  className="w-full bg-transparent p-2 outline-none placeholder-gray-500 text-gray-900"
+                />
+              </div>
+            )}
               <button
                 type="submit"
                 className="w-full mt-6 bg-gray-900 hover:bg-gray-700 text-white py-2 rounded-md transition"
               >
-                Send Reset Link
+                Send Reset OTP
               </button>
             </form>
 
@@ -75,7 +135,7 @@ const ForgotPassword = () => {
           <h2 className="text-2xl font-semibold text-center text-gray-900">
             Verify By OTP
           </h2>
-          <form onSubmit={handleVerifyUser} className="mt-6">
+          <form onSubmit={handleGenerateOtpAndVerifyUser} className="mt-6">
             <div className="w-full border-b-2 border-gray-900 focus-within:border-indigo-500">
               <label className="block text-sm text-gray-900">Email</label>
 
@@ -85,28 +145,26 @@ const ForgotPassword = () => {
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 className="w-full bg-transparent p-2 outline-none placeholder-gray-500 text-gray-900"
-                required
               />
             </div>
             <br />
-            <div className="w-full border-b-2 border-gray-900 focus-within:border-indigo-500">
-              <label className="block text-sm text-gray-900">OTP</label>
-
-              <input
-                type="text"
-                placeholder="Enter Your Otp"
-                value={otp}
-                onChange={(e) => setOtp(e.target.value)}
-                className="w-full bg-transparent p-2 outline-none placeholder-gray-500 text-gray-900"
-                required
-              />
-            </div>
-
+            {otpField && (
+              <div className="w-full border-b-2 border-gray-900 focus-within:border-indigo-500">
+                <label className="block text-sm text-gray-900">OTP</label>
+                <input
+                  type="text"
+                  placeholder="Enter Your Otp"
+                  value={otp_number}
+                  onChange={(e) => setOtpNumber(e.target.value)}
+                  className="w-full bg-transparent p-2 outline-none placeholder-gray-500 text-gray-900"
+                />
+              </div>
+            )}
             <button
               type="submit"
               className="w-full mt-6 bg-gray-900 hover:bg-gray-700 text-white py-2 rounded-md transition"
             >
-              Verify and Login
+              Generate Otp and Verify
             </button>
           </form>
         </div>

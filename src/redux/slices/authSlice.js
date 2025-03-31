@@ -1,6 +1,5 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "axios";
-import Cookies from "js-cookie";
 
 const BASE_URL = "http://localhost:8000";
 
@@ -9,12 +8,28 @@ export const signupUser = createAsyncThunk(
   "auth/signup",
   async (userData, { rejectWithValue }) => {
     try {
-      const response = await axios.post(`${BASE_URL}/signup`, userData, {
+      const response = await axios.post(`${BASE_URL}/api/auth/signup`, userData, {
         withCredentials: true,
         headers: {
-          "Content-Type": "multipart/form-data",
+          "Content-Type": "multipart/form-data"
         },
       });
+      return response.data;
+    } catch (error) {
+      return rejectWithValue(error.response?.data || "Signup failed");
+    }
+  }
+);
+
+
+export const generateOtp = createAsyncThunk(
+  "auth/verify",
+  async (userData, { rejectWithValue }) => {
+    try {
+      const response = await axios.post(`${BASE_URL}/api/auth/generate-otp`, userData, {
+        withCredentials: true,
+      });
+
       return response.data;
     } catch (error) {
       return rejectWithValue(error.response?.data || "Signup failed");
@@ -28,7 +43,7 @@ export const verifyUser = createAsyncThunk(
   "auth/verify",
   async (userData, { rejectWithValue }) => {
     try {
-      const response = await axios.post(`${BASE_URL}/verify-otp`, userData, {
+      const response = await axios.post(`${BASE_URL}/api/auth/verify-otp`, userData, {
         withCredentials: true,
       });
       console.log(response, "response");
@@ -45,7 +60,7 @@ export const loginUser = createAsyncThunk(
   "auth/login",
   async (userData, { rejectWithValue }) => {
     try {
-      const response = await axios.post(`${BASE_URL}/login`, userData, {
+      const response = await axios.post(`${BASE_URL}/api/auth/login`, userData, {
         withCredentials: true,
       });
       return response.data;
@@ -55,11 +70,11 @@ export const loginUser = createAsyncThunk(
   }
 );
 
-export const forgotPassword = createAsyncThunk(
-  "auth/forgetpassword",
+export const resetPassword = createAsyncThunk(
+  "auth/resetPassword",
   async (userData, { rejectWithValue }) => {
     try {
-      const response = await axios.post(`${BASE_URL}/forgot-password`, userData, {
+      const response = await axios.post(`${BASE_URL}/api/auth/reset-password`, userData, {
         withCredentials: true,
       });
       return response.data;
@@ -73,7 +88,7 @@ export const googleAuth = createAsyncThunk(
   "auth/loginGoogle",
   async (userData, { rejectWithValue }) => {
     try {
-      const response = await axios.post(`${BASE_URL}/google-auth`, userData, {
+      const response = await axios.post(`${BASE_URL}/api/auth/google-auth`, userData, {
         withCredentials: true,
       });
       return response.data;
@@ -104,11 +119,10 @@ const authSlice = createSlice({
         state.loading = true;
         state.error = null;
       })
-      .addCase(loginUser.fulfilled, (state, action) => {
+      .addCase(loginUser.fulfilled, (state, action) => {  
         state.loading = false;
         state.user = action.payload.data;
-        state.token = action.payload.data?.token;
-        Cookies.set("authToken", action.payload.data?.token, {secure: true })        
+        state.token = action.payload.data?.accessToken;
       })
       .addCase(loginUser.rejected, (state, action) => {
         state.loading = false;
@@ -122,20 +136,21 @@ const authSlice = createSlice({
         state.loading = false;
         state.user = action.payload.data;
         state.message = action.payload.message;
+        localStorage.setItem("user", JSON.stringify(action.payload.data));
       })
       .addCase(signupUser.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload;
       })
-      .addCase(forgotPassword.pending, (state) => {
+      .addCase(resetPassword.pending, (state) => {
         state.loading = true;
         state.error = null;
       })
-      .addCase(forgotPassword.fulfilled, (state, action) => {
+      .addCase(resetPassword.fulfilled, (state, action) => {
         state.loading = false;
         state.data = action.payload.data;
       })
-      .addCase(forgotPassword.rejected, (state, action) => {
+      .addCase(resetPassword.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload;
       })
@@ -146,7 +161,6 @@ const authSlice = createSlice({
       .addCase(googleAuth.fulfilled, (state, action) => {
         state.loading = false;
         state.data = action.payload.data;
-        Cookies.set("authToken", action.payload.data?.token, {secure: true })
       })
       .addCase(googleAuth.rejected, (state, action) => {
         state.loading = false;

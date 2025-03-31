@@ -3,17 +3,22 @@ import { useNavigate } from "react-router-dom";
 import Cookies from "js-cookie";
 
 export const getAuthToken = () => {
-  return Cookies.get("authToken");
+  return Cookies.get("accessToken");
+};
+
+export const getUserDetail = () => {
+  return JSON.parse(localStorage.getItem("user"));
 };
 export const ProtectedRoute = ({ Component }) => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    const token = getAuthToken(); // Ensure the correct token key
+    const token = getAuthToken();
+    console.log(token, "token");
     if (!token) {
-      navigate("/login"); // Redirect to login if no token found
+      navigate("/login");
     }
-  }, [navigate]); // Add `navigate` as dependency
+  }, [navigate]);
 
   return <Component />;
 };
