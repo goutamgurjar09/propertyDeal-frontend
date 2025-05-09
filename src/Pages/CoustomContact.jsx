@@ -1,6 +1,6 @@
 import React from "react";
 
-const ContactForm = () => {
+const CoustomContact = () => {
   return (
     <div className="bg-[#005555] text-gray-900 py-20 px-10 md:px-32 mt-8 min-h-screen">
       <div className="max-w-8xl mx-auto">
@@ -88,4 +88,4 @@ const ContactForm = () => {
   );
 };
 
-export default ContactForm;
+export default CoustomContact;

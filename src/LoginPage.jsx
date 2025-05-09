@@ -1,65 +1,96 @@
-import React, { useState } from "react";
-import { Link } from "react-router-dom";
+import React, { useState, useEffect } from "react";
+import { Link, useNavigate } from "react-router-dom";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import { googleAuth, loginUser } from "./redux/slices/authSlice";
-import { useNavigate } from "react-router-dom";
-import { FcGoogle } from "react-icons/fc";
-import { GoogleOAuthProvider } from "@react-oauth/google";
 import { GoogleLogin } from "@react-oauth/google";
-import { getUserDetail } from "./Protected/ProtectedRoute";
 import { showError, showSuccess } from "./Alert";
-
 function LoginPage() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
+  const [selectedRole, setSelectedRole] = useState("");
 
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const user = getUserDetail();
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const result = await dispatch(loginUser({ email, password }));
-    const verifiedUser = result.payload?.data?.isVerified;
-    if (result.payload?.data?.accessToken && verifiedUser) {
-      showSuccess(result.payload?.message);
-      navigate("/dashboard");
-    } else if (result.payload?.message === "Invalid credentials") {
-      showError(result.payload?.message);
-    } else if (!verifiedUser) {
-      navigate("/verify");
-    }
-  };
-
-  const handleGoogleLogin = async (response) => {
-    if (response?.credential) {
-      const result = await dispatch(
-        googleAuth({ tokenId: response.credential, role: user.role })
-      );
-      console.log("Google Auth Response:", result);
-      const verifiedUser = result.payload?.data?.isVerified;
-
-      if (result.payload?.data?.accessToken && verifiedUser) {
-        showSuccess(result.payload?.message);
-        navigate("/dashboard");
-      } else if (result.payload?.message === "Invalid credentials") {
-        showError(result.payload?.message);
-      } else if (!verifiedUser) {
-        navigate("/verify");
+    try {
+      const { payload } = await dispatch(loginUser({ email: email.trim(), password }));
+  
+  
+      if (payload?.data) {
+        const { accessToken, isVerified } = payload.data;
+  
+        if (accessToken) {
+          if (isVerified) {
+            showSuccess(payload.message || "Login successful!");
+            navigate("/dashboard");
+          } else {
+            showError("Please verify your email to complete the login.");
+            navigate("/verify");
+          }
+        } else {
+          showError("Login failed. Try again.");
+        }
       }
+    } catch (error) {
+      showError("An unexpected error occurred during login.");
     }
   };
+  
+
+  // Google login handler
+  const handleGoogleLogin = async (response) => {
+    try {
+      const tokenId = response?.credential;
+      if (!tokenId) {
+        showError("Invalid Google response.");
+        return;
+      }
+  
+      const result = await dispatch(
+        googleAuth({
+          tokenId,
+          role: selectedRole || null,
+        })
+      );
+  
+      if (result.error) {
+        const msg = result?.payload?.message;
+        
+        // 🔍 Check if it's the new user
+        if (msg) {
+          showError("Please select a role before continuing with Google login.");
+          return;
+        }
+  
+        // Generic error fallback
+        showError(msg || "Google login failed");
+        return;
+      }
+      const user = result.payload?.data;
+      console.log(user?.accessToken, "usertoken");
+      if (user?.accessToken && user?.role === "admin") {
+        showSuccess("Login successful");
+        navigate("/dashboard");
+      } else {
+        showSuccess("Login successful");
+        navigate("/");
+      }
+     
+      
+    } catch (error) {
+      showError("Google login error. Please try again.");
+    }
+  };
+  
   return (
     <div className="flex min-h-screen items-center justify-center bg-gray-900 text-white p-4 relative">
-      {/* Background Blur Effect */}
       <div className="absolute inset-0 bg-[url('/path-to-your-image.jpg')] bg-cover bg-center blur-lg opacity-30"></div>
 
-      {/* Login Form */}
       <div className="w-full max-w-md bg-white p-8 rounded-lg shadow-xl border border-gray-300 relative z-10">
-        <h2 className="text-center text-3xl font-semibold mb-6 text-gray-900">
-          Log In
-        </h2>
+        <h2 className="text-center text-3xl font-semibold mb-6 text-gray-900">Log In</h2>
 
         <form className="space-y-6" onSubmit={handleSubmit}>
           <div className="w-full border-b border-gray-900 focus-within:border-indigo-500">
@@ -90,6 +121,7 @@ function LoginPage() {
               {showPassword ? <FaEyeSlash /> : <FaEye />}
             </button>
           </div>
+
           <Link
             to="/forgetPassword"
             className="block text-end text-sm font-semibold text-gray-500 hover:text-gray-600 mt-4"
@@ -107,19 +139,28 @@ function LoginPage() {
           </div>
         </form>
 
-        <div></div>
-
         <p className="text-center text-sm mt-4 text-gray-600">
           No account?
           <Link to="/signup" className="text-indigo-600 hover:underline ml-1">
             Create One
           </Link>
         </p>
-        <div className="flex justify-center">
+        <div className="flex justify-center items-center mt-4 gap-4">
           <GoogleLogin
             onSuccess={handleGoogleLogin}
-            onError={() => console.log("Google Login Failed")}
+            onError={() => showError("Google Login Failed")}
           />
+
+          <select
+            className="border border-gray-300 rounded p-2 text-gray-800"
+            value={selectedRole}
+            onChange={(e) => setSelectedRole(e.target.value)}
+            required
+          >
+            <option value="">-- Select Role --</option>
+            <option value="buyer">Buyer</option>
+            <option value="seller">Seller</option>
+          </select>
         </div>
       </div>
     </div>

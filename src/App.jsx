@@ -1,33 +1,34 @@
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
-import Coustom_navbar from "./Pages/Coustom_navbar";
+import CustomNavbar from "./Pages/CustomNavbar";
 import HomeSection from "./Pages/HomeSection";
 import Cotegories from "./Pages/Cotegories";
-import Coustom_Fotter from "./Pages/Coustom_Fotter";
-import Coustom_contact from "./Pages/Coustom_contact";
+import CoustomFooter from "./Pages/CoustomFooter";
+import CoustomContact from "./Pages/CoustomContact";
 import FAQ from "./Pages/FAQ";
-import LoginPage from "./Login-Page";
-import SignupPage from "./Signup-Page";
+import LoginPage from "./LoginPage";
+import SignupPage from "./SignupPage";
 import PropertyDetails from "./Pages/PropertyDetails";
-import AdminDashboard from "./Admin-Page/Dashboard";
+import Dashboard from "./Admin-Page/Dashboard";
 import Services from "./Pages/Services";
 import PropertyCard from "./Pages/PropertyCard";
-import BookingPage from "./Pages/Booking_Page";
+import BookingPage from "./Pages/BookingPage";
 import ForgotPassword from "./ForgotPassword";
 import CommercialPage from "./Pages/CommercialPage";
 import PremiumPage from "./Pages/PremiumPage";
 import LuxuryPage from "./Pages/LuxuryPage";
 import Cards from "./Pages/Cards";
-import AboutUs from "./Pages/About_us";
-import Trending_pro from "./Pages/Trending_pro";
+import AboutUs from "./Pages/AboutUs";
+import TrendingProperty from "./Pages/TrendingProperty";
 import { GoogleOAuthProvider } from "@react-oauth/google";
-import { ProtectedRoute } from "./Protected/ProtectedRoute";
-
+import  ProtectedRoute  from "./Protected/ProtectedRoute";
+import AddProperty from "./Admin-Page/AddProperty";
+import VerifyUser from "./VerifyUser";
 function App() {  
-  const CLIENT_ID = "847941775059-kbbirbkfg0jv8jnodkgqoffu1vdg6d27.apps.googleusercontent.com"
+  const CLIENT_ID = "160483331532-ehfiher4egcksebq5g7lr921nq3g7n28.apps.googleusercontent.com"
   return (
     <Router>
       <div>
-        <Coustom_navbar />
+        <CustomNavbar />
 
         <Routes>
           <Route
@@ -36,12 +37,12 @@ function App() {
               <>
                 <HomeSection />
                 <AboutUs />
-                <Trending_pro />
+                <TrendingProperty />
                 <Cotegories />
                 <Services />
                 <Cards />
                 <FAQ />
-                <Coustom_contact />
+                <CoustomContact />
               </>
             }
           />
@@ -49,28 +50,36 @@ function App() {
           <Route
             path="/login"
             element={
-              <GoogleOAuthProvider clientId = {CLIENT_ID}
-              redirectUri="http://localhost:5173"
-              >
+              <GoogleOAuthProvider clientId = {CLIENT_ID}>
                 <LoginPage />
               </GoogleOAuthProvider>
             }
           />
           <Route path="/signup" element={<SignupPage />} />
           <Route path="/forgetPassword" element={<ForgotPassword />} />
-          <Route path="/verify" element={<ForgotPassword />} />
+          <Route path="/verify" element={<VerifyUser />} />
 
           {/* Property Pages */}
-          <Route path="/property-card" element={<PropertyCard />} />
+          <Route path="/propertyCard" element={<PropertyCard />} />
           <Route path="/commercial" element={<CommercialPage />} />
           <Route path="/premium" element={<PremiumPage />} />
           <Route path="/luxury" element={<LuxuryPage />} />
-          <Route path="/property-details/:id" element={<PropertyDetails />} />
+          <Route path="/propertyDetails/:id" element={<PropertyDetails />} />
           <Route path="/booking" element={<BookingPage />} />
-          <Route path="/Coustom_contact" element={<Coustom_contact/>} />
-          <Route path="/Dashboard" element={ <ProtectedRoute Component={AdminDashboard} />} />
+          <Route path="/contact" element={<CoustomContact/>} />
+          <Route path="/dashboard" element={<ProtectedRoute><Dashboard /></ProtectedRoute>} />
+
+          {/* <Route path="/add-property" element={<AddProperty/>} /> */}
+          <Route
+            path="/addProperty"
+            element={
+              <ProtectedRoute>
+                <AddProperty />
+              </ProtectedRoute>
+            }
+          />
         </Routes>
-        <Coustom_Fotter />
+        <CoustomFooter />
       </div>
     </Router>
   );

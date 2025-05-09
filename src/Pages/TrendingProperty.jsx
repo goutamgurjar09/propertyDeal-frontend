@@ -11,8 +11,8 @@ const properties = [
   { id: 4, type: "3 BHK", price: "750,000", location: "India, M.P" },
 ];
 
-const PropertyCard = ({ property }) => (
-  <Link to={`/property-details/${property.id}`}>
+const TrendingProperty = ({ property }) => (
+  <Link to={`/propertyDetails/${property.id}`}>
     <div className={`${cardShades[property.id % cardShades.length]} shadow-xl rounded-xl overflow-hidden hover:shadow-2xl transform hover:scale-[1.02] transition-all duration-300 h-full flex flex-col`}>
       <img src={categoriesImg} alt={`Apartment ${property.id}`} className="w-full h-60 object-cover" />
       <div className="p-6 flex flex-col flex-grow">
@@ -43,7 +43,7 @@ function Categories() {
 
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-8 pb-12">
           {properties.map((property) => (
-            <PropertyCard key={property.id} property={property} />
+            <TrendingProperty key={property.id} property={property} />
           ))}
         </div>
       </div>

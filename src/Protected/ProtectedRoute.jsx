@@ -1,24 +1,19 @@
-import React, { useEffect } from "react";
+import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import Cookies from "js-cookie";
+import {getUserDetail } from "../redux/slices/authUtlis"; 
 
-export const getAuthToken = () => {
-  return Cookies.get("accessToken");
-};
-
-export const getUserDetail = () => {
-  return JSON.parse(localStorage.getItem("user"));
-};
-export const ProtectedRoute = ({ Component }) => {
+const ProtectedRoute = ({ children }) => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    const token = getAuthToken();
-    console.log(token, "token");
-    if (!token) {
+    const user = getUserDetail();
+    console.log("User:", user);
+    if (!user.accessToken || !user || user.role !== "admin") {
       navigate("/login");
     }
   }, [navigate]);
 
-  return <Component />;
+  return children;
 };
+
+export default ProtectedRoute;

@@ -12,7 +12,7 @@ const properties = [
 ];
 
 const PropertyCard = ({ property }) => (
-  <Link to={`/property-details/${property.id}`}>
+  <Link to={`/propertyDetails/${property.id}`}>
     <div className={`${cardShades[property.id % cardShades.length]} shadow-xl rounded-xl overflow-hidden hover:shadow-2xl transform hover:scale-[1.02] transition-all duration-300 h-full flex flex-col`}>
       <img src={categoriesImg} alt={`Apartment ${property.id}`} className="w-full h-60 object-cover" />
       <div className="p-6 flex flex-col flex-grow">

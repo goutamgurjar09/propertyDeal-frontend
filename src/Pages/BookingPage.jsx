@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import img from "../assets/image copy.png";
 
-const BookingTable = () => {
+const BookingPage = () => {
   const [bookingForm, setBookingForm] = useState({
     name: "",
     email: "",
@@ -368,6 +368,6 @@ const BookingTable = () => {
   );
 };
 
-export default BookingTable;
+export default BookingPage;
 
 

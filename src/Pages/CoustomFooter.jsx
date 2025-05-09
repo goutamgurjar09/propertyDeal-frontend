@@ -1,6 +1,6 @@
 import { FaFilm } from "react-icons/fa";
 
-const AboutUs = () => {
+const CoustomFooter = () => {
   return (
     <footer className="bg-[#005555]  text-white py-10 ">
       <div className="max-w-7xl font-serif  font-xl mx-auto grid grid-cols-2 md:grid-cols-4 gap-5 ">
@@ -66,5 +66,5 @@ const AboutUs = () => {
   );
 };
 
-export default AboutUs;
+export default CoustomFooter;
 
