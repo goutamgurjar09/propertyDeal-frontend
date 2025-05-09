@@ -1,15 +1,10 @@
 import { useEffect, useState } from "react";
-import img from "../assets/image copy.png";
 import { FaHome, FaChartBar, FaUser, FaBars, FaTimes, FaSignOutAlt } from "react-icons/fa";
 import { Link } from "react-router-dom";
 import {clearAuthSession } from "../redux/slices/authUtlis"; 
 import { useDispatch, useSelector } from "react-redux";
-import { getUsers } from "../redux/slices/authSlice";
-const properties = [
-  { id: 1, name: "Luxury Villa", location: "New York", type: "Villa", image: img },
-  { id: 2, name: "Modern Apartment", location: "Los Angeles", type: "Apartment", image: img },
-  { id: 3, name: "Beach House", location: "Miami", type: "House", image: img },
-];
+import { Properties } from "./Properties";
+
 
 export default function Dashboard() {
   const [sidebarOpen, setSidebarOpen] = useState(true);
@@ -91,15 +86,7 @@ export default function Dashboard() {
             </div>
           <h2 className="text-xl font-bold mb-4">Property Management</h2>
          
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            {properties.map((property,index) => (
-              <div key={index} className="p-4 bg-gray-100 shadow-md rounded-lg hover:shadow-lg">
-                <img src={property.image} alt={property.name} className="rounded w-full mb-2" />
-                <h3 className="text-lg font-bold">{property.name}</h3>
-                <p className="text-gray-600">{property.location} - {property.type}</p>
-              </div>
-            ))}
-          </div>
+          <Properties/>
         </div>
 
         {/* User Management */}
