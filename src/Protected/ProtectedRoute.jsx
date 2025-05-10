@@ -7,7 +7,6 @@ const ProtectedRoute = ({ children }) => {
 
   useEffect(() => {
     const user = getUserDetail();
-    console.log("User:", user);
     if (!user.accessToken || !user || user.role !== "admin") {
       navigate("/login");
     }

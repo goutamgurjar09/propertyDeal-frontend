@@ -1,10 +1,11 @@
-import React, { useState, useEffect } from "react";
-import { useDispatch, useSelector } from "react-redux";
-import { createProperty, resetPropertyState } from "../redux/slices/propertySlice";
+import React, { useState } from "react";
+import { useDispatch } from "react-redux";
+import { createProperty } from "../redux/slices/propertySlice";
+import { Link } from "react-router-dom";
+import {showError, showSuccess } from "../Alert";
 
 const AddProperty = () => {
   const dispatch = useDispatch();
-  const { loading, error, property } = useSelector((state) => state.property);
 
   const [formData, setFormData] = useState({
     title: "",
@@ -26,27 +27,6 @@ const AddProperty = () => {
   });
 
   const [success, setSuccess] = useState("");
-
-  useEffect(() => {
-    if (property) {
-      setSuccess("Property created successfully!");
-      setFormData({
-        title: "",
-        description: "",
-        price: "",
-        propertyType: "Apartment",
-        location: { address: "", city: "" },
-        size: "",
-        bedrooms: "",
-        bathrooms: "",
-        facilities: ["Wifi", "RO", "Park"],
-        owner: { name: "" },
-        propertyImages: [],
-      });
-
-      dispatch(resetPropertyState());
-    }
-  }, [property, dispatch]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -100,16 +80,48 @@ const AddProperty = () => {
     for (let i = 0; i < formData.propertyImages.length; i++) {
       data.append("propertyImages", formData.propertyImages[i]);
     }
+    
+    const propertyData = await dispatch(createProperty(data));
+    console.log(propertyData);
+    if(propertyData?.payload?.status === 'success'){
+      showSuccess(propertyData.payload.message);
+
+      setFormData({
+        title: "",
+        description: "",
+        price: "",
+        propertyType: "",
+        location: {
+          address: "",
+          city: "",
+        },
+        size: "",
+        bedrooms: "",
+        bathrooms: "",
+        facilities: [],
+        owner: {
+          name: "",
+        },
+        propertyImages: [],
+      })
+    }
+    else{
+      showError(propertyData.payload.message);
+    }
   
-    dispatch(createProperty(data));
+  
   };
   
   return (
     <div className="max-w-4xl mx-auto mt-10 p-6 bg-white rounded-xl shadow-lg">
+       <div className="flex justify-end mb-4">
+              <Link to="/dashboard">
+                <button className="flex p-3 bg-gray-300 rounded hover:bg-gray-400">
+                  Go Back
+                </button>
+              </Link>
+        </div>
       <h2 className="text-2xl font-semibold mb-6">Create Property</h2>
-
-      {error && <p className="text-red-500 mb-4">{error}</p>}
-      {success && <p className="text-green-500 mb-4">{success}</p>}
 
       <form onSubmit={handleSubmit} className="grid grid-cols-1 md:grid-cols-2 gap-4">
         <input name="title" value={formData.title} onChange={handleChange} placeholder="Title*" className="border p-2 rounded" required />

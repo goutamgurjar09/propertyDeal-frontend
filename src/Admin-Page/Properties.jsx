@@ -1,5 +1,4 @@
 import { useEffect } from "react";
-import img from "../assets/image copy.png";
 import { getProperties } from "../redux/slices/propertySlice";
 import { useDispatch, useSelector } from "react-redux";
 
@@ -10,14 +9,8 @@ export const Properties = () => {
   const { properties, loading, error } = property;
 
   useEffect(() => {
-    dispatch(getProperties()); // Dispatch the action to fetch properties
+    dispatch(getProperties()); 
   }, [dispatch]);
-
-  // const properties = [
-  //   { id: 1, name: "Luxury Villa", location: "New York", type: "Villa", image: img },
-  //   { id: 2, name: "Modern Apartment", location: "Los Angeles", type: "Apartment", image: img },
-  //   { id: 3, name: "Beach House", location: "Miami", type: "House", image: img },
-  // ];
   return (
     <div className="flex flex-col items-center justify-center min-h-screen bg-gray-100">
       <h1 className="text-2xl font-bold mb-4">Property Details</h1>

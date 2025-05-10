@@ -23,12 +23,25 @@ import { GoogleOAuthProvider } from "@react-oauth/google";
 import  ProtectedRoute  from "./Protected/ProtectedRoute";
 import AddProperty from "./Admin-Page/AddProperty";
 import VerifyUser from "./VerifyUser";
-function App() {  
-  const CLIENT_ID = "160483331532-ehfiher4egcksebq5g7lr921nq3g7n28.apps.googleusercontent.com"
+import {getUserDetail } from "./redux/slices/authUtlis"; 
+import React, { useEffect, useState } from "react";
+
+function App() {
+  const CLIENT_ID = "160483331532-ehfiher4egcksebq5g7lr921nq3g7n28.apps.googleusercontent.com";
+  const [userRole, setUserRole] = useState(null);
+
+  useEffect(() => {
+    const user = getUserDetail();
+    if (user && user.role) {
+      setUserRole(user.role);
+    }
+  }, []);
+
   return (
     <Router>
       <div>
-        <CustomNavbar />
+        {/* Show navbar only if user is not an admin */}
+        {userRole !== "admin" && <CustomNavbar />}
 
         <Routes>
           <Route
@@ -50,7 +63,7 @@ function App() {
           <Route
             path="/login"
             element={
-              <GoogleOAuthProvider clientId = {CLIENT_ID}>
+              <GoogleOAuthProvider clientId={CLIENT_ID}>
                 <LoginPage />
               </GoogleOAuthProvider>
             }
@@ -58,18 +71,14 @@ function App() {
           <Route path="/signup" element={<SignupPage />} />
           <Route path="/forgetPassword" element={<ForgotPassword />} />
           <Route path="/verify" element={<VerifyUser />} />
-
-          {/* Property Pages */}
           <Route path="/propertyCard" element={<PropertyCard />} />
           <Route path="/commercial" element={<CommercialPage />} />
           <Route path="/premium" element={<PremiumPage />} />
           <Route path="/luxury" element={<LuxuryPage />} />
           <Route path="/propertyDetails/:id" element={<PropertyDetails />} />
           <Route path="/booking" element={<BookingPage />} />
-          <Route path="/contact" element={<CoustomContact/>} />
+          <Route path="/contact" element={<CoustomContact />} />
           <Route path="/dashboard" element={<ProtectedRoute><Dashboard /></ProtectedRoute>} />
-
-          {/* <Route path="/add-property" element={<AddProperty/>} /> */}
           <Route
             path="/addProperty"
             element={
@@ -79,6 +88,7 @@ function App() {
             }
           />
         </Routes>
+        
         <CoustomFooter />
       </div>
     </Router>

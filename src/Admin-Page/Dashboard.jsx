@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { FaHome, FaChartBar, FaUser, FaBars, FaTimes, FaSignOutAlt } from "react-icons/fa";
-import { Link } from "react-router-dom";
+import { Link ,useNavigate } from "react-router-dom";
 import {clearAuthSession } from "../redux/slices/authUtlis"; 
 import { useDispatch, useSelector } from "react-redux";
 import { Properties } from "./Properties";
@@ -11,6 +11,7 @@ export default function Dashboard() {
   const dispatch = useDispatch();
   const { users, error ,loading} = useSelector((state) => state.auth);
 //console.log(users);
+const navigate = useNavigate();
 
   // useEffect(() => {
   //   dispatch(getUsers({ page: 1, limit: 10 }));
