@@ -101,15 +101,10 @@ export const googleAuth = createAsyncThunk(
 // ========== GET USERS API ==========
 export const getUsers = createAsyncThunk(
   "auth/getUsers",
-  async ({ page = 1, limit = 10 }, { rejectWithValue, getState }) => {
+  async ({ page, limit }, { rejectWithValue }) => {
     try {
-      const { token } = getState().auth;
-      const response = await axios.get(
-        `${BASE_URL}/api/auth/users?page=${page}&limit=${limit}`,
+       const response = await axios.get(`${BASE_URL}/api/auth/users?page=${page}&limit=${limit}`,
         {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
           withCredentials: true,
         }
       );
@@ -129,6 +124,10 @@ const authSlice = createSlice({
     loading: false,
     error: null,
     users: [],
+    totalUsers: 0,
+    totalPages: 0,
+    hasNextPage: false,
+    hasPrevPage: false,
   },
   reducers: {
     logout: (state) => {
@@ -239,6 +238,10 @@ const authSlice = createSlice({
       .addCase(getUsers.fulfilled, (state, action) => {
         state.loading = false;
         state.users = action.payload.data;
+        state.totalUsers = action.payload.totalUsers;
+        state.totalPages = action.payload.totalPages;
+        state.hasNextPage = action.payload.hasNextPage;
+        state.hasPrevPage = action.payload.hasPrevPage;
       })
       .addCase(getUsers.rejected, (state, action) => {
         state.loading = false;

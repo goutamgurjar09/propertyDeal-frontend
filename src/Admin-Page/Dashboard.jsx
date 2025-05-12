@@ -1,24 +1,15 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { FaHome, FaChartBar, FaUser, FaBars, FaTimes, FaSignOutAlt } from "react-icons/fa";
 import { Link ,useNavigate } from "react-router-dom";
 import {clearAuthSession } from "../redux/slices/authUtlis"; 
-import { useDispatch, useSelector } from "react-redux";
 import { Properties } from "./Properties";
-
+import UserManagement from "./UserManagement";
 
 export default function Dashboard() {
   const [sidebarOpen, setSidebarOpen] = useState(true);
-  const dispatch = useDispatch();
-  const { users, error ,loading} = useSelector((state) => state.auth);
-//console.log(users);
-const navigate = useNavigate();
+  const navigate = useNavigate();
 
-  // useEffect(() => {
-  //   dispatch(getUsers({ page: 1, limit: 10 }));
-  // }, [dispatch]);
 
-  // if (loading) return <p>Loading users...</p>;
-  // if (error) return <p>Error: {error.message}</p>;
   const handleLogout = () => {
       clearAuthSession();
       navigate("/login");
@@ -26,7 +17,7 @@ const navigate = useNavigate();
   return (
     <div className="flex min-h-screen bg-white text-gray-900">
       {/* Sidebar */}
-      <div className={`fixed z-50 w-64 h-full bg-gray-200 p-4 transition-transform ${sidebarOpen ? "translate-x-0" : "-translate-x-64"}`}>
+      {/* <div className={`fixed z-50 w-64 h-full bg-gray-200 p-4 transition-transform ${sidebarOpen ? "translate-x-0" : "-translate-x-64"}`}>
         <div className="flex justify-between items-center mb-4">
           <span className="text-xl font-bold">Admin Dashboard</span>
           <button onClick={() => setSidebarOpen(!sidebarOpen)} className="text-xl text-gray-900 cursor-pointer">
@@ -52,7 +43,7 @@ const navigate = useNavigate();
             </button>
           </Link>
         </nav>
-      </div>
+      </div> */}
 
       {/* Main Content */}
       <div className={`flex-1 p-6 transition-all bg-white ml-${sidebarOpen ? "64" : "0"}`}>
@@ -84,77 +75,13 @@ const navigate = useNavigate();
                   Add Property
                 </button>
               </Link>
-            </div>
-          <h2 className="text-xl font-bold mb-4">Property Management</h2>
-         
+            </div>         
           <Properties/>
         </div>
 
         {/* User Management */}
-        <div className="mt-6 bg-gray-100 p-4 rounded-lg shadow-md">
-          <h2 className="text-xl font-bold mb-4">User Management</h2>
-          <div className="container mx-auto p-4">
-            <div className="overflow-x-auto">
-              <table className="min-w-full bg-white border border-gray-200 rounded-lg">
-                <thead>
-                  <tr className="bg-gray-200">
-                    <th className="py-2 px-4 border">Name</th>
-                    <th className="py-2 px-4 border">Email</th>
-                    <th className="py-2 px-4 border">Role</th>
-                    <th className="py-2 px-4 border">Mobile</th>
-                    <th className="py-2 px-4 border">Actions</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {users?.map((user,index) => (
-                    <tr key={index} className="border-b text-center">
-                      <td className="py-2 px-4 border">{user.fullname}</td>
-                      <td className="py-2 px-4 border">{user.email}</td>
-                      <td className="py-2 px-4 border">{user.role}</td>
-                      <td className="py-2 px-4 border">{user.mobile}</td>
-                      <td className="py-2 px-4 border">
-                        <button
-                          className="bg-blue-500 text-white px-3 py-1 rounded mr-2 hover:bg-blue-700"
-                        // onClick={() => handleEdit(user.id)}
-                        >
-                          Edit
-                        </button>
-                        <button
-                          className="bg-red-500 text-white px-3 py-1 rounded hover:bg-red-700"
-                        // onClick={() => handleDelete(user.id)}
-                        >
-                          Delete
-                        </button>
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-              <div className="flex justify-between items-center px-4 py-3">
-                <div className="text-sm text-slate-500">
-                  Showing <b>1-5</b> of 45
-                </div>
-                <div className="flex space-x-1">
-                  <button className="px-3 py-1 min-w-9 min-h-9 text-sm font-normal text-slate-500 bg-white border border-slate-200 rounded hover:bg-slate-50 hover:border-slate-400 transition duration-200 ease">
-                    Prev
-                  </button>
-                  <button className="px-3 py-1 min-w-9 min-h-9 text-sm font-normal text-white bg-slate-800 border border-slate-800 rounded hover:bg-slate-600 hover:border-slate-600 transition duration-200 ease">
-                    1
-                  </button>
-                  <button className="px-3 py-1 min-w-9 min-h-9 text-sm font-normal text-slate-500 bg-white border border-slate-200 rounded hover:bg-slate-50 hover:border-slate-400 transition duration-200 ease">
-                    2
-                  </button>
-                  <button className="px-3 py-1 min-w-9 min-h-9 text-sm font-normal text-slate-500 bg-white border border-slate-200 rounded hover:bg-slate-50 hover:border-slate-400 transition duration-200 ease">
-                    3
-                  </button>
-                  <button className="px-3 py-1 min-w-9 min-h-9 text-sm font-normal text-slate-500 bg-white border border-slate-200 rounded hover:bg-slate-50 hover:border-slate-400 transition duration-200 ease">
-                    Next
-                  </button>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
+         <UserManagement/>
+       
       </div>
     </div>
   );

@@ -24,7 +24,8 @@ import  ProtectedRoute  from "./Protected/ProtectedRoute";
 import AddProperty from "./Admin-Page/AddProperty";
 import VerifyUser from "./VerifyUser";
 import {getUserDetail } from "./redux/slices/authUtlis"; 
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
+import EditProperty from "./Admin-Page/EditProperty";
 
 function App() {
   const CLIENT_ID = "160483331532-ehfiher4egcksebq5g7lr921nq3g7n28.apps.googleusercontent.com";
@@ -87,8 +88,9 @@ function App() {
               </ProtectedRoute>
             }
           />
-        </Routes>
-        
+           <Route path="/property/edit/:id" element={<ProtectedRoute> <EditProperty/> </ProtectedRoute>}  />
+         </Routes>
+
         <CoustomFooter />
       </div>
     </Router>

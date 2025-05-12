@@ -155,98 +155,10 @@ const PropertyDetails = () => {
                 {/* Map could be an interactive component */}
                 <p>Map: <Link to="/map">View on Map</Link></p>
               </div>
-
-
-
-
             </div>
           </div>
         </div>
       </div>
-
-
-      {/* =================== */}
-      <div className="m-20 hover:shadow-2xl rounded-lg font-semibold hover:opacity-90 transition-all transform hover:-translate-y-2">
-        <div className="w-full mx-auto p-8 bg-white rounded-xl shadow-lg border border-gray-400 font-semibold hover:opacity-90 transition-all transform hover:-translate-y-2">
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-8">
-            {/* Left Section */}
-            <div className="space-y-8">
-              {/* Property Owner/Agent Information */}
-              <div className="bg-gray-100 p-6 rounded-lg shadow-md">
-                <h5 className="text-xl font-semibold mb-4">Property Owner/Agent Information</h5>
-                <ul className="text-gray-700">
-                  <li><strong>Agent/Seller Name:</strong> John Doe</li>
-                  <li><strong>Contact Number:</strong> (123) 456-7890</li>
-                  <li><strong>Email Address:</strong> john.doe@example.com</li>
-                  <li><strong>Agency Name:</strong> XYZ Realty</li>
-                  <li><strong>Location:</strong> 123 Main St, City</li>
-                  <li><strong>Years of Experience:</strong> 10 Years</li>
-                </ul>
-              </div>
-
-              {/* Contact & Inquiry Options */}
-              <div className="bg-gray-100 p-6 rounded-lg shadow-md">
-                <h5 className="text-xl font-semibold mb-4">Contact & Inquiry Options</h5>
-                <ul className="text-gray-700">
-                  <li><strong>Schedule a Visit:</strong> Use calendar for booking appointments</li>
-                  <li><strong>Send Inquiry Form:</strong> Provide your Name, Email, Message</li>
-                  <li><strong>Call / WhatsApp Now:</strong> Instant connection via phone</li>
-                  <li><strong>Save Property to Favorites:</strong> Save for logged-in users</li>
-                </ul>
-              </div>
-
-              {/* Property Reviews & Ratings */}
-              <div className="bg-gray-100 p-6 rounded-lg shadow-md">
-                <h5 className="text-xl font-semibold mb-4">Property Reviews & Ratings</h5>
-                <ul className="text-gray-700">
-                  <li><strong>User Reviews & Ratings:</strong> See feedback from buyers</li>
-                  <li><strong>Add Your Review:</strong> Share your experience if you’ve purchased or viewed</li>
-                </ul>
-              </div>
-            </div>
-
-            {/* Right Section */}
-            <div className="space-y-8">
-              {/* Similar Properties */}
-              <div className="bg-gray-100 p-6 rounded-lg shadow-md">
-                <h5 className="text-xl font-semibold mb-4">Similar Properties</h5>
-                <ul className="text-gray-700">
-                  <li><a href="/similar-properties" className="text-blue-600">View Similar Properties</a></li>
-                  <li><a href="/recently-viewed" className="text-blue-600">View Recently Viewed</a></li>
-                </ul>
-              </div>
-
-              {/* Map Integration */}
-              <div className="bg-gray-100 p-6 rounded-lg shadow-md">
-                <h5 className="text-xl font-semibold mb-4">Property Location</h5>
-                <div className="relative">
-                  <img
-                    className="w-full h-64 object-cover rounded-lg"
-                    src="https://source.unsplash.com/random/800x600/?map"
-                    alt="Map Location"
-                  />
-                  <div className="absolute top-4 left-4 bg-black text-white p-2 rounded-md">
-                    <strong>123 Main St, City</strong>
-                  </div>
-                </div>
-                <div className="mt-4 text-gray-700">
-                  <a
-                    href="https://www.google.com/maps/dir/?q=1600+Amphitheatre+Parkway,+Mountain+View,+CA"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="text-blue-600"
-                  >
-                    Get Directions
-                  </a>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-
-
-      {/* ============= */}
     </div>
   );
 };

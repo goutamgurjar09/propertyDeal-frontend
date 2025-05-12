@@ -21,16 +21,31 @@ export const createProperty = createAsyncThunk(
 
 // Get All Properties
 export const getProperties = createAsyncThunk(
-  "property/getAll",
-  async (_, { rejectWithValue }) => {
+  "property/getProperties",
+  async ({ page = 1, limit = 10, propertyType = "" }, { rejectWithValue }) => {
     try {
-      const response = await axios.get(`${API_URL}/properties/get-properties`, { withCredentials: true });
+      const params = new URLSearchParams();
+      params.append("page", page);
+      params.append("limit", limit);
+
+      // Only append propertyType if it exists and is non-empty
+      if (propertyType.trim()) {
+        params.append("propertyType", propertyType);
+      }
+
+      const response = await axios.get(
+        `${API_URL}/properties/get-properties?${params.toString()}`,
+        { withCredentials: true }
+      );
+
       return response.data;
     } catch (error) {
-      return rejectWithValue(error.response.data);
+      return rejectWithValue(error.response?.data || "Failed to fetch properties");
     }
   }
 );
+
+
 
 // Get Property by ID
 export const getPropertyById = createAsyncThunk(
@@ -66,8 +81,8 @@ export const deleteProperty = createAsyncThunk(
   "property/delete",
   async (id, { rejectWithValue }) => {
     try {
-      const response = await axios.delete(`${API_URL}/properties/delete-property/${id}`, { withCredentials: true });
-      return response.data;
+      await axios.delete(`${API_URL}/properties/delete-property/${id}`, { withCredentials: true });
+      return id;
     } catch (error) {
       return rejectWithValue(error.response.data);
     }
@@ -82,6 +97,10 @@ const propertySlice = createSlice({
     property: null,
     loading: false,
     error: null,
+    totalProperties: 0,
+    totalPages: 0,
+    hasNextPage: false,
+    hasPrevPage: false,
   },
   reducers: {
     resetPropertyState: (state) => {
@@ -98,7 +117,7 @@ const propertySlice = createSlice({
       })
       .addCase(createProperty.fulfilled, (state, action) => {
         state.loading = false;
-        state.properties.push(action.payload); // updated here
+        state.properties.push(action.payload); 
       })
       .addCase(createProperty.rejected, (state, action) => {
         state.loading = false;
@@ -110,10 +129,15 @@ const propertySlice = createSlice({
         state.loading = true;
         state.error = null;
       })
-      .addCase(getProperties.fulfilled, (state, action) => {
+     .addCase(getProperties.fulfilled, (state, action) => {
         state.loading = false;
-        state.properties = action.payload;
+        state.properties = action.payload.data;
+        state.totalProperties = action.payload.totalUsers;
+        state.totalPages = action.payload.totalPages;
+        state.hasNextPage = action.payload.hasNextPage;
+        state.hasPrevPage = action.payload.hasPrevPage;
       })
+
       .addCase(getProperties.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload;
@@ -126,7 +150,7 @@ const propertySlice = createSlice({
       })
       .addCase(getPropertyById.fulfilled, (state, action) => {
         state.loading = false;
-        state.property = action.payload;
+        state.property = action.payload.data;
       })
       .addCase(getPropertyById.rejected, (state, action) => {
         state.loading = false;
@@ -138,14 +162,16 @@ const propertySlice = createSlice({
         state.loading = true;
         state.error = null;
       })
-      .addCase(updateProperty.fulfilled, (state, action) => {
+     .addCase(updateProperty.fulfilled, (state, action) => {
         state.loading = false;
-        const index = state.properties.findIndex(p => p._id === action.payload._id);
+        const updated = action.payload.data;
+        const index = state.properties.findIndex(p => p._id === updated._id);
         if (index !== -1) {
-          state.properties[index] = action.payload;
+          state.properties[index] = updated;
         }
-        state.property = action.payload;
+        state.property = updated;
       })
+
       .addCase(updateProperty.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload;
@@ -158,8 +184,11 @@ const propertySlice = createSlice({
       })
       .addCase(deleteProperty.fulfilled, (state, action) => {
         state.loading = false;
-        state.properties = state.properties.filter((prop) => prop._id !== action.payload._id); // fixed here
+        state.properties = state.properties.filter(
+          (prop) => prop._id !== action.payload
+        );
       })
+    
       .addCase(deleteProperty.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload;
