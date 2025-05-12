@@ -73,7 +73,8 @@ export const Properties = () => {
             className="relative bg-white rounded-2xl shadow-md hover:shadow-xl transition-shadow p-4 flex flex-col justify-between h-full"
           >
             {/* Card Content */}
-            <div className="flex-grow">
+            <div className="flex-grow" onClick={() => navigate(`/propertyDetails/${property._id}`)}>
+              {/* Property Image */}
               <div className="flex justify-center items-center mb-4">
                 <img
                   src={
