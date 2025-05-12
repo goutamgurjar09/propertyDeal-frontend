@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { getUsers } from "../redux/slices/authSlice";
 import { FaEdit, FaTrash } from "react-icons/fa";
@@ -25,13 +25,14 @@ const UserManagement = () => {
   const start = (page - 1) * limit + 1;
   const end = Math.min(page * limit, totalUsers);
 
-  if (loading) return <p>Loading users...</p>;
   if (error) return <p>Error: {error.message}</p>;
 
   return (
-    <div className="mt-6 bg-gray-100 p-4 rounded-lg shadow-md">
-      <h2 className="text-2xl text-center font-bold mb-6 text-slate-700">User Management</h2>
-
+    <div className="mt-6 mb-6 bg-gray-100 p-4 shadow-md w-[96%] ml-4">
+      <h2 className="text-2xl text-center font-bold mb-6 text-slate-700">
+        User Management
+      </h2>
+      {loading && <p className="text-center text-slate-500">Loading...</p>}
       <div className="overflow-x-auto">
         <table className="min-w-full bg-white border border-gray-300 rounded-lg shadow-sm">
           <thead className="bg-slate-200 text-slate-600 text-sm">
@@ -46,7 +47,10 @@ const UserManagement = () => {
           <tbody className="text-slate-700">
             {users?.length > 0 ? (
               users.map((user) => (
-                <tr key={user._id} className="border-b hover:bg-gray-50 transition">
+                <tr
+                  key={user._id}
+                  className="border-b hover:bg-gray-50 transition"
+                >
                   <td className="py-2 px-4 border">{user.fullname}</td>
                   <td className="py-2 px-4 border">{user.email}</td>
                   <td className="py-2 px-4 border capitalize">{user.role}</td>
@@ -71,7 +75,10 @@ const UserManagement = () => {
               ))
             ) : (
               <tr>
-                <td colSpan="5" className="py-4 px-4 text-center text-slate-400">
+                <td
+                  colSpan="5"
+                  className="py-4 px-4 text-center text-slate-400"
+                >
                   No users found.
                 </td>
               </tr>
@@ -100,8 +107,8 @@ const UserManagement = () => {
               onClick={() => setPage(num)}
               className={`px-3 py-1 text-sm rounded border ${
                 num === page
-                  ? 'bg-slate-800 text-white border-slate-800 hover:bg-slate-700'
-                  : 'text-slate-600 bg-white border-slate-300 hover:bg-slate-100'
+                  ? "bg-slate-800 text-white border-slate-800 hover:bg-slate-700"
+                  : "text-slate-600 bg-white border-slate-300 hover:bg-slate-100"
               }`}
             >
               {num}
