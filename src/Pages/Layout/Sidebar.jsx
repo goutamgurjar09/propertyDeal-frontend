@@ -3,7 +3,12 @@ import { FaHome, FaUser, FaChartBar, FaSignOutAlt } from "react-icons/fa";
 import { RxCross2 } from "react-icons/rx";
 import { Link, useLocation } from "react-router-dom";
 
-const Sidebar = ({ sidebarOpen, setSidebarOpen, handleLogout }) => {
+const Sidebar = ({ sidebarOpen, setSidebarOpen }) => {
+  const handleLogout = () => {
+    clearAuthSession();
+    navigate("/login");
+  };
+
   const location = useLocation(); // Get the current path
 
   const isActive = (path) => location.pathname === path; // Check if the path matches the current route

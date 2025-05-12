@@ -2,21 +2,14 @@ import { useEffect, useState } from "react";
 import { FaBars } from "react-icons/fa";
 import { Link, useNavigate } from "react-router-dom";
 import { clearAuthSession } from "../redux/slices/authUtlis";
-import { useDispatch, useSelector } from "react-redux";
 import { Properties } from "./Properties";
-import Sidebar from "../Pages/Sidebar";
+import Sidebar from "../Pages/Layout/Sidebar";
 import UserManagement from "./UserManagement";
+import Header from "../Pages/Layout/Header";
 export default function Dashboard() {
   const [sidebarOpen, setSidebarOpen] = useState(true);
-  const dispatch = useDispatch();
-  const { users, error, loading } = useSelector((state) => state.auth);
-  //console.log(users);
   const navigate = useNavigate();
 
-  const handleLogout = () => {
-    clearAuthSession();
-    navigate("/login");
-  };
   return (
     <div className="flex min-h-screen overflow-hidden">
       <div
@@ -27,7 +20,6 @@ export default function Dashboard() {
         <Sidebar
           sidebarOpen={sidebarOpen}
           setSidebarOpen={setSidebarOpen}
-          handleLogout={handleLogout}
         />
       </div>
 
@@ -38,15 +30,7 @@ export default function Dashboard() {
         } bg-white`}
       >
         {/* Header */}
-        <header className="flex items-center justify-between p-4 bg-white shadow-md">
-          <button
-            onClick={() => setSidebarOpen(!sidebarOpen)}
-            className="text-xl text-gray-900 cursor-pointer"
-          >
-            <FaBars />
-          </button>
-          <div className="text-lg font-bold">Welcome, Admin</div>
-        </header>
+        <Header sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen} />
 
         {/* Dashboard Overview */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mt-6 h-32 p-6">
@@ -66,21 +50,6 @@ export default function Dashboard() {
             </div>
           ))}
         </div>
-
-        {/* Property Management */}
-        <div className="p-6">
-          <div className="flex justify-end mb-4">
-            <Link to="/addProperty">
-              <button className="flex p-3 bg-blue-500 rounded hover:bg-blue-400 text-white">
-                Add Property
-              </button>
-            </Link>
-          </div>
-          <Properties />
-        </div>
-
-        {/* User Management */}
-        <UserManagement />
       </div>
     </div>
   );

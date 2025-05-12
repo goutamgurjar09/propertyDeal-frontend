@@ -11,10 +11,14 @@ export const signupUser = createAsyncThunk(
   "auth/signup",
   async (userData, { rejectWithValue }) => {
     try {
-      const response = await axios.post(`${BASE_URL}/api/auth/signup`, userData, {
-        withCredentials: true,
-        headers: { "Content-Type": "multipart/form-data" },
-      });
+      const response = await axios.post(
+        `${BASE_URL}/api/auth/signup`,
+        userData,
+        {
+          withCredentials: true,
+          headers: { "Content-Type": "multipart/form-data" },
+        }
+      );
       return response.data;
     } catch (error) {
       return rejectWithValue(error.response?.data || "Signup failed");
@@ -27,9 +31,13 @@ export const generateOtp = createAsyncThunk(
   "auth/generateOtp",
   async (userData, { rejectWithValue }) => {
     try {
-      const response = await axios.post(`${BASE_URL}/api/auth/generate-otp`, userData, {
-        withCredentials: true,
-      });
+      const response = await axios.post(
+        `${BASE_URL}/api/auth/generate-otp`,
+        userData,
+        {
+          withCredentials: true,
+        }
+      );
       return response.data;
     } catch (error) {
       return rejectWithValue(error.response?.data || "OTP generation failed");
@@ -42,9 +50,13 @@ export const verifyUser = createAsyncThunk(
   "auth/verify",
   async (userData, { rejectWithValue }) => {
     try {
-      const response = await axios.post(`${BASE_URL}/api/auth/verify-otp`, userData, {
-        withCredentials: true,
-      });
+      const response = await axios.post(
+        `${BASE_URL}/api/auth/verify-otp`,
+        userData,
+        {
+          withCredentials: true,
+        }
+      );
       console.log(response, "response");
       return response.data;
     } catch (error) {
@@ -58,9 +70,13 @@ export const loginUser = createAsyncThunk(
   "auth/login",
   async (userData, { rejectWithValue }) => {
     try {
-      const response = await axios.post(`${BASE_URL}/api/auth/login`, userData, {
-        withCredentials: true,
-      });
+      const response = await axios.post(
+        `${BASE_URL}/api/auth/login`,
+        userData,
+        {
+          withCredentials: true,
+        }
+      );
       return response.data;
     } catch (error) {
       return rejectWithValue(error.response?.data || "Login failed");
@@ -73,9 +89,13 @@ export const resetPassword = createAsyncThunk(
   "auth/resetPassword",
   async (userData, { rejectWithValue }) => {
     try {
-      const response = await axios.post(`${BASE_URL}/api/auth/reset-password`, userData, {
-        withCredentials: true,
-      });
+      const response = await axios.post(
+        `${BASE_URL}/api/auth/reset-password`,
+        userData,
+        {
+          withCredentials: true,
+        }
+      );
       return response.data;
     } catch (error) {
       return rejectWithValue(error.response?.data || "Reset failed");
@@ -88,9 +108,13 @@ export const googleAuth = createAsyncThunk(
   "auth/loginGoogle",
   async (userData, { rejectWithValue }) => {
     try {
-      const response = await axios.post(`${BASE_URL}/api/auth/google-auth`, userData, {
-        withCredentials: true,
-      });
+      const response = await axios.post(
+        `${BASE_URL}/api/auth/google-auth`,
+        userData,
+        {
+          withCredentials: true,
+        }
+      );
       return response.data;
     } catch (error) {
       return rejectWithValue(error.response?.data || "Google auth failed");
@@ -103,7 +127,8 @@ export const getUsers = createAsyncThunk(
   "auth/getUsers",
   async ({ page, limit }, { rejectWithValue }) => {
     try {
-       const response = await axios.get(`${BASE_URL}/api/auth/users?page=${page}&limit=${limit}`,
+      const response = await axios.get(
+        `${BASE_URL}/api/auth/users?page=${page}&limit=${limit}`,
         {
           withCredentials: true,
         }
@@ -111,6 +136,24 @@ export const getUsers = createAsyncThunk(
       return response.data;
     } catch (error) {
       return rejectWithValue(error.response?.data || "Fetching users failed");
+    }
+  }
+);
+
+// Delete User
+export const deleteUser = createAsyncThunk(
+  "auth/deleteUser",
+  async (userId, { rejectWithValue }) => {
+    try {
+      const response = await axios.delete(
+        `${BASE_URL}/api/auth/users/${userId}`,
+        {
+          withCredentials: true,
+        }
+      );
+      return response.data;
+    } catch (error) {
+      return rejectWithValue(error.response?.data || "User deletion failed");
     }
   }
 );
@@ -134,7 +177,7 @@ const authSlice = createSlice({
       state.user = null;
       state.token = null;
       state.error = null;
-      clearAuthSession(); 
+      clearAuthSession();
     },
   },
   extraReducers: (builder) => {
@@ -149,7 +192,6 @@ const authSlice = createSlice({
         state.user = action.payload.data;
         state.token = action.payload.data?.accessToken;
         setAuthSession(action.payload.data);
-
       })
       .addCase(loginUser.rejected, (state, action) => {
         state.loading = false;
@@ -199,7 +241,6 @@ const authSlice = createSlice({
         state.error = action.payload;
       })
 
-
       // Reset Password
       .addCase(resetPassword.pending, (state) => {
         state.loading = true;
@@ -244,6 +285,22 @@ const authSlice = createSlice({
         state.hasPrevPage = action.payload.hasPrevPage;
       })
       .addCase(getUsers.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload;
+      })
+
+      // Delete User
+      .addCase(deleteUser.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(deleteUser.fulfilled, (state, action) => {
+        state.loading = false;
+        state.users = state.users.filter(
+          (user) => user._id !== action.meta.arg
+        );
+      })
+      .addCase(deleteUser.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload;
       });

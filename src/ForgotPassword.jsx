@@ -177,7 +177,7 @@ const ForgotPassword = () => {
                   value={otp_number}
                   onChange={(e) => setOtpNumber(e.target.value)}
                   className="w-full bg-transparent p-2 outline-none placeholder-gray-500 text-gray-900"
-                />
+                  />
               </div>
             )}
 
