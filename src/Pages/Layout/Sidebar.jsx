@@ -1,9 +1,11 @@
 import React from "react";
-import { FaHome, FaUser, FaChartBar, FaSignOutAlt } from "react-icons/fa";
+import { FaHome, FaUser, FaChartBar, FaSignOutAlt, FaCalendarAlt } from "react-icons/fa"; // Added FaCalendarAlt
 import { RxCross2 } from "react-icons/rx";
-import { Link, useLocation } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
+import { clearAuthSession } from "../../redux/slices/authUtlis";
 
 const Sidebar = ({ sidebarOpen, setSidebarOpen }) => {
+  const navigate = useNavigate();
   const handleLogout = () => {
     clearAuthSession();
     navigate("/login");
@@ -27,7 +29,7 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }) => {
       <nav className="space-y-2 flex flex-col gap-1">
         <Link to="/dashboard">
           <button
-            className={`flex items-center gap-2 p-3 w-full rounded text-left ${
+            className={`flex items-center gap-2 p-3 w-full rounded cursor-pointer text-left ${
               isActive("/dashboard")
                 ? "bg-blue-500 text-white"
                 : "bg-gray-200 hover:bg-gray-300"
@@ -38,7 +40,7 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }) => {
         </Link>
         <Link to="/users">
           <button
-            className={`flex items-center gap-2 p-3 w-full rounded text-left ${
+            className={`flex items-center gap-2 p-3 w-full cursor-pointer rounded text-left ${
               isActive("/users")
                 ? "bg-blue-500 text-white"
                 : "bg-gray-200 hover:bg-gray-300"
@@ -49,7 +51,7 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }) => {
         </Link>
         <Link to="/properties">
           <button
-            className={`flex items-center gap-2 p-3 w-full rounded text-left ${
+            className={`flex items-center cursor-pointer gap-2 p-3 w-full rounded text-left ${
               isActive("/properties")
                 ? "bg-blue-500 text-white"
                 : "bg-gray-200 hover:bg-gray-300"
@@ -58,9 +60,20 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }) => {
             <FaChartBar /> Property Management
           </button>
         </Link>
+        <Link to="/bookings">
+          <button
+            className={`flex items-center cursor-pointer gap-2 p-3 w-full rounded text-left ${
+              isActive("/bookings")
+                ? "bg-blue-500 text-white"
+                : "bg-gray-200 hover:bg-gray-300"
+            }`}
+          >
+            <FaCalendarAlt /> Bookings {/* Updated icon */}
+          </button>
+        </Link>
         <button
           onClick={handleLogout}
-          className="flex items-center gap-2 p-3 w-full bg-gray-200 rounded hover:bg-gray-300 text-left"
+          className="flex items-center cursor-pointer gap-2 p-3 w-full bg-gray-200 rounded hover:bg-gray-300 text-left"
         >
           <FaSignOutAlt /> Logout
         </button>

@@ -4,21 +4,26 @@ const Modal = ({ isOpen, onClose, title, children }) => {
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
-      <div className="bg-white rounded-2xl shadow-xl max-w-md w-full p-6 relative">
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-opacity-50 backdrop-blur-xs">
+      {/* Modal Box */}
+      <div className="relative w-[40%] max-w-4xl h-[60%] bg-gradient-to-br from-white to-blue-50 rounded-2xl shadow-2xl overflow-y-auto p-6 transition-all duration-300">
         {/* Close Button */}
         <button
           onClick={onClose}
-          className="absolute top-3 right-3 text-gray-400 hover:text-gray-600 text-2xl"
+          className="absolute top-4 right-4 text-gray-500 hover:text-black text-3xl font-bold"
         >
           &times;
         </button>
 
-        {/* Modal Title */}
-        {title && <h2 className="text-xl font-semibold mb-4">{title}</h2>}
+        {/* Title */}
+        {title && (
+          <h2 className="text-2xl font-bold mb-4 text-center text-gray-800 border-b pb-2">
+            {title}
+          </h2>
+        )}
 
-        {/* Modal Content */}
-        <div>{children}</div>
+        {/* Content */}
+        <div className="text-gray-700">{children}</div>
       </div>
     </div>
   );

@@ -20,25 +20,35 @@ import Cards from "./Pages/Cards";
 import AboutUs from "./Pages/AboutUs";
 import TrendingProperty from "./Pages/TrendingProperty";
 import { GoogleOAuthProvider } from "@react-oauth/google";
-import  ProtectedRoute  from "./Protected/ProtectedRoute";
+import ProtectedRoute from "./Protected/ProtectedRoute";
 import AddProperty from "./Admin-Page/AddProperty";
 import VerifyUser from "./VerifyUser";
-import {getUserDetail } from "./redux/slices/authUtlis"; 
+import { getUserDetail } from "./redux/slices/authUtlis";
 import { useEffect, useState } from "react";
 import EditProperty from "./Admin-Page/EditProperty";
 import UserManagement from "./Admin-Page/UserManagement";
 import { Properties } from "./Admin-Page/Properties";
+import Booking from "./Admin-Page/Bookings";
 
 function App() {
-  const CLIENT_ID = "160483331532-ehfiher4egcksebq5g7lr921nq3g7n28.apps.googleusercontent.com";
+  const CLIENT_ID =
+    "160483331532-ehfiher4egcksebq5g7lr921nq3g7n28.apps.googleusercontent.com";
   const [userRole, setUserRole] = useState(null);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const user = getUserDetail();
     if (user && user.role) {
       setUserRole(user.role);
+    } else {
+      setUserRole(null);
     }
+    setLoading(false);
   }, []);
+
+  if (loading) {
+    return <div className="text-center mt-10">Loading...</div>;
+  }
 
   return (
     <Router>
@@ -81,7 +91,14 @@ function App() {
           <Route path="/propertyDetails/:id" element={<PropertyDetails />} />
           <Route path="/booking" element={<BookingPage />} />
           <Route path="/contact" element={<CoustomContact />} />
-          <Route path="/dashboard" element={<ProtectedRoute><Dashboard /></ProtectedRoute>} />
+          <Route
+            path="/dashboard"
+            element={
+              <ProtectedRoute>
+                <Dashboard />
+              </ProtectedRoute>
+            }
+          />
           <Route
             path="/addProperty"
             element={
@@ -90,10 +107,39 @@ function App() {
               </ProtectedRoute>
             }
           />
-           <Route path="/property/edit/:id" element={<ProtectedRoute> <EditProperty/> </ProtectedRoute>}  />
-           <Route path="/users" element={<ProtectedRoute> <UserManagement/> </ProtectedRoute>}  />
-            <Route path="/properties" element={<ProtectedRoute> <Properties/> </ProtectedRoute>}  />
-         </Routes>
+          <Route
+            path="/property/edit/:id"
+            element={
+              <ProtectedRoute>
+                <EditProperty />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/users"
+            element={
+              <ProtectedRoute>
+                <UserManagement />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/properties"
+            element={
+              <ProtectedRoute>
+                <Properties />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/bookings"
+            element={
+              <ProtectedRoute>
+                <Booking />
+              </ProtectedRoute>
+            }
+          />
+        </Routes>
 
         <CoustomFooter />
       </div>

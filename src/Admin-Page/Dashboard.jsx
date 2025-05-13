@@ -1,15 +1,12 @@
-import { useEffect, useState } from "react";
-import { FaBars } from "react-icons/fa";
-import { Link, useNavigate } from "react-router-dom";
-import { clearAuthSession } from "../redux/slices/authUtlis";
-import { Properties } from "./Properties";
+import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import Sidebar from "../Pages/Layout/Sidebar";
-import UserManagement from "./UserManagement";
 import Header from "../Pages/Layout/Header";
+import { useSelector } from "react-redux";
 export default function Dashboard() {
   const [sidebarOpen, setSidebarOpen] = useState(true);
-  const navigate = useNavigate();
-
+  const { totalProperties } = useSelector((state) => state.property);
+  const { totalUsers } = useSelector((state) => state.auth);
   return (
     <div className="flex min-h-screen overflow-hidden">
       <div
@@ -17,10 +14,7 @@ export default function Dashboard() {
           sidebarOpen ? "w-70" : "w-0"
         } bg-gray-100 shadow-2xl overflow-hidden`}
       >
-        <Sidebar
-          sidebarOpen={sidebarOpen}
-          setSidebarOpen={setSidebarOpen}
-        />
+        <Sidebar sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen} />
       </div>
 
       {/* Main Content */}
@@ -44,8 +38,8 @@ export default function Dashboard() {
                 {index === 2
                   ? "$120,000"
                   : index === 1
-                  ? "50 Registered"
-                  : "15 Listed"}
+                  ? `${totalUsers} Registered`
+                  : totalProperties}
               </p>
             </div>
           ))}

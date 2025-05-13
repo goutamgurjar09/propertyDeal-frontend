@@ -145,7 +145,7 @@ const AddProperty = () => {
     <div className="max-w-5xl mx-auto my-10 p-8 bg-gradient-to-br from-gray-50 via-white to-gray-200 rounded-lg shadow-lg">
       <div className="flex justify-between items-center mb-6">
         <h2 className="text-3xl font-bold text-gray-700">Create Property</h2>
-        <Link to="/dashboard">
+        <Link to="/properties">
           <button className="px-4 py-2 bg-gray-500 hover:bg-gray-700 text-white rounded">
             Go Back
           </button>

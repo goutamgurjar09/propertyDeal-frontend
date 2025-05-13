@@ -6,7 +6,8 @@ import { FaEdit, FaTrash } from "react-icons/fa";
 import { showError, showSuccess } from "../Alert";
 import Sidebar from "../Pages/Layout/Sidebar";
 import Header from "../Pages/Layout/Header";
-
+import Pagination from "../CommonComponent/Pagination";
+import Loader from "../CommonComponent/Loader";
 export const Properties = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -49,18 +50,18 @@ export const Properties = () => {
     navigate(`/property/edit/${id}`);
   };
 
-  if (loading) {
-    return (
-      <div className="text-center text-xl font-semibold">
-        Loading properties...
-      </div>
-    );
-  }
+  // Calculate the range of properties being displayed
+  const start = (page - 1) * limit + 1;
+  const end = Math.min(page * limit, totalProperties);
 
   if (error) {
     showError(error);
     return;
   }
+
+  const handleAddProperty = () => {
+    navigate("/addProperty");
+  };
 
   return (
     <div className="flex min-h-screen overflow-hidden">
@@ -81,8 +82,16 @@ export const Properties = () => {
         {/* Header */}
         <Header sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen} />
         <div className="mt-6 mb-6 bg-gray-100 p-4 shadow-md w-[96%] ml-4">
-          <h1 className="text-2xl font-bold mb-6">Property Details</h1>
-
+          {loading && <Loader />}
+         <div className="flex justify-between items-center mb-6">
+            <h1 className="text-2xl font-bold">Property Details</h1>
+            <button
+              onClick={handleAddProperty}
+              className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
+            >
+              Add Property
+            </button>
+          </div>
           {/* Filter by Property Type */}
           <div className="mb-4 overflow-x-auto">
             <label className="mr-2 font-medium">Filter by Type:</label>
@@ -172,25 +181,19 @@ export const Properties = () => {
             ))}
           </div>
 
-          {/* Pagination Controls */}
-          <div className="flex justify-end items-center space-x-4 mt-6">
-            <button
-              onClick={() => setPage((prev) => Math.max(prev - 1, 1))}
-              disabled={!hasPrevPage}
-              className="px-4 py-2 bg-blue-500 text-white rounded disabled:opacity-50"
-            >
-              Prev
-            </button>
-            <span>
-              Page {page} of {totalPages}
-            </span>
-            <button
-              onClick={() => setPage((prev) => Math.min(prev + 1, totalPages))}
-              disabled={!hasNextPage}
-              className="px-4 py-2 bg-blue-500 text-white rounded disabled:opacity-50"
-            >
-              Next
-            </button>
+          {/* Pagination */}
+          <div className="flex justify-between items-center mt-4">
+            <div className="text-sm text-slate-500">
+              Showing <b>{start}</b> to <b>{end}</b> of <b>{totalProperties}</b>{" "}
+              properties
+            </div>
+            <Pagination
+              currentPage={page}
+              totalPages={totalPages}
+              onPageChange={setPage}
+              hasPrevPage={hasPrevPage}
+              hasNextPage={hasNextPage}
+            />
           </div>
         </div>
       </div>

@@ -1,12 +1,13 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import Slider from "react-slick";
 import { useDispatch, useSelector } from "react-redux";
 import { getPropertyById } from "../redux/slices/propertySlice";
-import { useParams } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import BookingPage from "./BookingPage";
 import Modal from "../CommonComponent/Modal";
+import Loader from "../CommonComponent/Loader";
 
 const PropertyDetails = () => {
   const { id } = useParams();
@@ -31,21 +32,43 @@ const PropertyDetails = () => {
     arrows: true,
   };
 
-  if (loading) return <div className="p-8 text-center">Loading...</div>;
+  if (loading) return <Loader />;
   if (error) return <div className="p-8 text-center text-red-500">{error}</div>;
   if (!property) return null;
 
   return (
-    <div className="w-full mt-10 flex flex-col items-center bg-gray-100">
+    <div className="w-full flex flex-col items-center bg-gray-100">
+      <div className="w-full mt-4 max-w-6xl mx-auto px-4 mb-6">
+        <Link to="/properties">
+          <button className="px-6 py-3 bg-blue-500 hover:bg-blue-600 text-white rounded-lg shadow-md transition duration-300 flex items-center gap-2">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              className="h-5 w-5"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+              strokeWidth={2}
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                d="M15 19l-7-7 7-7"
+              />
+            </svg>
+            Go Back
+          </button>
+        </Link>
+      </div>
+
       {/* Image Slider */}
       <div className="w-full max-w-6xl mx-auto overflow-hidden rounded-xl">
-        <Slider {...settings} className="h-[350px]">
+        <Slider {...settings} className="h-screen">
           {(property.propertyImages || []).map((img, index) => (
-            <div key={index} className="h-[350px]">
+            <div key={index} className="h-screen">
               <img
                 src={img}
                 alt={`Slide ${index + 1}`}
-                className="w-full h-full object-cover rounded-xl"
+                className="w-full h-full object-cover"
               />
             </div>
           ))}
@@ -93,7 +116,7 @@ const PropertyDetails = () => {
               onClose={() => setIsModalOpen(false)}
               title="Book this Property"
             >
-              <BookingPage propertyId={id} />
+              <BookingPage propertyId={id} setIsModalOpen={setIsModalOpen} />
             </Modal>
           </div>
 
@@ -106,10 +129,11 @@ const PropertyDetails = () => {
             <p className="text-green-600 mb-2">Status: {property.status}</p>
             <p className="text-gray-600 mb-2">Size: {property.size} sqft</p>
             <p className="text-gray-600 mb-2">Bedrooms: {property.bedrooms}</p>
-            <p className="text-gray-600 mb-2">Bathrooms: {property.bathrooms}</p>
+            <p className="text-gray-600 mb-2">
+              Bathrooms: {property.bathrooms}
+            </p>
             <p className="text-gray-500 mb-2">
-              Listed on:{" "}
-              {new Date(property.postedAt).toLocaleDateString()}
+              Listed on: {new Date(property.postedAt).toLocaleDateString()}
             </p>
             <p className="text-gray-500">
               Posted by: {property.owner?.name || "Unknown"}

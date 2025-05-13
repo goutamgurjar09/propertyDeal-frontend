@@ -70,7 +70,6 @@ function LoginPage() {
         return;
       }
       const user = result.payload?.data;
-      console.log(user?.accessToken, "usertoken");
       if (user?.accessToken && user?.role === "admin") {
         showSuccess("Login successful");
         navigate("/dashboard");

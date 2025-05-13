@@ -30,7 +30,7 @@ const EditProperty = () => {
     },
     propertyImages: [],
   });
-  const { cities, loading } = useSelector((state) => state.city); 
+  const { cities, loading } = useSelector((state) => state.city);
   const [cityOptions, setCityOptions] = useState([]);
 
   const facilitiesOptions = [
@@ -43,14 +43,14 @@ const EditProperty = () => {
     { value: "Stadium", label: "Stadium" },
   ];
 
- // Fetch cities on mount
-   useEffect(() => {
-     dispatch(getCities());
-   }, [dispatch]);
+  // Fetch cities on mount
+  useEffect(() => {
+    dispatch(getCities());
+  }, [dispatch]);
   // Set city options for the dropdown
   useEffect(() => {
     if (cities && cities.length > 0) {
-       const  options = cities.map((city) => ({
+      const options = cities.map((city) => ({
         value: city._id,
         label: city.name,
       }));
@@ -94,31 +94,30 @@ const EditProperty = () => {
 
   // Handle input changes for both nested objects and primitive fields
   const handleChange = (e) => {
-  const { name, value } = e.target;
+    const { name, value } = e.target;
 
-  // Handle general location fields without city
-  if (name.includes("location.")) {
-    const locField = name.split(".")[1];
-    setFormData((prev) => ({
-      ...prev,
-      location: {
-        ...prev.location,
-        [locField]: value,
-      },
-    }));
-  } else if (name === "owner.name") {
-    setFormData((prev) => ({
-      ...prev,
-      owner: {
-        ...prev.owner,
-        name: value,
-      },
-    }));
-  } else {
-    setFormData((prev) => ({ ...prev, [name]: value }));
-  }
-};
-
+    // Handle general location fields without city
+    if (name.includes("location.")) {
+      const locField = name.split(".")[1];
+      setFormData((prev) => ({
+        ...prev,
+        location: {
+          ...prev.location,
+          [locField]: value,
+        },
+      }));
+    } else if (name === "owner.name") {
+      setFormData((prev) => ({
+        ...prev,
+        owner: {
+          ...prev.owner,
+          name: value,
+        },
+      }));
+    } else {
+      setFormData((prev) => ({ ...prev, [name]: value }));
+    }
+  };
 
   // Handle multi-select changes for facilities
   const handleFacilitiesChange = (selectedOptions) => {
@@ -163,12 +162,16 @@ const EditProperty = () => {
     data.append("location", JSON.stringify(formData.location));
     data.append("facilities", JSON.stringify(formData.facilities));
 
-    const existingImageUrls = formData.propertyImages.filter((img) => typeof img === "string");
+    const existingImageUrls = formData.propertyImages.filter(
+      (img) => typeof img === "string"
+    );
     if (existingImageUrls.length > 0) {
       data.append("existingImages", JSON.stringify(existingImageUrls));
     }
 
-    const newFiles = formData.propertyImages.filter((img) => typeof img === "object");
+    const newFiles = formData.propertyImages.filter(
+      (img) => typeof img === "object"
+    );
     newFiles.forEach((file) => data.append("propertyImages", file));
 
     const propertyData = await dispatch(updateProperty({ id, formData: data }));
@@ -176,7 +179,7 @@ const EditProperty = () => {
 
     if (propertyData?.payload?.status === "success") {
       showSuccess(propertyData.payload.message);
-      navigate("/dashboard");
+      navigate("/properties");
     } else {
       showError(propertyData.payload?.message || "Failed to update property.");
     }
@@ -185,13 +188,18 @@ const EditProperty = () => {
   return (
     <div className="max-w-4xl mx-auto mt-10 mb-4 p-6 bg-gray-100 rounded-xl shadow-lg">
       <div className="flex justify-end mb-4">
-        <Link to="/dashboard">
-          <button className="flex p-3 bg-gray-300 rounded hover:bg-gray-400">Go Back</button>
+        <Link to="/properties">
+          <button className="flex p-3 bg-gray-300 rounded hover:bg-gray-400">
+            Go Back
+          </button>
         </Link>
       </div>
       <h2 className="text-2xl font-semibold mb-6">Edit Property</h2>
 
-      <form onSubmit={handleSubmit} className="grid grid-cols-1 md:grid-cols-2 gap-4">
+      <form
+        onSubmit={handleSubmit}
+        className="grid grid-cols-1 md:grid-cols-2 gap-4"
+      >
         <input
           name="title"
           value={formData.title}
@@ -248,7 +256,9 @@ const EditProperty = () => {
           <label className="block mb-2 font-medium">City</label>
           <Select
             options={cityOptions}
-            value={cityOptions.find((city) => city.value === formData.location.city)}
+            value={cityOptions.find(
+              (city) => city.value === formData.location.city
+            )}
             onChange={handleCityChange}
             isLoading={loading}
             className="w-full"
@@ -265,7 +275,12 @@ const EditProperty = () => {
           required
         />
 
-        <select name="propertyType" value={formData.propertyType} onChange={handleChange} className="border p-2 rounded">
+        <select
+          name="propertyType"
+          value={formData.propertyType}
+          onChange={handleChange}
+          className="border p-2 rounded"
+        >
           <option value="Apartment">Apartment</option>
           <option value="House">House</option>
           <option value="Villa">Villa</option>
@@ -296,21 +311,22 @@ const EditProperty = () => {
         </div>
 
         {/* Handle existing Images Preview */}
-        {formData.propertyImages.length > 0 && typeof formData.propertyImages[0] === "string" && (
-          <div className="col-span-full">
-            <label className="block mb-2 font-medium">Existing Images:</label>
-            <div className="flex flex-wrap gap-4">
-              {formData.propertyImages.map((img, idx) => (
-                <img
-                  key={idx}
-                  src={img}
-                  alt={`property-${idx}`}
-                  className="w-32 h-24 object-cover border rounded"
-                />
-              ))}
+        {formData.propertyImages.length > 0 &&
+          typeof formData.propertyImages[0] === "string" && (
+            <div className="col-span-full">
+              <label className="block mb-2 font-medium">Existing Images:</label>
+              <div className="flex flex-wrap gap-4">
+                {formData.propertyImages.map((img, idx) => (
+                  <img
+                    key={idx}
+                    src={img}
+                    alt={`property-${idx}`}
+                    className="w-32 h-24 object-cover border rounded"
+                  />
+                ))}
+              </div>
             </div>
-          </div>
-        )}
+          )}
 
         {/* File input to add new images */}
         <div className="col-span-full">
@@ -324,7 +340,10 @@ const EditProperty = () => {
           />
         </div>
 
-        <button type="submit" className="bg-blue-600 text-white py-2 px-4 rounded hover:bg-blue-700 col-span-full">
+        <button
+          type="submit"
+          className="bg-blue-600 text-white py-2 px-4 rounded hover:bg-blue-700 col-span-full"
+        >
           Update Property
         </button>
       </form>
@@ -333,4 +352,3 @@ const EditProperty = () => {
 };
 
 export default EditProperty;
-
