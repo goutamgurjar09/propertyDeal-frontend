@@ -59,12 +59,6 @@ export const deleteBooking = createAsyncThunk(
 const bookingSlice = createSlice({
   name: "booking",
   initialState: {
-    booking: null,
-    loading: false,
-    error: null,
-    successMessage: null,
-  },
-  initialState: {
     booking: [],
     loading: false,
     error: null,

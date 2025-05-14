@@ -1,11 +1,11 @@
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { deleteUser, getUsers } from "../redux/slices/authSlice";
-import { FaTrash } from "react-icons/fa";
 import Sidebar from "../Pages/Layout/Sidebar";
 import Header from "../Pages/Layout/Header";
-import Pagination from "../../src/CommonComponent/Pagination";
 import { showSuccess, showError } from "../Alert";
+import { FaTrash } from "react-icons/fa";
+import PaginatedTable from "../CommonComponent/PaginatedTable";
 import Loader from "../CommonComponent/Loader";
 
 const UserManagement = () => {
@@ -32,22 +32,45 @@ const UserManagement = () => {
   const handleDelete = async (id) => {
     if (window.confirm("Are you sure you want to delete this user?")) {
       try {
-        await dispatch(deleteUser(id));
-        showSuccess("User deleted successfully!");
+        const response = await dispatch(deleteUser(id));
+        if (response.payload.status) {
+          showSuccess("User deleted successfully!");
+          dispatch(getUsers({ page, limit })); // Refresh users after deletion
+        } else {
+          showError(response.payload.message || "Failed to delete user.");
+        }
       } catch (err) {
         showError("Failed to delete user. Please try again.");
       }
     }
   };
 
-  // Calculate the range of users being displayed
-  const start = (page - 1) * limit + 1;
-  const end = Math.min(page * limit, totalUsers);
+  const columns = [
+    { header: "Name", accessor: "fullname" },
+    { header: "Email", accessor: "email" },
+    { header: "Role", accessor: "role" },
+    { header: "Mobile", accessor: "mobile" },
+    {
+      header: "Actions",
+      render: (row) => (
+        <button
+          className="text-red-500 hover:text-red-700"
+          title="Delete"
+          onClick={() => handleDelete(row._id)}
+        >
+          <FaTrash />
+        </button>
+      ),
+    },
+  ];
 
-  if (error) return <p>Error: {error.message}</p>;
+  if (error) {
+    return <p className="text-center text-red-500">Error: {error}</p>;
+  }
 
   return (
     <div className="flex min-h-screen overflow-hidden">
+      {/* Sidebar */}
       <div
         className={`transition-all duration-300 ${
           sidebarOpen ? "w-70" : "w-0"
@@ -65,73 +88,23 @@ const UserManagement = () => {
         {/* Header */}
         <Header sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen} />
         <div className="mt-6 mb-6 bg-gray-100 p-4 shadow-md w-[96%] ml-4">
-          {loading && <Loader />}
           <h2 className="text-2xl text-center font-bold mb-6 text-slate-700">
             User Management
           </h2>
-          <div className="overflow-x-auto">
-            <table className="min-w-full bg-white border border-gray-300 rounded-lg shadow-sm">
-              <thead className="bg-slate-200 text-slate-600 text-sm">
-                <tr>
-                  <th className="py-3 px-4 border text-left">Name</th>
-                  <th className="py-3 px-4 border text-left">Email</th>
-                  <th className="py-3 px-4 border text-left">Role</th>
-                  <th className="py-3 px-4 border text-left">Mobile</th>
-                  <th className="py-3 px-4 border text-center">Actions</th>
-                </tr>
-              </thead>
-              <tbody className="text-slate-700">
-                {users?.length > 0 ? (
-                  users.map((user) => (
-                    <tr
-                      key={user._id}
-                      className="border-b hover:bg-gray-50 transition"
-                    >
-                      <td className="py-2 px-4 border">{user.fullname}</td>
-                      <td className="py-2 px-4 border">{user.email}</td>
-                      <td className="py-2 px-4 border capitalize">
-                        {user.role}
-                      </td>
-                      <td className="py-2 px-4 border">{user.mobile}</td>
-                      <td className="py-2 px-4 border text-center space-x-2">
-                        <button
-                          className="text-red-500 hover:text-red-700"
-                          title="Delete"
-                          onClick={() => handleDelete(user._id)}
-                        >
-                          <FaTrash />
-                        </button>
-                      </td>
-                    </tr>
-                  ))
-                ) : (
-                  <tr>
-                    <td
-                      colSpan="5"
-                      className="py-4 px-4 text-center text-slate-400"
-                    >
-                      No users found.
-                    </td>
-                  </tr>
-                )}
-              </tbody>
-            </table>
-          </div>
 
-          {/* Pagination */}
-          <div className="flex justify-between items-center mt-4">
-            <div className="text-sm text-slate-500">
-              Showing <b>{start}</b> to <b>{end}</b> of <b>{totalUsers}</b>{" "}
-              users
-            </div>
-            <Pagination
-              currentPage={page}
-              totalPages={totalPages}
-              onPageChange={setPage}
-              hasPrevPage={hasPrevPage}
-              hasNextPage={hasNextPage}
-            />
-          </div>
+          {/* User Table */}
+          <PaginatedTable
+            columns={columns}
+            data={users}
+            currentPage={page}
+            totalPages={totalPages}
+            onPageChange={setPage}
+            hasPrevPage={hasPrevPage}
+            hasNextPage={hasNextPage}
+            loading={loading}
+            pageSize={limit}
+            totalItems={totalUsers}
+          />
         </div>
       </div>
     </div>
