@@ -1,25 +1,214 @@
+// import { useEffect, useState } from "react";
+// import Slider from "react-slick";
+// import { useDispatch, useSelector } from "react-redux";
+// import { getPropertyById } from "../redux/slices/propertySlice";
+// import { Link, useParams } from "react-router-dom";
+// import "slick-carousel/slick/slick.css";
+// import "slick-carousel/slick/slick-theme.css";
+// import BookingPage from "./BookingPage";
+// import Modal from "../CommonComponent/Modal";
+// import Loader from "../CommonComponent/Loader";
+
+// const PropertyDetails = () => {
+//   const { id } = useParams();
+//   const dispatch = useDispatch();
+//   const { property, loading, error } = useSelector((state) => state.property);
+//   const [isModalOpen, setIsModalOpen] = useState(false);
+
+//   useEffect(() => {
+//     if (id) {
+//       dispatch(getPropertyById(id));
+//     }
+//   }, [id, dispatch]);
+
+//   const settings = {
+//     dots: true,
+//     infinite: true,
+//     speed: 500,
+//     slidesToShow: 1,
+//     slidesToScroll: 1,
+//     autoplay: true,
+//     autoplaySpeed: 3000,
+//     arrows: true,
+//   };
+
+//   if (loading) return <Loader />;
+//   if (error) return <div className="p-8 text-center text-red-500">{error}</div>;
+//   if (!property) return null;
+
+//   return (
+//     <div className="w-full flex flex-col items-center bg-gray-100">
+//       <div className="w-full mt-4 max-w-6xl mx-auto px-4 mb-6">
+//         <Link to="/properties">
+//           <button className="px-6 py-3 bg-blue-500 hover:bg-blue-600 text-white rounded-lg shadow-md transition duration-300 flex items-center gap-2">
+//             <svg
+//               xmlns="http://www.w3.org/2000/svg"
+//               className="h-5 w-5"
+//               fill="none"
+//               viewBox="0 0 24 24"
+//               stroke="currentColor"
+//               strokeWidth={2}
+//             >
+//               <path
+//                 strokeLinecap="round"
+//                 strokeLinejoin="round"
+//                 d="M15 19l-7-7 7-7"
+//               />
+//             </svg>
+//             Go Back
+//           </button>
+//         </Link>
+//       </div>
+
+//       {/* Image Slider */}
+//       <div className="w-full max-w-6xl mx-auto overflow-hidden rounded-xl">
+//         <Slider {...settings} className="h-screen">
+//           {(property.propertyImages || []).map((img, index) => (
+//             <div key={index} className="h-screen">
+//               <img
+//                 src={img}
+//                 alt={`Slide ${index + 1}`}
+//                 className="w-full h-full object-cover"
+//               />
+//             </div>
+//           ))}
+//         </Slider>
+//       </div>
+
+//       {/* Property Details */}
+//       <div className="w-full mb-10 max-w-6xl p-6 sm:p-10 mt-10 bg-white rounded-xl shadow-lg border border-gray-300">
+//         <div className="flex flex-col lg:flex-row gap-8">
+//           {/* Left column */}
+//           <div className="w-full lg:w-2/3">
+//             <h2 className="text-3xl font-semibold text-gray-900 mb-4">
+//               {property.title}
+//             </h2>
+
+//             <div className="text-gray-700 mb-4 space-y-1">
+//               <p>City: {property.location?.city?.name || "N/A"}</p>
+//               <p>Address: {property.location?.address || "N/A"}</p>
+//               <p>State: {property.location?.state || "N/A"}</p>
+//               <p>Country: {property.location?.country || "N/A"}</p>
+//             </div>
+
+//             <p className="text-gray-600 mb-4">{property.description}</p>
+
+//             <div className="flex flex-wrap gap-2 mb-4">
+//               {(property.facilities || []).map((feature, index) => (
+//                 <span
+//                   key={index}
+//                   className="bg-blue-100 text-blue-800 px-3 py-1 rounded-full text-sm font-medium"
+//                 >
+//                   {feature}
+//                 </span>
+//               ))}
+//             </div>
+
+//             <button
+//               onClick={() => setIsModalOpen(true)}
+//               className="mt-6 w-full sm:w-64 px-6 py-3 text-white rounded-lg shadow-md bg-[#005555] hover:bg-gray-700 transition duration-300"
+//             >
+//               Book Now
+//             </button>
+
+//             <Modal
+//               isOpen={isModalOpen}
+//               onClose={() => setIsModalOpen(false)}
+//               title="Book this Property"
+//             >
+//               <BookingPage propertyId={id} setIsModalOpen={setIsModalOpen} />
+//             </Modal>
+//           </div>
+
+//           {/* Right column */}
+//           <div className="w-full lg:w-1/3 bg-gray-50 p-6 rounded-lg border">
+//             <div className="text-gray-900 text-xl font-bold mb-4">
+//               ₹{property.price}
+//             </div>
+//             <p className="text-gray-600 mb-2">Type: {property.propertyType}</p>
+//             <p className="text-green-600 mb-2">Status: {property.status}</p>
+//             <p className="text-gray-600 mb-2">Size: {property.size} sqft</p>
+//             <p className="text-gray-600 mb-2">Bedrooms: {property.bedrooms}</p>
+//             <p className="text-gray-600 mb-2">
+//               Bathrooms: {property.bathrooms}
+//             </p>
+//             <p className="text-gray-500 mb-2">
+//               Listed on: {new Date(property.postedAt).toLocaleDateString()}
+//             </p>
+//             <p className="text-gray-500">
+//               Posted by: {property.owner?.name || "Unknown"}
+//             </p>
+//           </div>
+//         </div>
+//       </div>
+//     </div>
+//   );
+// };
+
+// export default PropertyDetails;
+
 import { useEffect, useState } from "react";
 import Slider from "react-slick";
 import { useDispatch, useSelector } from "react-redux";
-import { getPropertyById } from "../redux/slices/propertySlice";
+import {
+  getPropertyById,
+  updatePropertyStatus,
+} from "../redux/slices/propertySlice"; // Import updatePropertyStatus
 import { Link, useParams } from "react-router-dom";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import BookingPage from "./BookingPage";
 import Modal from "../CommonComponent/Modal";
 import Loader from "../CommonComponent/Loader";
+import { getUserDetail } from "../redux/slices/authUtlis";
+import { showSuccess, showError } from "../Alert";
 
 const PropertyDetails = () => {
   const { id } = useParams();
   const dispatch = useDispatch();
   const { property, loading, error } = useSelector((state) => state.property);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isAdmin, setIsAdmin] = useState(false); // Track if the user is an admin
+  const [propertyStatus, setPropertyStatus] = useState("available"); // Default property status
 
   useEffect(() => {
     if (id) {
       dispatch(getPropertyById(id));
     }
   }, [id, dispatch]);
+
+  useEffect(() => {
+    const user = getUserDetail();
+    if (user) {
+      setIsAdmin(user.role === "admin"); // Check if the user is an admin
+    }
+  }, []);
+
+  useEffect(() => {
+    if (property) {
+      setPropertyStatus(property.status);
+    }
+  }, [property]);
+
+  const handleStatusChange = async (e) => {
+    const newStatus = e.target.value;
+    setPropertyStatus(newStatus);
+    try {
+      const response = await dispatch(
+        updatePropertyStatus({ id, status: newStatus })
+      );
+      if (response.payload.status) {
+        showSuccess(response.payload.message);
+        dispatch(getPropertyById(id));
+      } else {
+        showError(
+          response.payload.message || "Failed to update property status."
+        );
+      }
+    } catch (err) {
+      showError("An error occurred while updating the property status.");
+    }
+  };
 
   const settings = {
     dots: true,
@@ -126,7 +315,21 @@ const PropertyDetails = () => {
               ₹{property.price}
             </div>
             <p className="text-gray-600 mb-2">Type: {property.propertyType}</p>
-            <p className="text-green-600 mb-2">Status: {property.status}</p>
+            <p className="text-gray-600">
+              Status:{" "}
+              <span
+                className={`mb-2 ${
+                  property.status === "available"
+                    ? "text-green-600"
+                    : property.status === "sold"
+                    ? "text-red-600"
+                    : "text-gray-600"
+                }`}
+              >
+                {property.status.charAt(0).toUpperCase() +
+                  property.status.slice(1)}
+              </span>
+            </p>
             <p className="text-gray-600 mb-2">Size: {property.size} sqft</p>
             <p className="text-gray-600 mb-2">Bedrooms: {property.bedrooms}</p>
             <p className="text-gray-600 mb-2">
@@ -138,6 +341,36 @@ const PropertyDetails = () => {
             <p className="text-gray-500">
               Posted by: {property.owner?.name || "Unknown"}
             </p>
+
+            {/* Dropdown for Admin to Update Property Status */}
+            {isAdmin && (
+              <div className="mt-6">
+                <label className="block text-black-700 font-bold mb-2">
+                  Update Property Status
+                </label>
+                <select
+                  value={propertyStatus}
+                  onChange={handleStatusChange}
+                  className={`w-full px-4 py-2 border rounded ${
+                    propertyStatus === "available"
+                      ? "bg-green-100 text-green-800"
+                      : propertyStatus === "sold"
+                      ? "bg-red-100 text-red-800"
+                      : "bg-gray-100 text-gray-800"
+                  }`}
+                >
+                  <option
+                    value="available"
+                    className="bg-green-100 text-green-800"
+                  >
+                    Available
+                  </option>
+                  <option value="sold" className="bg-red-100 text-red-800">
+                    Sold
+                  </option>
+                </select>
+              </div>
+            )}
           </div>
         </div>
       </div>

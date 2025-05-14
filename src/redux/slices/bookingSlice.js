@@ -56,6 +56,25 @@ export const deleteBooking = createAsyncThunk(
   }
 );
 
+export const updateBookingStatus = createAsyncThunk(
+  "booking/updateBookingStatus",
+  async ({ id, status }, { rejectWithValue }) => {
+    try {
+      const response = await axios.patch(
+        `${BASE_URL}/api/bookings/update-status`,
+        { bookingId: id, status },
+        {
+          withCredentials: true,
+        }
+      );
+      return response.data;
+    } catch (error) {
+      return rejectWithValue(error.response?.data || "Failed to update booking status");
+    }
+  }
+);
+
+
 const bookingSlice = createSlice({
   name: "booking",
   initialState: {
@@ -121,6 +140,25 @@ const bookingSlice = createSlice({
       .addCase(deleteBooking.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload;
+      })
+       .addCase(updateBookingStatus.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(updateBookingStatus.fulfilled, (state, action) => {
+        state.loading = false;
+        state.successMessage = action.payload.message;
+
+        // Update the status of the specific booking in the state
+        const updatedBooking = action.payload.data;
+        const index = state.booking.findIndex((b) => b._id === updatedBooking._id);
+        if (index !== -1) {
+          state.booking[index] = updatedBooking;
+        }
+      })
+      .addCase(updateBookingStatus.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload?.message || "Failed to update booking status";
       });
   },
 });

@@ -83,7 +83,7 @@ export const Properties = () => {
         <Header sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen} />
         <div className="mt-6 mb-6 bg-gray-100 p-4 shadow-md w-[96%] ml-4">
           {loading && <Loader />}
-         <div className="flex justify-between items-center mb-6">
+          <div className="flex justify-between items-center mb-6">
             <h1 className="text-2xl font-bold">Property Details</h1>
             <button
               onClick={handleAddProperty}
@@ -155,8 +155,17 @@ export const Properties = () => {
                   <div className="text-sm text-gray-500">
                     Posted by: {property.owner?.name}
                   </div>
-                  <div className="text-sm text-green-600 font-semibold mt-2">
-                    {property.status}
+                  <div
+                    className={`mt-2 ${
+                      property.status === "available"
+                        ? "text-green-600"
+                        : property.status === "sold"
+                        ? "text-red-600"
+                        : "text-gray-600"
+                    }`}
+                  >
+                    {property.status.charAt(0).toUpperCase() +
+                      property.status.slice(1)}
                   </div>
                 </div>
 

@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { getBookings, deleteBooking } from "../redux/slices/bookingSlice";
+import { getBookings, deleteBooking, updateBookingStatus } from "../redux/slices/bookingSlice";
 import Sidebar from "../Pages/Layout/Sidebar";
 import Header from "../Pages/Layout/Header";
 import { FaTrash, FaEye } from "react-icons/fa";
@@ -48,6 +48,33 @@ const Booking = () => {
     navigate(`/propertyDetails/${propertyId}`);
   };
 
+  const handleStatusChange = async (id, newStatus) => {
+    try {
+      const response = await dispatch(updateBookingStatus({ id, status: newStatus }));
+      if (response.payload.status) {
+        showSuccess(response.payload.message);
+        dispatch(getBookings({ page, limit }));
+      } else {
+        showError(response.payload.message || "Failed to update booking status.");
+      }
+    } catch (err) {
+      showError("An error occurred while updating the booking status.");
+    }
+  };
+
+  const getStatusColor = (status) => {
+    switch (status) {
+      case "pending":
+        return "bg-yellow-200 text-yellow-800";
+      case "confirmed":
+        return "bg-green-200 text-green-800";
+      case "cancelled":
+        return "bg-red-200 text-red-800";
+      default:
+        return "bg-gray-200 text-gray-800";
+    }
+  };
+
   const columns = [
     { header: "Name", accessor: "name" },
     { header: "Mobile", accessor: "mobile" },
@@ -60,7 +87,26 @@ const Booking = () => {
       render: (row) => new Date(row.dateTime).toLocaleString(),
     },
     { header: "Message", accessor: "message" },
-    { header: "Status", accessor: "status"},
+    {
+      header: "Status",
+      render: (row) => (
+        <select
+          value={row.status}
+          onChange={(e) => handleStatusChange(row._id, e.target.value)}
+          className={`border border-gray-300 rounded p-1 ${getStatusColor(row.status)}`}
+        >
+          <option value="pending" className="bg-yellow-200 text-yellow-800">
+            Pending
+          </option>
+          <option value="confirmed" className="bg-green-200 text-green-800">
+            Confirmed
+          </option>
+          <option value="cancelled" className="bg-red-200 text-red-800">
+            Cancelled
+          </option>
+        </select>
+      ),
+    },
     {
       header: "Actions",
       render: (row) => (
