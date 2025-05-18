@@ -3,6 +3,7 @@ import { useDispatch } from "react-redux";
 import { createBooking, resetBookingState } from "../redux/slices/bookingSlice";
 import { getUserDetail } from "../redux/slices/authUtlis";
 import { showSuccess } from "../Alert";
+import { sendSms } from "../redux/slices/authSlice";
 
 const BookingPage = ({ propertyId, setIsModalOpen }) => {
   const dispatch = useDispatch();
@@ -16,8 +17,9 @@ const BookingPage = ({ propertyId, setIsModalOpen }) => {
     propertyId,
   });
 
+  const user = getUserDetail();
+  console.log(user);
   useEffect(() => {
-    const user = getUserDetail();
     if (user) {
       setFormData((prev) => ({ ...prev, userId: user.user_id }));
     }
@@ -33,6 +35,16 @@ const BookingPage = ({ propertyId, setIsModalOpen }) => {
     const response = await dispatch(createBooking(formData));
     if (response.payload.status) {
       showSuccess(response.payload.message);
+      // Send SMS
+      dispatch(
+        sendSms({
+          to: 6265983953,
+          message: `Property Booked Successfully by ${user.full_name}`,
+          userId: user.user_id,
+          userMobileNumber: user.mobile,
+        })
+      );
+
       setIsModalOpen(false);
       setFormData({
         name: "",

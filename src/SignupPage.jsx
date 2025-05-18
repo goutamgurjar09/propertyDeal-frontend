@@ -160,8 +160,6 @@ function SignupPage() {
               className="w-full bg-transparent p-2 outline-none placeholder-gray-500 text-gray-900 pr-10"
             />
           </div>
-          <input type="file" multiple accept="image/*" onChange={handleImageChanges} />
-
           <div className="flex justify-center">
             <button
               type="submit"

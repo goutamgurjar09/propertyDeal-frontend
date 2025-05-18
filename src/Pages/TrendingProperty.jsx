@@ -1,57 +1,231 @@
-import React from "react";
-import { Link } from "react-router-dom";
-import categoriesImg from "../assets/aa/img_2.jpg"; // Fix file name
+import { useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { getProperties } from "../redux/slices/propertySlice";
+import { getCities } from "../redux/slices/citySlice";
+import { showError } from "../Alert";
+import GooglePlacesAutocomplete from "react-google-places-autocomplete";
+import { Controller } from "react-hook-form";
+import Select from "react-select";
+import { useForm } from "react-hook-form";
+import Pagination from "../CommonComponent/Pagination";
+import Loader from "../CommonComponent/Loader";
 
-const cardShades = ["bg-white", "bg-gray-50"];
+export const TrendingProperty = () => {
+  const dispatch = useDispatch();
+  const [cityId, setCityId] = useState(null);
+  const [locality, setLocality] = useState(null);
+  const [lat, setLat] = useState(null);
+  const [lng, setLng] = useState(null);
+  // Redux state
+  const property = useSelector((state) => state.property);
+  const { cities } = useSelector((state) => state.city);
 
-const properties = [
-  { id: 1, type: "2 BHK", price: "500,000", location: "India, M.P" },
-  { id: 2, type: "3 BHK", price: "750,000", location: "India, M.P" },
-  { id: 3, type: "2 BHK", price: "500,000", location: "India, M.P" },
-  { id: 4, type: "3 BHK", price: "750,000", location: "India, M.P" },
-];
+  // Form control
+  const { control } = useForm();
+  const {
+    properties,
+    loading,
+    error,
+    totalProperties,
+    totalPages,
+    hasNextPage,
+    hasPrevPage,
+  } = property;
 
-const TrendingProperty = ({ property }) => (
-  <Link to={`/propertyDetails/${property.id}`}>
-    <div className={`${cardShades[property.id % cardShades.length]} shadow-xl rounded-xl overflow-hidden hover:shadow-2xl transform hover:scale-[1.02] transition-all duration-300 h-full flex flex-col`}>
-      <img src={categoriesImg} alt={`Apartment ${property.id}`} className="w-full h-60 object-cover" />
-      <div className="p-6 flex flex-col flex-grow">
-        <h2 className="text-xl font-bold text-gray-800 mb-2">Luxury Apartment {property.id}</h2>
-        <p className="text-gray-600 flex items-center">{property.location}</p>
-        <p className="text-gray-600 flex items-center">{property.type}</p>
-        <p className="text-gray-600 flex items-center">${property.price}</p>
-        <button className="mt-4 px-6 py-3 bg-[#005555] hover:bg-gray-700 text-white rounded-lg font-semibold hover:opacity-90 transition-all transform hover:-translate-y-1">
-          View Details
-        </button>
-      </div>
-    </div>
-  </Link>
-);
+  // Local state for pagination and filters
+  const [page, setPage] = useState(1);
+  const [limit] = useState(10); // You can also make limit changeable
+  const [propertyType, setPropertyType] = useState(""); // Filter
 
-function Categories() {
+  useEffect(() => {
+    dispatch(getProperties({ page, limit, propertyType, cityId, lat, lng }));
+  }, [dispatch, page, limit, propertyType, cityId, lat, lng]);
+
+  useEffect(() => {
+    dispatch(getCities());
+  }, [dispatch]);
+
+  const cityOptions = cities.map((city) => ({
+    value: city.name,
+    label: city.name,
+    cityId: city._id,
+  }));
+
+  // Calculate the range of properties being displayed
+  const start = (page - 1) * limit + 1;
+  const end = Math.min(page * limit, totalProperties);
+
+  if (error) {
+    showError(error);
+    return;
+  }
+
+  useEffect(() => {
+    const fetchLatLngFromPlaceId = async (placeId) => {
+      try {
+        const res = await axios.get(
+          `http://localhost:8000/api/properties/place-details?placeId=${placeId}`,
+          { withCredentials: true }
+        );
+        const { location } = res.data.result.geometry;
+        setLat(location.lat);
+        setLng(location.lng);
+      } catch (err) {
+        console.error("Failed to fetch lat/lng:", err);
+      }
+    };
+
+    if (locality?.value?.place_id) {
+      fetchLatLngFromPlaceId(locality.value.place_id);
+    }
+  }, [locality]);
+
   return (
-    <div className="flex min-h-screen">
-      <div className="p-12 my-8 m-6 w-full max-w-screen-xxl">
-        {/* Trending Properties */}
-        <div className="mb-12 px-4">
-          <h1 className="text-4xl font-extrabold text-gray-900 font-serif relative pb-4">
-            Trending Properties in Madhya Pradesh
-            <div className="absolute bottom-0 left-0 w-24 h-2 bg-gradient-to-r from-green-400 to-blue-500 rounded-full"></div>
-          </h1>
-          <p className="text-lg text-gray-600 mt-3">Discover premium living spaces</p>
+    <div className="flex min-h-screen overflow-hidden">
+      <div className="mt-6 mb-6 bg-gray-100 p-4 w-full shadow-md ml-4">
+        {loading && <Loader />}
+
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+          <div>
+            <label className="block mb-1 font-medium">Property Type</label>
+            <select
+              value={propertyType}
+              onChange={(e) => setPropertyType(e.target.value)}
+              className="w-full border p-2 rounded"
+            >
+              <option value="">All</option>
+              <option value="Apartment">Apartment</option>
+              <option value="Villa">Villa</option>
+              <option value="Plot">Plot</option>
+              <option value="House">House</option>
+            </select>
+          </div>
+
+          <div>
+            <label className="block mb-1 font-medium">City</label>
+            <Controller
+              control={control}
+              name="city"
+              render={({ field: { onChange, value, ref } }) => {
+                const selectedOption =
+                  cityOptions.find((option) => option.value === value) || null;
+                return (
+                  <Select
+                    inputRef={ref}
+                    options={cityOptions}
+                    value={selectedOption}
+                    onChange={(option) => {
+                      onChange(option ? option.value : null);
+                      setCityId(option ? option.cityId : "");
+                    }}
+                    isClearable
+                    placeholder="Select City"
+                  />
+                );
+              }}
+            />
+          </div>
+
+          <div>
+            <label className="block mb-1 font-medium">Locality</label>
+            <GooglePlacesAutocomplete
+              apiKey="AIzaSyAR_v8jpeLQrfsuZ0MvEWmxc6zomaCKPw4"
+              selectProps={{
+                value: locality,
+
+                onChange: (val) => {
+                  setLocality(val);
+                  if (!val) {
+                    setLat(null);
+                    setLng(null);
+                  }
+                },
+                placeholder: "Search Locality...",
+                isClearable: true,
+              }}
+            />
+          </div>
         </div>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-8 pb-12">
-          {properties.map((property) => (
-            <TrendingProperty key={property.id} property={property} />
+        {/* Properties Grid */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+          {properties.map((property, index) => (
+            <div
+              key={index}
+              className="relative bg-white rounded-2xl shadow-md hover:shadow-xl transition-shadow p-4 flex flex-col justify-between h-full"
+            >
+              {/* Card Content */}
+              <div
+                className="flex-grow cursor-pointer"
+                onClick={() => navigate(`/propertyDetails/${property._id}`)}
+              >
+                <div className="flex justify-center items-center mb-4">
+                  <img
+                    src={
+                      property.propertyImages?.[0] ||
+                      "https://via.placeholder.com/400x250?text=No+Image"
+                    }
+                    alt={property.title}
+                    className="rounded-lg object-cover w-full h-48"
+                  />
+                </div>
+
+                <h3 className="text-xl font-semibold text-gray-800 truncate">
+                  {property.title}
+                </h3>
+                <p className="text-sm text-gray-500 mb-2">
+                  {property.propertyType}
+                </p>
+                <p className="text-gray-700 font-medium mb-2">
+                  ₹ {property.price.toLocaleString()}
+                </p>
+
+                <div className="text-sm text-gray-600 mb-2">
+                  {property.location?.city?.name}, {property.location?.state},{" "}
+                  {property.location?.country}
+                </div>
+
+                <div className="flex flex-wrap text-sm text-gray-600 gap-2 mb-2">
+                  <span>🛏 {property.bedrooms} Beds</span>
+                  <span>🛁 {property.bathrooms} Baths</span>
+                  <span>📐 {property.size} sqft</span>
+                </div>
+
+                <div className="text-sm text-gray-500">
+                  Posted by: {property.owner?.name}
+                </div>
+                <div
+                  className={`mt-2 ${
+                    property.status === "available"
+                      ? "text-green-600"
+                      : property.status === "sold"
+                      ? "text-red-600"
+                      : "text-gray-600"
+                  }`}
+                >
+                  {property.status.charAt(0).toUpperCase() +
+                    property.status.slice(1)}
+                </div>
+              </div>
+            </div>
           ))}
         </div>
+
+        {/* Pagination */}
+        <div className="flex justify-between items-center mt-4">
+          <div className="text-sm text-slate-500">
+            Showing <b>{start}</b> to <b>{end}</b> of <b>{totalProperties}</b>{" "}
+            properties
+          </div>
+          <Pagination
+            currentPage={page}
+            totalPages={totalPages}
+            onPageChange={setPage}
+            hasPrevPage={hasPrevPage}
+            hasNextPage={hasNextPage}
+          />
+        </div>
       </div>
     </div>
-    // =============
-    
-    
   );
-}
-
-export default Categories;
+};

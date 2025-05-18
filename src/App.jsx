@@ -1,7 +1,6 @@
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import CustomNavbar from "./Pages/CustomNavbar";
 import HomeSection from "./Pages/HomeSection";
-import Cotegories from "./Pages/Cotegories";
 import CoustomFooter from "./Pages/CoustomFooter";
 import CoustomContact from "./Pages/CoustomContact";
 import FAQ from "./Pages/FAQ";
@@ -18,33 +17,34 @@ import PremiumPage from "./Pages/PremiumPage";
 import LuxuryPage from "./Pages/LuxuryPage";
 import Cards from "./Pages/Cards";
 import AboutUs from "./Pages/AboutUs";
-import TrendingProperty from "./Pages/TrendingProperty";
+import { TrendingProperty } from "./Pages/TrendingProperty";
 import { GoogleOAuthProvider } from "@react-oauth/google";
 import ProtectedRoute from "./Protected/ProtectedRoute";
 import AddProperty from "./Admin-Page/AddProperty";
 import VerifyUser from "./VerifyUser";
 import { getUserDetail } from "./redux/slices/authUtlis";
 import { useEffect, useState } from "react";
-import EditProperty from "./Admin-Page/EditProperty";
 import UserManagement from "./Admin-Page/UserManagement";
 import { Properties } from "./Admin-Page/Properties";
 import Booking from "./Admin-Page/Bookings";
+import { PropertiesList } from "./Buyer/PropertyList";
+import { Enquiries } from "./Admin-Page/Enquiries";
 
 function App() {
   const CLIENT_ID =
     "160483331532-ehfiher4egcksebq5g7lr921nq3g7n28.apps.googleusercontent.com";
-  const [userRole, setUserRole] = useState(null);
+  const [userRole, setUserRole] = useState(false);
   const [loading, setLoading] = useState(true);
+  const [user, setUser] = useState(getUserDetail());
 
   useEffect(() => {
-    const user = getUserDetail();
     if (user && user.role) {
-      setUserRole(user.role);
+      setUserRole(true);
     } else {
       setUserRole(null);
     }
     setLoading(false);
-  }, []);
+  }, [user]);
 
   if (loading) {
     return <div className="text-center mt-10">Loading...</div>;
@@ -54,7 +54,7 @@ function App() {
     <Router>
       <div>
         {/* Show navbar only if user is not an admin */}
-        {userRole !== "admin" && <CustomNavbar />}
+        {userRole ? null : <CustomNavbar />}
 
         <Routes>
           <Route
@@ -64,7 +64,6 @@ function App() {
                 <HomeSection />
                 <AboutUs />
                 <TrendingProperty />
-                <Cotegories />
                 <Services />
                 <Cards />
                 <FAQ />
@@ -77,7 +76,7 @@ function App() {
             path="/login"
             element={
               <GoogleOAuthProvider clientId={CLIENT_ID}>
-                <LoginPage />
+                <LoginPage setUser={setUser} />
               </GoogleOAuthProvider>
             }
           />
@@ -95,7 +94,7 @@ function App() {
             path="/dashboard"
             element={
               <ProtectedRoute>
-                <Dashboard />
+                <Dashboard setUser={setUser} />
               </ProtectedRoute>
             }
           />
@@ -111,7 +110,7 @@ function App() {
             path="/property/edit/:id"
             element={
               <ProtectedRoute>
-                <EditProperty />
+                <AddProperty />
               </ProtectedRoute>
             }
           />
@@ -119,7 +118,7 @@ function App() {
             path="/users"
             element={
               <ProtectedRoute>
-                <UserManagement />
+                <UserManagement setUser={setUser} />
               </ProtectedRoute>
             }
           />
@@ -127,7 +126,7 @@ function App() {
             path="/properties"
             element={
               <ProtectedRoute>
-                <Properties />
+                <Properties setUser={setUser} />
               </ProtectedRoute>
             }
           />
@@ -135,12 +134,28 @@ function App() {
             path="/bookings"
             element={
               <ProtectedRoute>
-                <Booking />
+                <Booking setUser={setUser} />
+              </ProtectedRoute>
+            }
+          />
+          {/* Buyer */}
+          <Route
+            path="/properties-list"
+            element={
+              <ProtectedRoute>
+                <PropertiesList setUser={setUser} />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/enquiries"
+            element={
+              <ProtectedRoute>
+                <Enquiries setUser={setUser} />
               </ProtectedRoute>
             }
           />
         </Routes>
-
         <CoustomFooter />
       </div>
     </Router>

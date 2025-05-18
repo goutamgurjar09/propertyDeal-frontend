@@ -114,7 +114,7 @@ const PaginatedTable = ({
           </tr>
         </thead>
         <tbody className="text-slate-700">
-          {data.length > 0 ? (
+          {data?.length > 0 ? (
             data.map((row, rowIndex) => (
               <tr
                 key={rowIndex}

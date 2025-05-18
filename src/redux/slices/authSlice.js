@@ -158,6 +158,25 @@ export const deleteUser = createAsyncThunk(
   }
 );
 
+// Send sms
+export const sendSms = createAsyncThunk(
+  "auth/sendSms",
+  async (userData, { rejectWithValue }) => {
+    try {
+      const response = await axios.post(
+        `${BASE_URL}/api/auth/send-sms`,
+        userData,
+        {
+          withCredentials: true,
+        }
+      );
+      return response.data;
+    } catch (error) {
+      return rejectWithValue(error.response?.data || "SMS sending failed");
+    }
+  }
+);
+
 // ========== AUTH SLICE ==========
 const authSlice = createSlice({
   name: "auth",
@@ -301,6 +320,20 @@ const authSlice = createSlice({
         );
       })
       .addCase(deleteUser.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload;
+      })
+
+      //send sms
+      .addCase(sendSms.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(sendSms.fulfilled, (state, action) => {
+        state.loading = false;
+        state.message = action.payload.message;
+      })
+      .addCase(sendSms.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload;
       });

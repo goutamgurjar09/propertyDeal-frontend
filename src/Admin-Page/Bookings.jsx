@@ -9,7 +9,7 @@ import { showSuccess, showError } from "../Alert";
 import Loader from "../CommonComponent/Loader";
 import PaginatedTable from "../CommonComponent/PaginatedTable";
 
-const Booking = () => {
+const Booking = ({setUser}) => {
   const [sidebarOpen, setSidebarOpen] = useState(true);
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -151,9 +151,9 @@ const Booking = () => {
           sidebarOpen ? "w-2/3" : "w-full"
         } bg-white`}
       >
-        <Header sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen} />
+        <Header sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen} setUser={setUser} />
         <div className="mt-6 mb-6 bg-gray-100 p-4 shadow-md w-[96%] ml-4">
-          <h2 className="text-2xl text-center font-bold mb-6 text-slate-700">
+          <h2 className="text-2xl  font-bold mb-6 text-slate-700">
             Bookings
           </h2>
 

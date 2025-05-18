@@ -1,20 +1,39 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import { getProperties, deleteProperty } from "../redux/slices/propertySlice";
-import { FaEdit, FaTrash } from "react-icons/fa";
+import {
+  getProperties,
+  deleteProperty,
+  updatePropertyStatus,
+} from "../redux/slices/propertySlice";
+import { FaEdit, FaEye, FaTrash } from "react-icons/fa";
 import { showError, showSuccess } from "../Alert";
 import Sidebar from "../Pages/Layout/Sidebar";
 import Header from "../Pages/Layout/Header";
 import Pagination from "../CommonComponent/Pagination";
 import Loader from "../CommonComponent/Loader";
-export const Properties = () => {
+import GooglePlacesAutocomplete from "react-google-places-autocomplete";
+import { getCities } from "../redux/slices/citySlice";
+import Select from "react-select";
+import { Controller, useForm } from "react-hook-form";
+import axios from "axios";
+import PaginatedTable from "../CommonComponent/PaginatedTable";
+
+export const Properties = ({setUser}) => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const [sidebarOpen, setSidebarOpen] = useState(true);
-
-  // Redux state
+  const [cityId, setCityId] = useState(null);
+  const [page, setPage] = useState(1);
+  const [limit] = useState(10);
+  const [propertyType, setPropertyType] = useState("");
+  const [locality, setLocality] = useState(null);
+  const [lat, setLat] = useState(null);
+  const [lng, setLng] = useState(null);
+  const { control } = useForm();
   const property = useSelector((state) => state.property);
+  const { cities } = useSelector((state) => state.city);
+
   const {
     properties,
     loading,
@@ -25,20 +44,21 @@ export const Properties = () => {
     hasPrevPage,
   } = property;
 
-  // Local state for pagination and filters
-  const [page, setPage] = useState(1);
-  const [limit] = useState(10); // You can also make limit changeable
-  const [propertyType, setPropertyType] = useState(""); // Filter
+  useEffect(() => {
+    dispatch(getProperties({ page, limit, propertyType, cityId, lat, lng }));
+  }, [dispatch, page, limit, propertyType, cityId, lat, lng]);
 
   useEffect(() => {
-    dispatch(getProperties({ page, limit, propertyType }));
-  }, [dispatch, page, limit, propertyType]);
+    dispatch(getCities());
+  }, [dispatch]);
 
   const handleDelete = async (id) => {
     if (window.confirm("Are you sure you want to delete this property?")) {
       try {
         await dispatch(deleteProperty(id));
-        dispatch(getProperties({ page, limit, propertyType })); // Refresh properties after deletion
+        dispatch(
+          getProperties({ page, limit, propertyType, cityId, lat, lng })
+        );
         showSuccess("Property deleted successfully!");
       } catch (err) {
         showError("Failed to delete property. Please try again.");
@@ -46,22 +66,140 @@ export const Properties = () => {
     }
   };
 
-  const handleEdit = (id) => {
-    navigate(`/property/edit/${id}`);
-  };
+  const handleEdit = (id) => navigate(`/property/edit/${id}`);
+  const handleAddProperty = () => navigate("/addProperty");
+  const handleView = (id) => navigate(`/propertyDetails/${id}`);
 
-  // Calculate the range of properties being displayed
+  useEffect(() => {
+    const fetchLatLngFromPlaceId = async (placeId) => {
+      try {
+        const res = await axios.get(
+          `http://localhost:8000/api/properties/place-details?placeId=${placeId}`,
+          { withCredentials: true }
+        );
+        const { location } = res.data.result.geometry;
+        setLat(location.lat);
+        setLng(location.lng);
+      } catch (err) {
+        console.error("Failed to fetch lat/lng:", err);
+      }
+    };
+
+    if (locality?.value?.place_id) {
+      fetchLatLngFromPlaceId(locality.value.place_id);
+    }
+  }, [locality]);
+
+  const cityOptions = cities.map((city) => ({
+    value: city.name,
+    label: city.name,
+    cityId: city._id,
+  }));
+
   const start = (page - 1) * limit + 1;
   const end = Math.min(page * limit, totalProperties);
 
   if (error) {
     showError(error);
-    return;
+    return null;
   }
 
-  const handleAddProperty = () => {
-    navigate("/addProperty");
+  const handleStatusToggle = async (id, currentStatus) => {
+    try {
+      const response = await dispatch(
+        updatePropertyStatus({ id, status: currentStatus })
+      );
+      if (response.payload.status) {
+        showSuccess(response.payload.message || "Status updated!");
+        dispatch(
+          getProperties({ page, limit, propertyType, cityId, lat, lng })
+        );
+      } else {
+        showError(
+          response.payload.message || "Failed to update property status."
+        );
+      }
+    } catch (err) {
+      showError("An error occurred while updating the property status.");
+    }
   };
+
+  const columns = [
+    {
+      header: "Image",
+      render: (row) => (
+        <img
+          src={
+            row.propertyImages?.[0] ||
+            "https://via.placeholder.com/80x60?text=No+Image"
+          }
+          alt={row.title}
+          className="w-20 h-14 object-cover rounded"
+        />
+      ),
+    },
+    { header: "Title", accessor: "title" },
+    { header: "Type", accessor: "propertyType" },
+    {
+      header: "City",
+      render: (row) => row.location?.city?.name || "N/A",
+    },
+    {
+      header: "Status",
+      accessor: "status",
+      render: (row) => (
+        <select
+          value={row.status}
+          onChange={(e) => handleStatusToggle(row._id, e.target.value)}
+          className={`ml-2 px-2 py-1 rounded border text-xs ${
+            row.status === "Available"
+              ? "bg-green-100 text-green-700"
+              : row.status === "Sold"
+              ? "bg-red-100 text-red-700"
+              : "bg-amber-100 text-amber-700"
+          }`}
+        >
+          <option value="Available" className="bg-green-100 text-green-700">
+            Available
+          </option>
+          <option value="Sold" className="bg-red-100 text-red-700">
+            Sold
+          </option>
+          <option value="Rented" className="bg-amber-100 text-amber-700">
+            Rented
+          </option>
+        </select>
+      ),
+    },
+    {
+      header: "Actions",
+      render: (row) => (
+        <div className="flex gap-2">
+          <button
+            onClick={() => handleView(row._id)}
+            className="text-green-600 hover:text-green-800"
+            title="View"
+          >
+            <FaEye />
+          </button>
+          <button
+            onClick={() => handleEdit(row._id)}
+            className="text-blue-500 hover:text-blue-700"
+            title="Edit"
+          >
+            <FaEdit />
+          </button>
+          <button
+            onClick={() => handleDelete(row._id)}
+            className="text-red-500 hover:text-red-700"
+            title="Delete"
+          >
+            <FaTrash />
+          </button>
+        </div>
+      ),
+    },
+  ];
 
   return (
     <div className="flex min-h-screen overflow-hidden">
@@ -80,130 +218,97 @@ export const Properties = () => {
         } bg-white`}
       >
         {/* Header */}
-        <Header sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen} />
+        <Header sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen} setUser={setUser} />
+
         <div className="mt-6 mb-6 bg-gray-100 p-4 shadow-md w-[96%] ml-4">
-          {loading && <Loader />}
-          <div className="flex justify-between items-center mb-6">
-            <h1 className="text-2xl font-bold">Property Details</h1>
+          <div className="flex justify-between items-center mb-4">
+            <h1 className="text-2xl font-bold">Property Listings</h1>
             <button
               onClick={handleAddProperty}
-              className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
+              className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700"
             >
               Add Property
             </button>
           </div>
-          {/* Filter by Property Type */}
-          <div className="mb-4 overflow-x-auto">
-            <label className="mr-2 font-medium">Filter by Type:</label>
-            <select
-              value={propertyType}
-              onChange={(e) => setPropertyType(e.target.value)}
-              className="border border-gray-300 p-2 rounded"
-            >
-              <option value="">All</option>
-              <option value="Apartment">Apartment</option>
-              <option value="Villa">Villa</option>
-              <option value="Plot">Plot</option>
-            </select>
-          </div>
 
-          {/* Properties Grid */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-            {properties.map((property, index) => (
-              <div
-                key={index}
-                className="relative bg-white rounded-2xl shadow-md hover:shadow-xl transition-shadow p-4 flex flex-col justify-between h-full"
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+            <div>
+              <label className="block mb-1 font-medium">Property Type</label>
+              <select
+                value={propertyType}
+                onChange={(e) => setPropertyType(e.target.value)}
+                className="w-full border p-2 rounded"
               >
-                {/* Card Content */}
-                <div
-                  className="flex-grow cursor-pointer"
-                  onClick={() => navigate(`/propertyDetails/${property._id}`)}
-                >
-                  <div className="flex justify-center items-center mb-4">
-                    <img
-                      src={
-                        property.propertyImages?.[0] ||
-                        "https://via.placeholder.com/400x250?text=No+Image"
-                      }
-                      alt={property.title}
-                      className="rounded-lg object-cover w-full h-48"
+                <option value="">All</option>
+                <option value="Apartment">Apartment</option>
+                <option value="Villa">Villa</option>
+                <option value="Plot">Plot</option>
+                <option value="House">House</option>
+              </select>
+            </div>
+
+            <div>
+              <label className="block mb-1 font-medium">City</label>
+              <Controller
+                control={control}
+                name="city"
+                render={({ field: { onChange, value, ref } }) => {
+                  const selectedOption =
+                    cityOptions.find((option) => option.value === value) ||
+                    null;
+                  return (
+                    <Select
+                      inputRef={ref}
+                      options={cityOptions}
+                      value={selectedOption}
+                      onChange={(option) => {
+                        onChange(option ? option.value : null);
+                        setCityId(option ? option.cityId : "");
+                      }}
+                      isClearable
+                      placeholder="Select City"
                     />
-                  </div>
+                  );
+                }}
+              />
+            </div>
 
-                  <h3 className="text-xl font-semibold text-gray-800 truncate">
-                    {property.title}
-                  </h3>
-                  <p className="text-sm text-gray-500 mb-2">
-                    {property.propertyType}
-                  </p>
-                  <p className="text-gray-700 font-medium mb-2">
-                    ₹ {property.price.toLocaleString()}
-                  </p>
-
-                  <div className="text-sm text-gray-600 mb-2">
-                    {property.location?.address},{" "}
-                    {property.location?.city?.name}, {property.location?.state},{" "}
-                    {property.location?.country}
-                  </div>
-
-                  <div className="flex flex-wrap text-sm text-gray-600 gap-2 mb-2">
-                    <span>🛏 {property.bedrooms} Beds</span>
-                    <span>🛁 {property.bathrooms} Baths</span>
-                    <span>📐 {property.size} sqft</span>
-                  </div>
-
-                  <div className="text-sm text-gray-500">
-                    Posted by: {property.owner?.name}
-                  </div>
-                  <div
-                    className={`mt-2 ${
-                      property.status === "available"
-                        ? "text-green-600"
-                        : property.status === "sold"
-                        ? "text-red-600"
-                        : "text-gray-600"
-                    }`}
-                  >
-                    {property.status.charAt(0).toUpperCase() +
-                      property.status.slice(1)}
-                  </div>
-                </div>
-
-                {/* Edit/Delete Icons */}
-                <div className="flex flex-col items-end justify-end space-y-4 mt-auto">
-                  <button
-                    onClick={() => handleEdit(property._id)}
-                    className="text-blue-500 hover:text-blue-700"
-                    title="Edit Property"
-                  >
-                    <FaEdit size={18} />
-                  </button>
-                  <button
-                    onClick={() => handleDelete(property._id)}
-                    className="text-red-500 hover:text-red-700"
-                    title="Delete Property"
-                  >
-                    <FaTrash size={18} />
-                  </button>
-                </div>
-              </div>
-            ))}
+            <div>
+              <label className="block mb-1 font-medium">Locality</label>
+              <GooglePlacesAutocomplete
+                apiKey="AIzaSyAR_v8jpeLQrfsuZ0MvEWmxc6zomaCKPw4"
+                selectProps={{
+                  value: locality,
+                  onChange: (val) => {
+                    setLocality(val);
+                    if (!val) {
+                      setLat(null);
+                      setLng(null);
+                    }
+                  },
+                  placeholder: "Search Locality...",
+                  isClearable: true,
+                }}
+              />
+            </div>
           </div>
 
-          {/* Pagination */}
-          <div className="flex justify-between items-center mt-4">
-            <div className="text-sm text-slate-500">
-              Showing <b>{start}</b> to <b>{end}</b> of <b>{totalProperties}</b>{" "}
-              properties
-            </div>
-            <Pagination
+          {loading ? (
+            <Loader />
+          ) : (
+            <PaginatedTable
+              columns={columns}
+              data={properties}
               currentPage={page}
               totalPages={totalPages}
               onPageChange={setPage}
               hasPrevPage={hasPrevPage}
               hasNextPage={hasNextPage}
+              loading={loading}
+              pageSize={limit}
+              totalItems={totalProperties}
             />
-          </div>
+          )}
         </div>
       </div>
     </div>

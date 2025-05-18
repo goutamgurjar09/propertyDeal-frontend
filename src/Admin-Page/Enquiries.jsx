@@ -1,65 +1,66 @@
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { deleteUser, getUsers } from "../redux/slices/authSlice";
 import Sidebar from "../Pages/Layout/Sidebar";
 import Header from "../Pages/Layout/Header";
+import { FaTrash, FaEye } from "react-icons/fa";
+import { useNavigate } from "react-router-dom";
 import { showSuccess, showError } from "../Alert";
-import { FaTrash } from "react-icons/fa";
-import PaginatedTable from "../CommonComponent/PaginatedTable";
 import Loader from "../CommonComponent/Loader";
+import PaginatedTable from "../CommonComponent/PaginatedTable";
+import { deleteEnquiry, getEnquiries } from "../redux/slices/enquirySlices";
 
-const UserManagement = ({setUser}) => {
+export const Enquiries = ({ setUser }) => {
   const [sidebarOpen, setSidebarOpen] = useState(true);
-
   const dispatch = useDispatch();
+  const navigate = useNavigate();
   const [page, setPage] = useState(1);
   const limit = 10;
 
   const {
-    users,
-    totalUsers,
+    enquiryData,
+    totalEnquiries,
     totalPages,
     hasNextPage,
     hasPrevPage,
     error,
     loading,
-  } = useSelector((state) => state.auth);
+  } = useSelector((state) => state.enquiry);
 
   useEffect(() => {
-    dispatch(getUsers({ page, limit }));
+    dispatch(getEnquiries({ page, limit }));
   }, [dispatch, page]);
 
   const handleDelete = async (id) => {
-    if (window.confirm("Are you sure you want to delete this user?")) {
+    if (window.confirm("Are you sure you want to delete this booking?")) {
       try {
-        const response = await dispatch(deleteUser(id));
+        const response = await dispatch(deleteEnquiry(id));
         if (response.payload.status) {
-          showSuccess("User deleted successfully!");
-          dispatch(getUsers({ page, limit })); // Refresh users after deletion
-        } else {
-          showError(response.payload.message || "Failed to delete user.");
+          dispatch(getEnquiries({ page, limit })); // Refresh bookings after deletion
+          showSuccess(response.payload.message);
         }
       } catch (err) {
-        showError("Failed to delete user. Please try again.");
+        showError("Failed to delete booking. Please try again.");
       }
     }
   };
 
   const columns = [
     { header: "Name", accessor: "fullname" },
-    { header: "Email", accessor: "email" },
-    { header: "Role", accessor: "role" },
     { header: "Mobile", accessor: "mobile" },
+    { header: "Email", accessor: "email" },
+    { header: "Message", accessor: "message" },
     {
       header: "Actions",
       render: (row) => (
-        <button
-          className="text-red-500 hover:text-red-700"
-          title="Delete"
-          onClick={() => handleDelete(row._id)}
-        >
-          <FaTrash />
-        </button>
+        <div className="flex space-x-2">
+          <button
+            onClick={() => handleDelete(row._id)}
+            className="text-red-500 hover:text-red-700"
+            title="Delete Booking"
+          >
+            <FaTrash />
+          </button>
+        </div>
       ),
     },
   ];
@@ -85,25 +86,28 @@ const UserManagement = ({setUser}) => {
           sidebarOpen ? "w-2/3" : "w-full"
         } bg-white`}
       >
-        {/* Header */}
-        <Header sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen} setUser={setUser} />
+        <Header
+          sidebarOpen={sidebarOpen}
+          setSidebarOpen={setSidebarOpen}
+          setUser={setUser}
+        />
         <div className="mt-6 mb-6 bg-gray-100 p-4 shadow-md w-[96%] ml-4">
           <h2 className="text-2xl font-bold mb-6 text-slate-700">
-            Users List
+            Enquiries
           </h2>
 
-          {/* User Table */}
+          {/* Booking Table */}
           <PaginatedTable
             columns={columns}
-            data={users}
+            data={enquiryData}
             currentPage={page}
             totalPages={totalPages}
             onPageChange={setPage}
             hasPrevPage={hasPrevPage}
             hasNextPage={hasNextPage}
             loading={loading}
-            pageSize={limit}
-            totalItems={totalUsers}
+            pageSize={limit} // Pass the page size
+            totalItems={totalEnquiries} // Pass the total number of items
           />
         </div>
       </div>
@@ -111,4 +115,4 @@ const UserManagement = ({setUser}) => {
   );
 };
 
-export default UserManagement;
+export default Enquiries;

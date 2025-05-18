@@ -5,7 +5,7 @@ import { useDispatch } from "react-redux";
 import { googleAuth, loginUser } from "./redux/slices/authSlice";
 import { GoogleLogin } from "@react-oauth/google";
 import { showError, showSuccess } from "./Alert";
-function LoginPage() {
+function LoginPage({ setUser }) {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
@@ -16,16 +16,24 @@ function LoginPage() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const { payload } = await dispatch(loginUser({ email: email.trim(), password }));
-  
-  
+      const { payload } = await dispatch(
+        loginUser({ email: email.trim(), password })
+      );
+      console.log(payload.message, "payload");
+
       if (payload?.data) {
-        const { accessToken, isVerified } = payload.data;
-  
+        const { accessToken, isVerified, role } = payload.data;
         if (accessToken) {
           if (isVerified) {
-            showSuccess(payload.message || "Login successful!");
-            navigate("/dashboard");
+            if (role === "admin") {
+              showSuccess(payload.message || "Login successful!");
+              navigate("/dashboard");
+            } else if (role === "buyer") {
+              console.log("Buyer role detected");
+              showSuccess("Login successful");
+              navigate("/properties-list");
+            }
+            setUser(payload.data);
           } else {
             showError("Please verify your email to complete the login.");
             navigate("/verify");
@@ -33,12 +41,13 @@ function LoginPage() {
         } else {
           showError("Login failed. Try again.");
         }
+      } else {
+        showError(payload.message || "Login failed. Try again.");
       }
     } catch (error) {
       showError("An unexpected error occurred during login.");
     }
   };
-  
 
   // Google login handler
   const handleGoogleLogin = async (response) => {
@@ -48,23 +57,25 @@ function LoginPage() {
         showError("Invalid Google response.");
         return;
       }
-  
+
       const result = await dispatch(
         googleAuth({
           tokenId,
           role: selectedRole || null,
         })
       );
-  
+
       if (result.error) {
         const msg = result?.payload?.message;
-        
+
         // 🔍 Check if it's the new user
         if (msg) {
-          showError("Please select a role before continuing with Google login.");
+          showError(
+            "Please select a role before continuing with Google login."
+          );
           return;
         }
-  
+
         // Generic error fallback
         showError(msg || "Google login failed");
         return;
@@ -73,23 +84,26 @@ function LoginPage() {
       if (user?.accessToken && user?.role === "admin") {
         showSuccess("Login successful");
         navigate("/dashboard");
+      } else if (user?.accessToken && user?.role === "buyer") {
+        showSuccess("Login successful");
+        navigate("/properties-list");
       } else {
         showSuccess("Login successful");
         navigate("/");
       }
-     
-      
     } catch (error) {
       showError("Google login error. Please try again.");
     }
   };
-  
+
   return (
     <div className="flex min-h-screen items-center justify-center bg-gray-900 text-white p-4 relative">
       <div className="absolute inset-0 bg-[url('/path-to-your-image.jpg')] bg-cover bg-center blur-lg opacity-30"></div>
 
       <div className="w-full max-w-md bg-white p-8 rounded-lg shadow-xl border border-gray-300 relative z-10">
-        <h2 className="text-center text-3xl font-semibold mb-6 text-gray-900">Log In</h2>
+        <h2 className="text-center text-3xl font-semibold mb-6 text-gray-900">
+          Log In
+        </h2>
 
         <form className="space-y-6" onSubmit={handleSubmit}>
           <div className="w-full border-b border-gray-900 focus-within:border-indigo-500">

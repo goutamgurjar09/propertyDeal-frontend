@@ -4,12 +4,13 @@ import { FaSignOutAlt } from "react-icons/fa";
 import { clearAuthSession, getUserDetail } from "../../redux/slices/authUtlis";
 import { useNavigate } from "react-router-dom";
 
-const Header = ({ sidebarOpen, setSidebarOpen }) => {
+const Header = ({ sidebarOpen, setSidebarOpen, setUser=null }) => {
   const navigate = useNavigate();
   const user = getUserDetail();
 
   const handleLogout = () => {
     clearAuthSession();
+    setUser && setUser(null);
     navigate("/login");
   };
 
@@ -30,7 +31,7 @@ const Header = ({ sidebarOpen, setSidebarOpen }) => {
         {/* Logout Button */}
         <button
           onClick={handleLogout}
-          className="flex items-center gap-2 p-2 bg-red-500 text-white rounded hover:bg-red-600"
+          className="cursor-pointer flex items-center gap-2 p-2 bg-red-500 text-white rounded hover:bg-red-600"
         >
           <FaSignOutAlt />
           Logout

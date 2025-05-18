@@ -1,5 +1,5 @@
 import React from "react";
-import { FaHome, FaUser, FaChartBar, FaSignOutAlt, FaCalendarAlt } from "react-icons/fa"; // Added FaCalendarAlt
+import { FaHome, FaUser, FaChartBar, FaSignOutAlt, FaCalendarAlt, FaEnvelope } from "react-icons/fa"; // Added FaCalendarAlt
 import { RxCross2 } from "react-icons/rx";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { clearAuthSession } from "../../redux/slices/authUtlis";
@@ -69,6 +69,17 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }) => {
             }`}
           >
             <FaCalendarAlt /> Bookings {/* Updated icon */}
+          </button>
+        </Link>
+        <Link to="/enquiries">
+          <button
+            className={`flex items-center cursor-pointer gap-2 p-3 w-full rounded text-left ${
+              isActive("/enquiries")
+                ? "bg-blue-500 text-white"
+                : "bg-gray-200 hover:bg-gray-300"
+            }`}
+          >
+            <FaEnvelope /> Enquiries {/* Updated icon */}
           </button>
         </Link>
         <button
