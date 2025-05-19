@@ -76,7 +76,7 @@ const ForgotPassword = () => {
     if (result?.payload?.data?.otp_send) {
       setOtpField(true);
     } else if (result?.payload?.data?.otp_verified) {
-      navigate("/dashboard");
+      navigate("/login");
     } else {
       alert(result?.payload?.message || "OTP process failed");
     }

@@ -2,7 +2,7 @@ import { FaFilm } from "react-icons/fa";
 
 const CoustomFooter = () => {
   return (
-    <footer className="bg-[#005555]  text-white py-10 ">
+    <footer className="bg-[#120C2C]  text-white py-10 ">
       <div className="max-w-7xl font-serif  font-xl mx-auto grid grid-cols-2 md:grid-cols-4 gap-5 ">
         {/* About Section */}
         <div>

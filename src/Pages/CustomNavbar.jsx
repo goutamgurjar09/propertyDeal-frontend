@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { IoMenu, IoClose } from "react-icons/io5";
 import { Link, useLocation, useNavigate } from "react-router-dom";
-import { getAuthToken,clearAuthSession } from "../redux/slices/authUtlis"; 
+import { getAuthToken, clearAuthSession } from "../redux/slices/authUtlis";
 
 function CustomNavbar() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -28,15 +28,14 @@ function CustomNavbar() {
     clearAuthSession();
     navigate("/login");
   };
-  
 
   return (
     <nav
       className={`fixed ${
         isScrolled
-          ? "top-0 left-0 right-0 bg-[#005555] bg-opacity-80 shadow-lg rounded-none font-serif"
-          : "top-2 left-10 right-10 bg-transparent border border-[#005555] rounded-full shadow-lg font-serif"
-      } z-50 text-white font-bold px-6 py-3 transition-all duration-700 backdrop-blur-md`}
+          ? "top-0 left-0 text-black right-0 bg-[#120C2C] text-white bg-opacity-80 shadow-lg rounded-none font-serif"
+          : "top-2 left-10 right-10 border border-[#120C2C] rounded-full shadow-lg font-serif"
+      } z-50 text-white bg-[#120C2C] font-bold px-6 py-3 transition-all duration-700`}
     >
       <div className="container mx-auto flex items-center justify-between">
         {!isDashboard ? (

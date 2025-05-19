@@ -9,6 +9,8 @@ import Select from "react-select";
 import { useForm } from "react-hook-form";
 import Pagination from "../CommonComponent/Pagination";
 import Loader from "../CommonComponent/Loader";
+import axios from "axios";
+import { useNavigate } from "react-router-dom";
 
 export const TrendingProperty = () => {
   const dispatch = useDispatch();
@@ -36,7 +38,7 @@ export const TrendingProperty = () => {
   const [page, setPage] = useState(1);
   const [limit] = useState(10); // You can also make limit changeable
   const [propertyType, setPropertyType] = useState(""); // Filter
-
+  const navigate = useNavigate();
   useEffect(() => {
     dispatch(getProperties({ page, limit, propertyType, cityId, lat, lng }));
   }, [dispatch, page, limit, propertyType, cityId, lat, lng]);
@@ -155,10 +157,7 @@ export const TrendingProperty = () => {
               className="relative bg-white rounded-2xl shadow-md hover:shadow-xl transition-shadow p-4 flex flex-col justify-between h-full"
             >
               {/* Card Content */}
-              <div
-                className="flex-grow cursor-pointer"
-                onClick={() => navigate(`/propertyDetails/${property._id}`)}
-              >
+              <div className="flex-grow cursor-pointer">
                 <div className="flex justify-center items-center mb-4">
                   <img
                     src={
@@ -207,6 +206,12 @@ export const TrendingProperty = () => {
                     property.status.slice(1)}
                 </div>
               </div>
+              <button
+                className=" mt-4 bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700"
+                onClick={() => navigate("/login")}
+              >
+                Book Now
+              </button>
             </div>
           ))}
         </div>
