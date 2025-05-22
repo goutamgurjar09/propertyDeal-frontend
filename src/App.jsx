@@ -1,7 +1,6 @@
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
-import CustomNavbar from "./Pages/CustomNavbar";
+
 import HomeSection from "./Pages/HomeSection";
-import CoustomFooter from "./Pages/CoustomFooter";
 import CoustomContact from "./Pages/CoustomContact";
 import FAQ from "./Pages/FAQ";
 import LoginPage from "./LoginPage";
@@ -29,6 +28,8 @@ import { Properties } from "./Admin-Page/Properties";
 import Booking from "./Admin-Page/Bookings";
 import { PropertiesList } from "./Buyer/PropertyList";
 import { Enquiries } from "./Admin-Page/Enquiries";
+import Navbar from "./Pages/Layout/Navbar";
+import Footer from "./Pages/Layout/Footer";
 
 function App() {
   const CLIENT_ID =
@@ -54,15 +55,17 @@ function App() {
     <Router>
       <div>
         {/* Show navbar only if user is not an admin */}
-        {userRole ? null : <CustomNavbar />}
+        {userRole ? null : <Navbar/>}
 
         <Routes>
           <Route
             path="/"
             element={
               <>
+                {/* <CustomNavbar/> */}
+
                 <HomeSection />
-                <AboutUs />
+                {/* <AboutUs /> */}
                 <TrendingProperty />
                 <Services />
                 <Cards />
@@ -90,6 +93,7 @@ function App() {
           <Route path="/propertyDetails/:id" element={<PropertyDetails />} />
           <Route path="/booking" element={<BookingPage />} />
           <Route path="/contact" element={<CoustomContact />} />
+          <Route path="/About" element={<AboutUs/>} />
           <Route
             path="/dashboard"
             element={
@@ -156,7 +160,7 @@ function App() {
             }
           />
         </Routes>
-        <CoustomFooter />
+  <Footer/>
       </div>
     </Router>
   );

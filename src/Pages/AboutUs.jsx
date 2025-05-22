@@ -50,9 +50,6 @@ function AboutUs() {
             className="w-170 h-80 rounded-xl shadow-xl object-cover"
           />
 
-        
-
-            
         </div>
       </div>
     </div>

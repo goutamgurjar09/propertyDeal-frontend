@@ -1,80 +1,176 @@
-import React from "react";
+import React, { useState } from "react";
+import rental from "../../src/assets/Image/rental.jpg";
+import commercial from "../../src/assets/Image/commercial.jpg" // Use real images if available
+import PG from "../../src/assets/Image/PG.jpg";
+import House from "../../src/assets/Image/House.jpg";
+import Hostel from "../../src/assets/Image/Hostel.jpg";
+// import Plot from "../../src/assets/Image/Plot.jpg";
+
+
 
 const services = [
   {
-    title: "PG and co-living",
-    description: "Organised, owner and broker listed PGs",
-    image: "src/assets/cotegories-img.png",
-    bgColor: "bg-gray-100 shadow-md", 
+    title: "Rental",
+    icon: (
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        className="w-12 h-12"
+        fill="none"
+        viewBox="0 0 24 24"
+        stroke="currentColor"
+        strokeWidth={2}
+      >
+        <path d="M3 7h18M6 7v10m12-10v10M9 17v4h6v-4" />
+      </svg>
+    ),
+    image: rental,
   },
   {
-    title: "commercial property",
-    description: "Shops, offices, land, factories, warehouses and more",
-    image: "src/assets/cotegories-img.png",
-    bgColor: "bg-white shadow-md", // White with shadow
+    title: "Commercial",
+    icon: (
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        className="w-12 h-12"
+        fill="none"
+        viewBox="0 0 24 24"
+        stroke="currentColor"
+        strokeWidth={2}
+      >
+        <path d="M4 6h16M4 10h16M4 14h16M4 18h16" />
+      </svg>
+    ),
+    image: commercial,
   },
   {
-    title: "commercial property",
-    description: "Shops, offices, land, factories, warehouses and more",
-    image: "src/assets/cotegories-img.png",
-    bgColor: "bg-gray-100 shadow-md", 
+    title: "PG",
+    icon: (
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        className="w-12 h-12"
+        fill="none"
+        viewBox="0 0 24 24"
+        stroke="currentColor"
+        strokeWidth={2}
+      >
+        <path d="M4 10h16M4 14h16M10 6v12" />
+      </svg>
+    ),
+    image: PG,
   },
   {
-    title: "Buying a home",
-    description: "Apartments, land, builder floors, villas and more",
-    image: "src/assets/cotegories-img.png",
-    bgColor: "bg-gray-100 shadow-md", 
+    title: "Hostel",
+    icon: (
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        className="w-12 h-12"
+        fill="none"
+        viewBox="0 0 24 24"
+        stroke="currentColor"
+        strokeWidth={2}
+      >
+        <path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z" />
+        <path d="M9 22V12h6v10" />
+      </svg>
+    ),
+    image: Hostel,
   },
   {
-    title: "Buy Plots/Land",
-    description:
-      "Residential Plots, Agricultural Farm lands, Inst. Lands and more",
-    image: "src/assets/cotegories-img.png",
-    bgColor: "bg-gray-100 shadow-md", 
+    title: "House",
+    icon: (
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        className="w-12 h-12"
+        fill="none"
+        viewBox="0 0 24 24"
+        stroke="currentColor"
+        strokeWidth={2}
+      >
+        <path d="M4 12l8-8 8 8M4 12v8h16v-8" />
+      </svg>
+    ),
+    image: House,
   },
   {
-    title: "Rent a Home",
-    description: "Flats, apartments, houses, builder floors and more",
-    image: "src/assets/cotegories-img.png",
-    bgColor: "bg-gray-100 shadow-md", 
+    title: "Plot",
+    icon: (
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        className="w-12 h-12"
+        fill="none"
+        viewBox="0 0 24 24"
+        stroke="currentColor"
+        strokeWidth={2}
+      >
+        <rect x="3" y="8" width="18" height="10" rx="2" />
+        <path d="M7 8V6h10v2" />
+      </svg>
+    ),
+    image: rental,
   },
 ];
 
-function Services() {
+const Services = () => {
+  const [selected, setSelected] = useState("Rental");
+  const selectedService = services.find(
+    (service) => service.title === selected
+  );
+
   return (
-    <div className="bg-white  py-16 px-6 sm:px-10 flex justify-center m-18 rounded-3xl shadow-2xl">
-      <div className="max-w-7xl w-full">
-        <h2 className="text-3xl font-bold font-serif bg-clip-text text-blue-950 mb-8 text-left relative inline-block group">
-          Explore Our Services
-          <span className="block w-40 h-1 bg-blue-800 mt-2 transition-all duration-300 group-hover:w-full"></span>
-        </h2>
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
-          {services.map((service, index) => (
-            <div
-              key={index}
-              className={`${service.bgColor} p-6 sm:p-8 rounded-xl shadow-lg transition-transform duration-300 transform hover:scale-105 hover:shadow-xl hover:bg-opacity-90 w-full`}
-            >
-              <div className="flex flex-col sm:flex-row items-center sm:items-start space-y-4 sm:space-y-0 sm:space-x-6">
-                <img
-                  src={service.image}
-                  alt={service.title}
-                  className="w-20 h-20 sm:w-24 sm:h-24 rounded-lg object-cover shadow-md"
-                />
-                <div className="text-center sm:text-left">
-                  <h3 className="text-xl sm:text-2xl font-semibold text-gray-800">
-                    {service.title}
-                  </h3>
-                  <p className="text-md text-gray-700 mt-2">
-                    {service.description}
-                  </p>
+   
+
+    <div className="max-w-7xl mx-auto py-16 px-4 sm:px-8 bg-gradient-to-r from-white via-[#f0fdfa] to-gray-100 rounded-3xl shadow-lg">
+      <h2 className="text-4xl font-bold text-center text-[#005555] font-serif mb-16">
+        Explore Our Categories
+      </h2>
+
+      <div className="flex flex-col lg:flex-row gap-12 items-start justify-between">
+        {/* Left: Category Grid */}
+        <div className="grid grid-cols-2 sm:grid-cols-3 gap-6 w-full lg:w-[60%] mt-12">
+          {services.map((service) => {
+            const isSelected = service.title === selected;
+            return (
+              <div
+                key={service.title}
+                onClick={() => setSelected(service.title)}
+                className={`cursor-pointer flex flex-col items-center justify-center rounded-xl p-6 text-center transition-all duration-300 border transform hover:scale-105 ${
+                  isSelected
+                    ? "bg-gradient-to-br from-[#005555] to-[#007777] text-white border-[#005555] shadow-2xl"
+                    : "bg-white text-gray-800 hover:shadow-xl"
+                }`}
+              >
+                <div className="mb-3 transition-transform duration-200 hover:scale-110">
+                  {service.icon}
                 </div>
+                <span className="text-lg font-semibold">{service.title}</span>
               </div>
-            </div>
-          ))}
+            );
+          })}
+        </div>
+
+        {/* Right: Selected Preview */}
+        <div className="w-full lg:w-[40%] bg-white p-6 rounded-xl shadow-2xl text-center relative">
+          {selectedService && (
+            <>
+              <img
+                src={selectedService.image}
+                alt={selectedService.title}
+                className="w-full max-h-64 object-cover rounded-xl mb-6"
+              />
+              <h3 className="text-2xl font-bold text-[#005555]">
+                {selectedService.title}
+              </h3>
+              <p className="text-gray-500 mt-2 text-sm">
+                Discover top features and offerings for our{" "}
+                <strong>{selectedService.title}</strong> spaces.
+              </p>
+            </>
+          )}
+          {/* Decorative background element */}
+          <div className="absolute top-[-20px] right-[-20px] w-20 h-20 bg-[#e0f7f7] rounded-full opacity-20"></div>
         </div>
       </div>
     </div>
   );
-}
+};
 
 export default Services;

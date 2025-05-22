@@ -46,8 +46,8 @@ const HomeSection = () => {
             fadeIn ? "opacity-100" : "opacity-0"
           } shadow-lg shadow-blue-750 hover:text-gray-300 hover:shadow-[0px_0px_20px_rgba(255,99,71,0.8)]`}
         >
-          <h1 className="text-2xl">{texts[currentText]}</h1>
-          <h1 className="text-2xl">{texts[(currentText + 1) % texts.length]}</h1>
+          <h1 className="text-3xl">{texts[currentText]}</h1>
+          <h1 className="text-3xl">{texts[(currentText + 1) % texts.length]}</h1>
         </div>
       </div>
     </section>

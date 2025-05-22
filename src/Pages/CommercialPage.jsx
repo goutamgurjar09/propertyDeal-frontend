@@ -1,5 +1,5 @@
 import React from "react";
-import img from "../assets/cotegories-img.png";
+// import img from "../assets/cotegories-img.png";
 
 const CommercialPage = () => {
   return (
@@ -15,7 +15,7 @@ const CommercialPage = () => {
           >
             <div className="relative">
               <img
-                src={img}
+                src=""
                 alt="Commercial Property"
                 className="w-full h-64 object-cover transition-transform duration-300 hover:scale-110"
               />

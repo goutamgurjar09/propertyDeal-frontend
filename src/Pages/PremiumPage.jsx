@@ -1,5 +1,5 @@
 import React from "react";
-import img from "../assets/cotegories-img.png";
+// import img from "../../src/assets/img_1.png";
 
 const PremiumPage = () => {
   return (
@@ -15,7 +15,7 @@ const PremiumPage = () => {
           >
             <div className="relative">
               <img
-                src={img}
+                src=""
                 alt="Premium Property"
                 className="w-full h-64 object-cover transition-transform duration-300 hover:scale-110"
               />
