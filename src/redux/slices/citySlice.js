@@ -9,7 +9,7 @@ export const getCities = createAsyncThunk(
   async (_, { rejectWithValue }) => {
     try {
       const response = await axios.get(`${API_URL}/cities/get-cities`, { withCredentials: true });
-      console.log(response, "response");
+      (response, "response");
       return response.data;
     } catch (error) {
       return rejectWithValue(error.response.data);

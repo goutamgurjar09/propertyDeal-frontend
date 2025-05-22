@@ -28,6 +28,8 @@ import { Properties } from "./Admin-Page/Properties";
 import Booking from "./Admin-Page/Bookings";
 import { PropertiesList } from "./Buyer/PropertyList";
 import { Enquiries } from "./Admin-Page/Enquiries";
+import { Categories } from "./Admin-Page/Category/Categories";
+import { FilterProperty } from "./Admin-Page/Category/FilterProperty";
 import Navbar from "./Pages/Layout/Navbar";
 import Footer from "./Pages/Layout/Footer";
 
@@ -62,8 +64,6 @@ function App() {
             path="/"
             element={
               <>
-                {/* <CustomNavbar/> */}
-
                 <HomeSection />
                 {/* <AboutUs /> */}
                 <TrendingProperty />
@@ -151,11 +151,20 @@ function App() {
               </ProtectedRoute>
             }
           />
+          <Route path="/property" element={<FilterProperty />} />
           <Route
             path="/enquiries"
             element={
               <ProtectedRoute>
                 <Enquiries setUser={setUser} />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/categories"
+            element={
+              <ProtectedRoute>
+                <Categories setUser={setUser} />
               </ProtectedRoute>
             }
           />

@@ -1,10 +1,10 @@
-import { messaging } from './firebase-config';
-import { getToken } from 'firebase/messaging';
+import { messaging } from "./firebase-config";
+import { getToken } from "firebase/messaging";
 
 export const requestForToken = async () => {
   try {
     const token = await getToken(messaging, {
-      vapidKey: "YOUR_PUBLIC_VAPID_KEY" // From Firebase Console
+      vapidKey: "YOUR_PUBLIC_VAPID_KEY", // From Firebase Console
     });
 
     if (token) {

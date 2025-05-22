@@ -5,6 +5,9 @@ import propertyReducer from "../slices/propertySlice";
 import cityReducer from "../slices/citySlice";
 import bookingReducer from "../slices/bookingSlice";
 import EnquiryFormReducer from "../slices/enquirySlices";
+import categoryReducer from "../slices/categorySlice";
+import viewersReducer from "../slices/trackViewers";
+
 const store = configureStore({
   reducer: {
     auth: authReducer,
@@ -12,7 +15,8 @@ const store = configureStore({
     city: cityReducer,
     booking: bookingReducer,
     enquiry: EnquiryFormReducer,
-
+    category: categoryReducer,
+    viewers: viewersReducer,
   },
 });
 

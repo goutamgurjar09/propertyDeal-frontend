@@ -40,9 +40,7 @@ function SignupPage() {
       formData.append("profileImg", profileImg);
     }
   
-    const result = await dispatch(signupUser(formData));
-    console.log(result);
-  
+    const result = await dispatch(signupUser(formData));  
     if (result.payload?.status === "Success") {
       navigate("/login");
       showSuccess(result.payload?.message);
@@ -51,13 +49,10 @@ function SignupPage() {
   
 
   const handleImageChange = (e) => {
-    console.log(e.target.files[0]);
-
     setProfileImg(e.target.files[0]);
   };
   const handleImageChanges = (event) => {
     const files = Array.from(event.target.files); // Convert FileList to an array
-    console.log(files);
   };
   return (
     <div className="flex min-h-screen items-center justify-center bg-[#005555] text-white p-4 relative">

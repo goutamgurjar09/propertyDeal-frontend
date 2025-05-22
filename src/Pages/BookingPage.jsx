@@ -18,10 +18,9 @@ const BookingPage = ({ propertyId, setIsModalOpen }) => {
   });
 
   const user = getUserDetail();
-  console.log(user);
   useEffect(() => {
     if (user) {
-      setFormData((prev) => ({ ...prev, userId: user.user_id }));
+      setFormData((prev) => ({ ...prev, userId: user.userId }));
     }
   }, []);
 
@@ -38,10 +37,8 @@ const BookingPage = ({ propertyId, setIsModalOpen }) => {
       // Send SMS
       dispatch(
         sendSms({
-          to: 6265983953,
           message: `Property Booked Successfully by ${user.full_name}`,
-          userId: user.user_id,
-          userMobileNumber: user.mobile,
+          userId: user.userId,
         })
       );
 

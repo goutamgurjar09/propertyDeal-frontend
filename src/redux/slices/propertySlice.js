@@ -27,7 +27,7 @@ export const createProperty = createAsyncThunk(
 export const getProperties = createAsyncThunk(
   "property/getProperties",
   async (
-    { page = 1, limit = 10, propertyType = "", cityId, lat, lng },
+    { page = 1, limit = 10, propertyType = "", cityId, lat, lng, categoryId, subCategory },
     { rejectWithValue }
   ) => {
     try {
@@ -41,6 +41,9 @@ export const getProperties = createAsyncThunk(
         params.append("lat", lat);
         params.append("lng", lng);
       }
+
+      if (categoryId) params.append("categoryId", categoryId);
+    if (subCategory) params.append("subCategory", subCategory);
 
       // Only append propertyType if it exists and is non-empty
       if (propertyType.trim()) {

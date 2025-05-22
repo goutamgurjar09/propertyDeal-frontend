@@ -4,32 +4,111 @@ import Header from "../Pages/Layout/Header";
 import { useDispatch, useSelector } from "react-redux";
 import { getProperties } from "../redux/slices/propertySlice";
 import { getUsers } from "../redux/slices/authSlice";
-import { getBookings } from "../redux/slices/bookingSlice";
+import { getBookings, getTotalRevenue } from "../redux/slices/bookingSlice";
 import { getEnquiries } from "../redux/slices/enquirySlices";
+import { getTrackViewersCount } from "../redux/slices/trackViewers";
+
+import { Bar } from "react-chartjs-2";
+import {
+  Chart as ChartJS,
+  BarElement,
+  CategoryScale,
+  LinearScale,
+  Tooltip,
+  Legend,
+} from "chart.js";
+
+ChartJS.register(BarElement, CategoryScale, LinearScale, Tooltip, Legend);
+
+const monthShortNames = [
+  "Jan",
+  "Feb",
+  "Mar",
+  "Apr",
+  "May",
+  "Jun",
+  "Jul",
+  "Aug",
+  "Sep",
+  "Oct",
+  "Nov",
+  "Dec",
+];
 
 export default function Dashboard() {
   const [sidebarOpen, setSidebarOpen] = useState(true);
   const dispatch = useDispatch();
-
   useEffect(() => {
     dispatch(getProperties({ page: 1, limit: 10 }));
     dispatch(getUsers({ page: 1, limit: 10 }));
     dispatch(getBookings({ page: 1, limit: 10 }));
     dispatch(getEnquiries({ page: 1, limit: 10 }));
+    dispatch(getTrackViewersCount());
+    dispatch(getTotalRevenue());
   }, [dispatch]);
 
-  const { totalProperties } = useSelector((state) => state.property);
-  const { totalUsers } = useSelector((state) => state.auth);
-  const { totalBookings } = useSelector((state) => state.booking);
-  const { totalEnquiries } = useSelector((state) => state.enquiry);
+  const {
+    viewers: { trackViewersCount },
+    property: { totalProperties },
+    auth: { totalUsers },
+    booking: { totalBookings, totalRevenueData },
+    enquiry: { totalEnquiries },
+  } = useSelector((state) => state);
 
   const stats = [
     { title: "Total Properties", value: totalProperties },
     { title: "Total Users", value: `${totalUsers}` },
     { title: "Total Bookings", value: totalBookings },
     { title: "Total Enquiries", value: totalEnquiries },
-    { title: "Revenue", value: "$120,000" },
+    { title: "Total Visiters", value: trackViewersCount },
+    { title: "Total Revenue", value: totalRevenueData?.totalRevenue || 0 },
   ];
+
+  const options = {
+    plugins: {
+      tooltip: {
+        callbacks: {
+          title: function (context) {
+            // context[0].label is in YYYY-MM-DD format
+            const dateStr = context[0].label;
+            const dateObj = new Date(dateStr);
+            const day = dateObj.getDate();
+            const month = monthShortNames[dateObj.getMonth()];
+            const year = dateObj.getFullYear();
+            return `${day} ${month} ${year}`;
+          },
+          label: function (context) {
+            return `Revenue: ₹${context.parsed.y}`;
+          },
+        },
+      },
+    },
+  };
+
+  const revenueByDate =
+    totalRevenueData && Array.isArray(totalRevenueData.bookings)
+      ? totalRevenueData.bookings.reduce((acc, item) => {
+          const date = new Date(item.createdAt)?.toISOString()?.split("T")[0];
+          acc[date] = (acc[date] || 0) + item.price;
+          return acc;
+        }, {})
+      : {};
+
+  const labels = Object.keys(revenueByDate);
+  const data = Object.values(revenueByDate);
+
+  const chartData = {
+    labels,
+    datasets: [
+      {
+        label: "Revenue (₹)",
+        data,
+        backgroundColor: "rgba(75, 192, 192, 0.6)",
+        borderColor: "rgba(75, 192, 192, 1)",
+        borderWidth: 1,
+      },
+    ],
+  };
 
   return (
     <div className="flex min-h-screen overflow-hidden">
@@ -64,6 +143,10 @@ export default function Dashboard() {
               </p>
             </div>
           ))}
+        </div>
+        <div className="w-full max-w-4xl mx-auto mt-8 p-6 bg-gray-100 shadow-md rounded-lg mb-3">
+          <h3 className="text-center my-4">Daily Revenue Chart</h3>
+          <Bar data={chartData} options={options} />
         </div>
       </div>
     </div>

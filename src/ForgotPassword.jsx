@@ -25,7 +25,6 @@ const ForgotPassword = () => {
     if (!otpField && !newPasswordField) {
       if (!email) return alert("Email is required");
       result = await dispatch(generateOtp({ otp_type: "forgot", email }));
-      console.log(result, "OTP Generation Result");
 
       if (result?.payload?.data?.otp_send) {
         setOtpField(true);
@@ -37,7 +36,6 @@ const ForgotPassword = () => {
     } else if (otpField && !newPasswordField) {
       if (!otp_number) return alert("OTP is required");
       result = await dispatch(verifyUser({ otp_number, otp_type: "forgot", email }));
-      console.log(result, "OTP Verification Result");
 
       if (result?.payload?.data?.otp_verified) {
         setNewPasswordField(true);
@@ -49,7 +47,6 @@ const ForgotPassword = () => {
     } else if (newPasswordField) {
       if (!newPassword) return alert("New password is required");
       result = await dispatch(resetPassword({ email, otp_type: "forgot", newPassword }));
-      console.log(result, "Password Reset Result");
 
       if (result?.payload?.status === "success") {
         alert("Password reset successful!");
@@ -71,7 +68,7 @@ const ForgotPassword = () => {
         : generateOtp({ otp_type: "varification", email })
     );
 
-    console.log(result);
+    (result);
 
     if (result?.payload?.data?.otp_send) {
       setOtpField(true);
