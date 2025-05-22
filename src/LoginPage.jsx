@@ -19,7 +19,6 @@ function LoginPage({ setUser }) {
       const { payload } = await dispatch(
         loginUser({ email: email.trim(), password })
       );
-      console.log(payload.message, "payload");
 
       if (payload?.data) {
         const { accessToken, isVerified, role } = payload.data;
@@ -29,7 +28,6 @@ function LoginPage({ setUser }) {
               showSuccess(payload.message || "Login successful!");
               navigate("/dashboard");
             } else if (role === "buyer") {
-              console.log("Buyer role detected");
               showSuccess("Login successful");
               navigate("/properties-list");
             }

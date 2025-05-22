@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import goutam from "../assets/video/goutam.mp4";
+import CustomNavbar from "./CustomNavbar";
 
 const HomeSection = () => {
   const texts = [
@@ -30,6 +31,7 @@ const HomeSection = () => {
   return (
     <section className="relative h-screen w-full">
       {/* Video background */}
+      <CustomNavbar />
       <video
         className="absolute top-0 left-0 w-full h-full object-cover"
         autoPlay

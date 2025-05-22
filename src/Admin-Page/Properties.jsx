@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate, useSearchParams } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import {
   getProperties,
@@ -19,7 +19,7 @@ import { Controller, useForm } from "react-hook-form";
 import axios from "axios";
 import PaginatedTable from "../CommonComponent/PaginatedTable";
 
-export const Properties = ({setUser}) => {
+export const Properties = ({ setUser }) => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const [sidebarOpen, setSidebarOpen] = useState(true);
@@ -30,7 +30,7 @@ export const Properties = ({setUser}) => {
   const [locality, setLocality] = useState(null);
   const [lat, setLat] = useState(null);
   const [lng, setLng] = useState(null);
-  const { control } = useForm();
+  const { control, register, setValue } = useForm();
   const property = useSelector((state) => state.property);
   const { cities } = useSelector((state) => state.city);
 
@@ -45,8 +45,26 @@ export const Properties = ({setUser}) => {
   } = property;
 
   useEffect(() => {
-    dispatch(getProperties({ page, limit, propertyType, cityId, lat, lng }));
-  }, [dispatch, page, limit, propertyType, cityId, lat, lng]);
+    dispatch(
+      getProperties({
+        page,
+        limit,
+        propertyType,
+        cityId,
+        lat,
+        lng,
+      })
+    );
+  }, [
+    dispatch,
+    page,
+    limit,
+    propertyType,
+    cityId,
+    lat,
+    lng,
+
+  ]);
 
   useEffect(() => {
     dispatch(getCities());
@@ -218,7 +236,11 @@ export const Properties = ({setUser}) => {
         } bg-white`}
       >
         {/* Header */}
-        <Header sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen} setUser={setUser} />
+        <Header
+          sidebarOpen={sidebarOpen}
+          setSidebarOpen={setSidebarOpen}
+          setUser={setUser}
+        />
 
         <div className="mt-6 mb-6 bg-gray-100 p-4 shadow-md w-[96%] ml-4">
           <div className="flex justify-between items-center mb-4">

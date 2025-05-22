@@ -1,5 +1,5 @@
 import React from "react";
-import { FaHome, FaUser, FaChartBar, FaSignOutAlt, FaCalendarAlt, FaEnvelope } from "react-icons/fa"; // Added FaCalendarAlt
+import { FaHome, FaUser, FaChartBar, FaSignOutAlt, FaCalendarAlt, FaEnvelope, FaTags } from "react-icons/fa"; // Added FaCalendarAlt
 import { RxCross2 } from "react-icons/rx";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { clearAuthSession } from "../../redux/slices/authUtlis";
@@ -82,6 +82,18 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }) => {
             <FaEnvelope /> Enquiries {/* Updated icon */}
           </button>
         </Link>
+        <Link to="/categories">
+          <button
+            className={`flex items-center cursor-pointer gap-2 p-3 w-full rounded text-left ${
+              isActive("/categories")
+                ? "bg-blue-500 text-white"
+                : "bg-gray-200 hover:bg-gray-300"
+            }`}
+          >
+            <FaTags /> Categories {/* Updated icon */}
+          </button>
+        </Link>
+        
         <button
           onClick={handleLogout}
           className="flex items-center cursor-pointer gap-2 p-3 w-full bg-gray-200 rounded hover:bg-gray-300 text-left"

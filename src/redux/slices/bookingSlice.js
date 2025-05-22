@@ -74,11 +74,28 @@ export const updateBookingStatus = createAsyncThunk(
   }
 );
 
+export const getTotalRevenue = createAsyncThunk(
+  "booking/getTotalRevenue",
+  async (_, { rejectWithValue }) => {
+    try {
+      const response = await axios.get(
+        `${BASE_URL}/api/bookings/get-revenue`,
+        {
+          withCredentials: true,
+        }
+      );
+      return response.data;
+    } catch (error) {
+      return rejectWithValue(error.response?.data || "Fetching booking failed");
+    }
+  }
+);
 
 const bookingSlice = createSlice({
   name: "booking",
   initialState: {
     booking: [],
+    totalRevenueData: {},
     loading: false,
     error: null,
     successMessage: null,
@@ -159,6 +176,19 @@ const bookingSlice = createSlice({
       .addCase(updateBookingStatus.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload?.message || "Failed to update booking status";
+      })
+      .addCase(getTotalRevenue.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(getTotalRevenue.fulfilled, (state, action) => {
+        state.loading = false;
+        state.totalRevenueData = action.payload.data;
+        state.success = action.payload.message;
+      })
+      .addCase(getTotalRevenue.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload?.message || "Something went wrong";
       });
   },
 });

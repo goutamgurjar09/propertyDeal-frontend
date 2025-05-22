@@ -2,6 +2,8 @@ import React, { useState, useEffect } from "react";
 import { IoMenu, IoClose } from "react-icons/io5";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { getAuthToken, clearAuthSession } from "../redux/slices/authUtlis";
+import { getCategories } from "../redux/slices/categorySlice";
+import { useDispatch, useSelector } from "react-redux";
 
 function CustomNavbar() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -11,6 +13,7 @@ function CustomNavbar() {
   const location = useLocation();
   const navigate = useNavigate();
   const isDashboard = location.pathname === "/dashboard";
+  const dispatch = useDispatch();
 
   useEffect(() => {
     const handleScroll = () => {
@@ -28,6 +31,14 @@ function CustomNavbar() {
     clearAuthSession();
     navigate("/login");
   };
+
+    const { categories } = useSelector((state) => state.category);
+  // const { singleProperty } = useSelector((state) => state.property);
+
+  // Fetch categories on mount
+  useEffect(() => {
+    dispatch(getCategories({ page: 1, limit: 100 }));
+  }, [dispatch]);
 
   return (
     <nav
@@ -73,6 +84,40 @@ function CustomNavbar() {
 
               {/* Properties with Dropdown */}
               <li
+  className="relative"
+  onMouseEnter={() => setDropdownOpen("properties")}
+  onMouseLeave={() => setDropdownOpen(null)}
+>
+  <button className="hover:text-blue-500 transition-colors duration-300">
+    Properties
+  </button>
+  {dropdownOpen === "properties" && (
+    <div className="absolute top-full left-0 bg-gray-800 text-white rounded-md shadow-lg w-64">
+      {categories.map((cat) => (
+        <div key={cat._id} className="group relative">
+          <button className="w-full text-left px-4 py-2 hover:bg-gray-700">
+            {cat.categoryName}
+          </button>
+          {cat.subCategories.length > 0 && (
+            <div className="absolute top-0 left-full bg-gray-700 text-white rounded-md shadow-lg w-48 hidden group-hover:block">
+              {cat.subCategories.map((sub) => (
+                <Link
+                  key={sub.name}
+                  to={`/property?category=${cat._id}&subCategory=${sub.name}`}
+                  className="block px-4 py-2 hover:bg-gray-600"
+                >
+                  {sub.name}
+                </Link>
+              ))}
+            </div>
+          )}
+        </div>
+      ))}
+    </div>
+  )}
+</li>
+
+              {/* <li
                 className="relative"
                 onMouseEnter={() => setDropdownOpen("properties")}
                 onMouseLeave={() => setDropdownOpen(null)}
@@ -108,7 +153,7 @@ function CustomNavbar() {
                     </Link>
                   </div>
                 )}
-              </li>
+              </li> */}
               <li>
                 <Link
                   to="/booking"

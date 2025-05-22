@@ -11,6 +11,10 @@ import Pagination from "../CommonComponent/Pagination";
 import Loader from "../CommonComponent/Loader";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import {
+  getTrackViewersCount,
+  trackViewers,
+} from "../redux/slices/trackViewers";
 
 export const TrendingProperty = () => {
   const dispatch = useDispatch();
@@ -37,21 +41,12 @@ export const TrendingProperty = () => {
   // Local state for pagination and filters
   const [page, setPage] = useState(1);
   const [limit] = useState(10); // You can also make limit changeable
-  const [propertyType, setPropertyType] = useState(""); // Filter
   const navigate = useNavigate();
-  useEffect(() => {
-    dispatch(getProperties({ page, limit, propertyType, cityId, lat, lng }));
-  }, [dispatch, page, limit, propertyType, cityId, lat, lng]);
 
   useEffect(() => {
-    dispatch(getCities());
-  }, [dispatch]);
-
-  const cityOptions = cities.map((city) => ({
-    value: city.name,
-    label: city.name,
-    cityId: city._id,
-  }));
+    dispatch(getProperties({ page, limit }));
+    dispatch(trackViewers());
+  }, [dispatch, page, limit]);
 
   // Calculate the range of properties being displayed
   const start = (page - 1) * limit + 1;
@@ -87,7 +82,7 @@ export const TrendingProperty = () => {
       <div className="mt-6 mb-6 bg-gray-100 p-4 w-full shadow-md ml-4">
         {loading && <Loader />}
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+        {/* <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
           <div>
             <label className="block mb-1 font-medium">Property Type</label>
             <select
@@ -147,8 +142,8 @@ export const TrendingProperty = () => {
               }}
             />
           </div>
-        </div>
-
+        </div> */}
+        <h1 className="text-center text-4xl mb-8">Properties List</h1>
         {/* Properties Grid */}
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
           {properties.map((property, index) => (
@@ -176,7 +171,7 @@ export const TrendingProperty = () => {
                   {property.propertyType}
                 </p>
                 <p className="text-gray-700 font-medium mb-2">
-                  ₹ {property.price.toLocaleString()}
+                  ₹ {property?.price?.toLocaleString()}
                 </p>
 
                 <div className="text-sm text-gray-600 mb-2">
@@ -202,8 +197,8 @@ export const TrendingProperty = () => {
                       : "text-gray-600"
                   }`}
                 >
-                  {property.status.charAt(0).toUpperCase() +
-                    property.status.slice(1)}
+                  {property?.status?.charAt(0)?.toUpperCase() +
+                    property.status?.slice(1)}
                 </div>
               </div>
               <button

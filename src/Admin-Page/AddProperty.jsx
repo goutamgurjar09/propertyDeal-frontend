@@ -15,6 +15,7 @@ import { showError, showSuccess } from "../Alert";
 import { Link } from "react-router-dom";
 import axios from "axios";
 import { useNavigate, useParams } from "react-router-dom";
+import { getCategories } from "../redux/slices/categorySlice";
 
 const facilityOptions = [
   { value: "Wifi", label: "Wifi" },
@@ -47,6 +48,17 @@ const getSchema = (hasExistingImages) =>
         "At least one image is required",
         (value) => hasExistingImages || (value && value.length > 0)
       ),
+    category: yup.string().required("Category is required"),
+    subCategory: yup
+      .array()
+      .of(
+        yup.object({
+          label: yup.string().required(),
+          value: yup.string().required(),
+        })
+      )
+      .min(1, "Select at least one subcategory")
+      .required("Subcategory is required"),
   });
 const AddProperty = () => {
   const dispatch = useDispatch();
@@ -80,11 +92,19 @@ const AddProperty = () => {
     propertyData.propertyImages.length > 0
   );
 
+  const { categories } = useSelector((state) => state.category);
+
+  useEffect(() => {
+    dispatch(getCategories({ page: 1, limit: 100 }));
+  }, [dispatch]);
+
   const {
     register,
     handleSubmit,
     control,
+    setValue,
     reset,
+    watch,
     formState: { errors },
   } = useForm({
     resolver: yupResolver(getSchema(hasExistingImages)),
@@ -112,6 +132,7 @@ const AddProperty = () => {
         location,
         facilities,
         category,
+        subCategory,
       } = propertyData;
 
       reset({
@@ -125,6 +146,11 @@ const AddProperty = () => {
         description,
         city: location?.city.name,
         owner: owner?.name,
+        subCategory:
+          subCategory?.map((sub) => ({
+            label: sub,
+            value: sub,
+          })) || [],
         facilities: facilities?.map((f) => ({ label: f, value: f })) || [],
         propertyImages: [],
       });
@@ -181,12 +207,18 @@ const AddProperty = () => {
     formData.append("location.city", data.city);
     formData.append("location.locality", locality?.label || "");
     formData.append("location.lat", lat);
-    formData.append("category", data.category);
     formData.append("location.lng", lng);
     formData.append(
       "facilities",
       data.facilities.map((f) => f.value).join(",")
     );
+    formData.append("category", data.category);
+
+    formData.append(
+      "subCategory",
+      data.subCategory.map((f) => f.value).join(",")
+    );
+
     const images = Array.from(data.propertyImages);
 
     images.forEach((img) => {
@@ -216,15 +248,10 @@ const AddProperty = () => {
     }
   };
 
-  const categoryOptions = [
-    "Select Category",
-    "Residential",
-    "Commercial",
-    "Industrial",
-    "Land",
-    "Agricultural",
-    "Other",
-  ];
+  const selectedCategoryId = watch("category");
+  const selectedCategory = categories.find(
+    (cat) => cat._id === selectedCategoryId
+  );
 
   return (
     <div className="max-w-6xl mx-auto my-10 px-6 py-8 bg-gray-100 rounded-lg shadow-md">
@@ -319,16 +346,44 @@ const AddProperty = () => {
         <div>
           <select
             {...register("category")}
-            className="w-full h-12 px-4 border rounded bg-white focus:outline-none focus:ring-2 focus:ring-blue-400"
+            onChange={(e) => {
+              setValue("category", e.target.value);
+              setValue("subCategory", "");
+            }}
+            className="w-full border px-4 py-2 rounded bg-white"
           >
-            {categoryOptions.map((option, index) => (
-              <option key={option} value={index === 0 ? "" : option}>
-                {option}
+            <option value="">Select Category</option>
+            {categories?.map((cat) => (
+              <option key={cat._id} value={cat._id}>
+                {cat.categoryName}
               </option>
             ))}
           </select>
+          <p className="text-red-500 text-sm">{errors.category?.message}</p>
+        </div>
+
+        {/* SubCategory */}
+        <div className="col-span-1 md:col-span-2">
+          <Controller
+            control={control}
+            name="subCategory"
+            render={({ field }) => (
+              <Select
+                {...field}
+                options={
+                  selectedCategory?.subCategories?.map((sub) => ({
+                    label: sub.name,
+                    value: sub.name,
+                  })) || []
+                }
+                isMulti
+                className="w-full"
+                placeholder="Select Subcategories"
+              />
+            )}
+          />
           <p className="text-red-500 text-sm mt-1">
-            {errors.category?.message}
+            {errors.subCategory?.message}
           </p>
         </div>
 

@@ -158,7 +158,20 @@ const PropertyDetails = () => {
               ₹{property.price}
             </div>
             <p className="text-gray-600 mb-2">Type: {property.propertyType}</p>
-            <p className="text-gray-600 mb-2">Category: {property.category}</p>
+            <p className="text-gray-600 mb-2">
+              Category: {property.category?.categoryName}
+            </p>
+            <div className="flex flex-wrap gap-2 mb-4">
+              <p className="text-gray-600 mb-2">Sub Category: </p>
+              {(property?.subCategory || []).map((feature, index) => (
+                <span
+                  key={index}
+                  className="bg-blue-100 text-blue-800 px-3 py-1 rounded-full text-sm font-medium"
+                >
+                  {feature}
+                </span>
+              ))}
+            </div>{" "}
             <p className="text-gray-600 mb-2">
               Status:{" "}
               <span
