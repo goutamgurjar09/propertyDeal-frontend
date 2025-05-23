@@ -1,22 +1,22 @@
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 
-import HomeSection from "./Pages/HomeSection";
-import CoustomContact from "./Pages/CoustomContact";
-import FAQ from "./Pages/FAQ";
+import HomeSection from "./Pages/HomePage/HomeSection";
+import CoustomContact from "./Pages/HomePage/CoustomContact";
+import FAQ from "./Pages/HomePage/FAQ";
 import LoginPage from "./LoginPage";
 import SignupPage from "./SignupPage";
 import PropertyDetails from "./Pages/PropertyDetails";
 import Dashboard from "./Admin-Page/Dashboard";
-import Services from "./Pages/Services";
+import Services from "./Pages/HomePage/Services";
 import PropertyCard from "./Pages/PropertyCard";
 import BookingPage from "./Pages/BookingPage";
 import ForgotPassword from "./ForgotPassword";
-import CommercialPage from "./Pages/CommercialPage";
-import PremiumPage from "./Pages/PremiumPage";
-import LuxuryPage from "./Pages/LuxuryPage";
-import Cards from "./Pages/Cards";
+import CommercialPage from "././Pages/Categories/CommercialPage";
+import PremiumPage from "././Pages/Categories/PremiumPage";
+import LuxuryPage from "././Pages/Categories/PremiumPage";
+import Cards from "./Pages/HomePage/Cards"
 import AboutUs from "./Pages/AboutUs";
-import { TrendingProperty } from "./Pages/TrendingProperty";
+import { TrendingProperty } from "./Pages/HomePage/TrendingProperty";
 import { GoogleOAuthProvider } from "@react-oauth/google";
 import ProtectedRoute from "./Protected/ProtectedRoute";
 import AddProperty from "./Admin-Page/AddProperty";
@@ -32,6 +32,11 @@ import { Categories } from "./Admin-Page/Category/Categories";
 import { FilterProperty } from "./Admin-Page/Category/FilterProperty";
 import Navbar from "./Pages/Layout/Navbar";
 import Footer from "./Pages/Layout/Footer";
+import PrivacyPolicy from "./Pages/PrivacyPolicy";
+import TermsAndConditions from "./Pages/TermsAndConditions";
+import HowItWorks from "./Pages/HomePage/HowItWorks";
+import ScrollToTop from "./Pages/ScrollToTop";
+
 
 function App() {
   const CLIENT_ID =
@@ -57,18 +62,21 @@ function App() {
     <Router>
       <div>
         {/* Show navbar only if user is not an admin */}
-        {userRole ? null : <Navbar/>}
-
+        {userRole ? null : <Navbar />}
+       <ScrollToTop/>
         <Routes>
           <Route
             path="/"
             element={
               <>
-                <HomeSection />
-                {/* <AboutUs /> */}
+               
+
+                <HomeSection/>
                 <TrendingProperty />
+                
                 <Services />
                 <Cards />
+                <HowItWorks/>
                 <FAQ />
                 <CoustomContact />
               </>
@@ -93,7 +101,9 @@ function App() {
           <Route path="/propertyDetails/:id" element={<PropertyDetails />} />
           <Route path="/booking" element={<BookingPage />} />
           <Route path="/contact" element={<CoustomContact />} />
-          <Route path="/About" element={<AboutUs/>} />
+          <Route path="/About" element={<AboutUs />} />
+          <Route path="/PrivacyPolicy" element={<PrivacyPolicy />} />
+          <Route path="/TermsConditions" element={<TermsAndConditions/>} />
           <Route
             path="/dashboard"
             element={
@@ -169,7 +179,7 @@ function App() {
             }
           />
         </Routes>
-  <Footer/>
+        <Footer />
       </div>
     </Router>
   );

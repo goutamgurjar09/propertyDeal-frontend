@@ -5,6 +5,7 @@ import { Link, useLocation, useNavigate } from "react-router-dom";
 import { getAuthToken, clearAuthSession } from "../../redux/slices/authUtlis";
 import { getCategories } from "../../redux/slices/categorySlice";
 import { useDispatch, useSelector } from "react-redux";
+import Logo from "../../assets/Image/logo.png";
 
 function Navbar() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -52,12 +53,13 @@ function Navbar() {
       <div className="max-w-7xl mx-auto flex items-center justify-between">
         {!isDashboard ? (
           <>
-            {/* Logo */}
-            <Link
-              to="/"
-              className="text-2xl sm:text-3xl font-extrabold text-[#005555] hover:text-[#52b9b9] transition-colors duration-300"
-            >
-              LOGO
+           {/* Logo */}
+            <Link to="/" className="flex items-center">
+              <img
+                src={Logo}
+                alt="Company Logo"
+                className="h-10 w-auto sm:h-12 object-contain"
+              />
             </Link>
 
             {/* Mobile Menu Button */}
@@ -211,7 +213,7 @@ function Navbar() {
                     to="/login"
                     className="bg-[#005555] text-white px-5 py-2 rounded-md font-medium hover:text-[#52b9b9] transition shadow-md"
                   >
-                    Sign In
+                    LogIn
                   </Link>
                   <Link
                     to="/signup"

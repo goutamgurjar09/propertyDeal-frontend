@@ -26,10 +26,10 @@ const Footer = () => {
           <ul className="space-y-2 text-sm">
             {[
               { name: "Home", path: "/" },
-              { name: "Categories", path: "/categories" },
-              { name: "FAQ", path: "/faq" },
-              { name: "Contact", path: "/contact" },
               { name: "About", path: "/About" },
+              { name: "Terms & Conditions", path: "/TermsConditions" },
+              { name: "Privacy & Policy", path: "/PrivacyPolicy" },
+              { name: "Contact", path: "/contact" },
             ].map((item, index) => (
               <li key={index} className="relative group">
                 <Link
