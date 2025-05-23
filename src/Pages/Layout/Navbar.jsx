@@ -53,7 +53,7 @@ function Navbar() {
       <div className="max-w-7xl mx-auto flex items-center justify-between">
         {!isDashboard ? (
           <>
-           {/* Logo */}
+            {/* Logo */}
             <Link to="/" className="flex items-center">
               <img
                 src={Logo}
@@ -127,7 +127,7 @@ function Navbar() {
                 onMouseEnter={() => setDropdownOpen("properties")}
                 onMouseLeave={() => setDropdownOpen(null)}
               >
-                <button className="hover:text-blue-500 transition-colors duration-300">
+                <button className="hover:text-[#52b9b9]  text-[#005555] transition-colors duration-300">
                   Properties
                 </button>
                 {dropdownOpen === "properties" && (

@@ -95,11 +95,11 @@ function LoginPage({ setUser }) {
   };
 
   return (
-    <div className="flex min-h-screen items-center justify-center bg-gray-900 text-white p-4 relative">
+    <div className="flex min-h-screen items-center justify-center bg-[#005555] text-white p-4 relative">
       <div className="absolute inset-0 bg-[url('/path-to-your-image.jpg')] bg-cover bg-center blur-lg opacity-30"></div>
 
       <div className="w-full max-w-md bg-white p-8 rounded-lg shadow-xl border border-gray-300 relative z-10">
-        <h2 className="text-center text-3xl font-semibold mb-6 text-gray-900">
+        <h2 className="text-center text-3xl font-serif font-semibold mb-6 text-[#005555]">
           Log In
         </h2>
 
@@ -135,7 +135,7 @@ function LoginPage({ setUser }) {
 
           <Link
             to="/forgetPassword"
-            className="block text-end text-sm font-semibold text-gray-500 hover:text-gray-600 mt-4"
+            className="block text-end text-sm font-semibold text-[#005555] hover:text-gray-600 mt-4"
           >
             FORGOT PASSWORD?
           </Link>
@@ -143,16 +143,16 @@ function LoginPage({ setUser }) {
           <div className="flex justify-center">
             <button
               type="submit"
-              className="w-3/4 bg-gray-900 py-2 mt-4 rounded-full font-bold text-white transition duration-300 hover:bg-gray-700"
+              className="w-3/4 bg-[#005555] hover:bg-[#007777]  py-2 mt-4 rounded-full font-bold text-white transition duration-300 "
             >
-              LOG IN
+              LOGIN
             </button>
           </div>
         </form>
 
         <p className="text-center text-sm mt-4 text-gray-600">
           No account?
-          <Link to="/signup" className="text-indigo-600 hover:underline ml-1">
+          <Link to="/signup" className="text-[#005555] hover:underline ml-1">
             Create One
           </Link>
         </p>
@@ -163,7 +163,7 @@ function LoginPage({ setUser }) {
           />
 
           <select
-            className="border border-gray-300 rounded p-2 text-gray-800"
+            className="border border-gray-300 rounded p-2 text-[#005555]"
             value={selectedRole}
             onChange={(e) => setSelectedRole(e.target.value)}
             required
