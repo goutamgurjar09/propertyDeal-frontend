@@ -1,5 +1,5 @@
 import React from "react";
-import img from "../assets/cotegories-img.png";
+// import img from "../assets/cotegories-img.png";
 import { Link } from "react-router-dom";
 
 const categories = [
@@ -26,7 +26,7 @@ const PropertyCard = () => {
               >
                 <div className="relative">
                   <img
-                    src={img}
+                    src=""
                     alt="Property"
                     className="w-full h-64 object-cover transition-transform duration-300 hover:scale-110"
                   />

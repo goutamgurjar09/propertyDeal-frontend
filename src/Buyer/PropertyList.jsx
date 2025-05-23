@@ -10,7 +10,7 @@ import Select from "react-select";
 import { getCities } from "../redux/slices/citySlice";
 import { Controller, useForm } from "react-hook-form";
 import axios from "axios";
-import CustomNavbar from "../Pages/CustomNavbar";
+import Navbar from "../Pages/Layout/Navbar";
 
 export const PropertiesList = ({ setUser }) => {
   const navigate = useNavigate();
@@ -114,7 +114,7 @@ export const PropertiesList = ({ setUser }) => {
           sidebarOpen ? "w-2/3" : "w-full"
         } bg-white`}
       >
-        <CustomNavbar />
+        <Navbar />
         <div className="mt-6 mb-6 bg-gray-100 p-4 shadow-md w-[96%] ml-4">
           {loading && <Loader />}
 

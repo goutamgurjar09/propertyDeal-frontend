@@ -7,8 +7,8 @@ import axios from "axios";
 import { showError } from "../../Alert";
 import Pagination from "../../CommonComponent/Pagination";
 import Loader from "../../CommonComponent/Loader";
-import CustomNavbar from "../../Pages/CustomNavbar";
 import { getCategoriesById } from "../../redux/slices/categorySlice";
+import Navbar from "../../Pages/Layout/Navbar";
 
 export const FilterProperty = ({ setUser }) => {
   const navigate = useNavigate();
@@ -92,10 +92,10 @@ export const FilterProperty = ({ setUser }) => {
       >
         <div className="mt-6 mb-6 bg-gray-100 p-4 shadow-md w-[96%] ml-4">
           {loading && <Loader />}
-          <CustomNavbar />
+          <Navbar />
           {/* Properties Grid */}
           <h1 className="mt-16 text-5xl font-bold">
-            {categories?.category.categoryName}
+            {categories?.category?.categoryName}
           </h1>
           <div className="grid mt-8 grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
             {properties.map((property, index) => (
