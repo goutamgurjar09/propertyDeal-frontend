@@ -16,7 +16,8 @@ import { Link } from "react-router-dom";
 import axios from "axios";
 import { useNavigate, useParams } from "react-router-dom";
 import { getCategories } from "../redux/slices/categorySlice";
-
+import { InputField } from "../CommonComponent/InputField";
+import { SelectField } from "../CommonComponent/SelectField";
 const facilityOptions = [
   { value: "Wifi", label: "Wifi" },
   { value: "RO", label: "RO" },
@@ -60,13 +61,12 @@ const getSchema = (hasExistingImages) =>
       .min(1, "Select at least one subcategory")
       .required("Subcategory is required"),
   });
-const AddProperty = () => {
+const AddProperty = ({ id, setIsModalOpen, onSuccess }) => {
   const dispatch = useDispatch();
-  const { id } = useParams();
   const navigate = useNavigate();
   const { cities } = useSelector((state) => state.city);
-
   const [locality, setLocality] = useState(null);
+  const [error, setError] = useState("");
   const [lat, setLat] = useState("");
   const [lng, setLng] = useState("");
   const initialValues = {
@@ -85,11 +85,11 @@ const AddProperty = () => {
     propertyImages: [],
   };
 
-  const propertyData = useSelector((state) => state.property.property);
+  const { property, loading } = useSelector((state) => state.property);
   const hasExistingImages = !!(
-    propertyData &&
-    propertyData.propertyImages &&
-    propertyData.propertyImages.length > 0
+    property &&
+    property.propertyImages &&
+    property.propertyImages.length > 0
   );
 
   const { categories } = useSelector((state) => state.category);
@@ -119,7 +119,7 @@ const AddProperty = () => {
   }, [dispatch, id]);
 
   useEffect(() => {
-    if (propertyData && id) {
+    if (property && id) {
       const {
         title,
         price,
@@ -133,7 +133,7 @@ const AddProperty = () => {
         facilities,
         category,
         subCategory,
-      } = propertyData;
+      } = property;
 
       reset({
         title,
@@ -142,7 +142,7 @@ const AddProperty = () => {
         bathrooms,
         size,
         propertyType,
-        category,
+        category: category._id,
         description,
         city: location?.city.name,
         owner: owner?.name,
@@ -162,7 +162,7 @@ const AddProperty = () => {
       setLat(location?.lat || null);
       setLng(location?.lng || null);
     }
-  }, [propertyData, reset, id]);
+  }, [property, reset, id]);
 
   // Fetch cities on mount
   useEffect(() => {
@@ -195,6 +195,9 @@ const AddProperty = () => {
     label: city.name,
   }));
   const onSubmit = async (data) => {
+    if (!locality?.label) {
+      return setError("Locality is required");
+    }
     const formData = new FormData();
     formData.append("title", data.title);
     formData.append("description", data.description);
@@ -224,8 +227,8 @@ const AddProperty = () => {
     images.forEach((img) => {
       formData.append("propertyImages", img);
     });
-    if (id && propertyData?.propertyImages?.length > 0) {
-      propertyData.propertyImages.forEach((img) => {
+    if (id && property?.propertyImages?.length > 0) {
+      property.propertyImages.forEach((img) => {
         formData.append("existingImages", img);
       });
     }
@@ -243,6 +246,8 @@ const AddProperty = () => {
       reset();
       setLocality(null);
       navigate("/properties");
+      setIsModalOpen(false);
+      if (onSuccess) onSuccess();
     } else {
       showError(res.payload.message);
     }
@@ -254,116 +259,91 @@ const AddProperty = () => {
   );
 
   return (
-    <div className="max-w-6xl mx-auto my-10 px-6 py-8 bg-gray-100 rounded-lg shadow-md">
-      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-8">
-        <h2 className="text-2xl sm:text-3xl font-semibold text-gray-800">
-          {id ? "Update Property" : "Create Property"}
-        </h2>
-        <Link to="/properties" className="mt-4 sm:mt-0">
-          <button className="px-5 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded transition duration-200">
-            Go Back
-          </button>
-        </Link>
-      </div>
+    <div className="max-w-6xl mx-auto p-6 bg-white rounded-lg shadow no-scrollbar max-h-[60vh] overflow-scroll">
       <form
         onSubmit={handleSubmit(onSubmit)}
         className="grid grid-cols-1 md:grid-cols-2 gap-6"
       >
-        {/* Title */}
-        <div>
-          <input
-            placeholder="Title*"
-            {...register("title")}
-            className="w-full h-12 px-4 border rounded focus:outline-none focus:ring-2 focus:ring-blue-400"
-          />
-          <p className="text-red-500 text-sm mt-1">{errors.title?.message}</p>
-        </div>
+        <InputField
+          label="Title"
+          register={register}
+          name="title"
+          placeholder="Title"
+          error={errors.title?.message}
+        />
+        <InputField
+          label="Price"
+          register={register}
+          name="price"
+          type="number"
+          placeholder="Price"
+          error={errors.price?.message}
+        />
 
-        {/* Price */}
-        <div>
-          <input
-            placeholder="Price*"
-            type="number"
-            {...register("price")}
-            className="w-full h-12 px-4 border rounded focus:outline-none focus:ring-2 focus:ring-blue-400"
-          />
-          <p className="text-red-500 text-sm mt-1">{errors.price?.message}</p>
-        </div>
+        <InputField
+          label="Bedrooms"
+          register={register}
+          name="bedrooms"
+          type="number"
+          placeholder="Bedrooms"
+          error={errors.bedrooms?.message}
+        />
 
-        {/* Bedrooms */}
-        <div>
-          <input
-            placeholder="Bedrooms*"
-            type="number"
-            {...register("bedrooms")}
-            className="w-full h-12 px-4 border rounded focus:outline-none focus:ring-2 focus:ring-blue-400"
-          />
-          <p className="text-red-500 text-sm mt-1">
-            {errors.bedrooms?.message}
-          </p>
-        </div>
+        <InputField
+          label="Bathrooms"
+          register={register}
+          name="bathrooms"
+          type="number"
+          placeholder="Bathrooms"
+          error={errors.bathrooms?.message}
+        />
 
-        {/* Bathrooms */}
-        <div>
-          <input
-            placeholder="Bathrooms*"
-            type="number"
-            {...register("bathrooms")}
-            className="w-full h-12 px-4 border rounded focus:outline-none focus:ring-2 focus:ring-blue-400"
-          />
-          <p className="text-red-500 text-sm mt-1">
-            {errors.bathrooms?.message}
-          </p>
-        </div>
+        <InputField
+          label="Size  (sq ft)"
+          register={register}
+          name="size"
+          type="number"
+          placeholder="Size (sq ft)"
+          error={errors.size?.message}
+        />
+        <SelectField
+          label="Property Type"
+          register={register}
+          name="propertyType"
+          placeholder="Select Property Type"
+          error={errors.propertyType?.message}
+          options={[
+            { value: "Apartment", label: "Apartment" },
+            { value: "House", label: "House" },
+            { value: "Villa", label: "Villa" },
+            { value: "Commercial", label: "Commercial" },
+          ]}
+        />
 
-        {/* Size */}
-        <div>
-          <input
-            placeholder="Size (sq ft)"
-            type="number"
-            {...register("size")}
-            className="w-full h-12 px-4 border rounded focus:outline-none focus:ring-2 focus:ring-blue-400"
-          />
-          <p className="text-red-500 text-sm mt-1">{errors.size?.message}</p>
-        </div>
-
-        {/* Property Type */}
-        <div>
-          <select
-            {...register("propertyType")}
-            className="w-full h-12 px-4 border rounded bg-white focus:outline-none focus:ring-2 focus:ring-blue-400"
-          >
-            <option value="">Select Property Type</option>
-            <option value="Apartment">Apartment</option>
-            <option value="House">House</option>
-            <option value="Villa">Villa</option>
-            <option value="Commercial">Commercial</option>
-          </select>
-          <p className="text-red-500 text-sm mt-1">
-            {errors.propertyType?.message}
-          </p>
-        </div>
-        <div>
-          <select
-            {...register("category")}
-            onChange={(e) => {
-              setValue("category", e.target.value);
-              setValue("subCategory", "");
-            }}
-            className="w-full border px-4 py-2 rounded bg-white"
-          >
-            <option value="">Select Category</option>
-            {categories?.map((cat) => (
-              <option key={cat._id} value={cat._id}>
-                {cat.categoryName}
-              </option>
-            ))}
-          </select>
-          <p className="text-red-500 text-sm">{errors.category?.message}</p>
-        </div>
-
+        <SelectField
+          label="Category"
+          register={register}
+          name="category"
+          placeholder="Select Category"
+          error={errors.category?.message}
+          options={categories.map((cat) => ({
+            value: cat._id,
+            label: cat.categoryName,
+          }))}
+        />
+        <InputField
+          label="Owner Name"
+          register={register}
+          name="owner"
+          type="text"
+          placeholder="Owner Name*"
+          error={errors.owner?.message}
+        />
         {/* SubCategory */}
         <div className="col-span-1 md:col-span-2">
+          <label className="block text-sm font-medium text-gray-700 mb-1">
+            Sub Category <span className="required: text-red-500">*</span>
+          </label>
           <Controller
             control={control}
             name="subCategory"
@@ -388,7 +368,11 @@ const AddProperty = () => {
         </div>
 
         {/* City (Select) */}
-        <div className="col-span-1">
+
+        <div className="col-span-1 md:col-span-2">
+          <label className="block text-sm font-medium text-gray-700 mb-1">
+            City <span className="required: text-red-500">*</span>
+          </label>
           <Controller
             control={control}
             name="city"
@@ -397,7 +381,7 @@ const AddProperty = () => {
                 cityOptions.find((option) => option.value === value) || null;
               return (
                 <Select
-                  className="w-full h-12"
+                  className="w-full"
                   inputRef={ref}
                   options={cityOptions}
                   value={selectedOption}
@@ -410,21 +394,9 @@ const AddProperty = () => {
           />
           <p className="text-red-500 text-sm mt-1">{errors.city?.message}</p>
         </div>
-
-        {/* Owner */}
-        <div>
-          <input
-            placeholder="Owner Name*"
-            {...register("owner")}
-            className="w-full h-12 px-4 border rounded focus:outline-none focus:ring-2 focus:ring-blue-400"
-          />
-          <p className="text-red-500 text-sm mt-1">{errors.owner?.message}</p>
-        </div>
-
-        {/* Locality (Google Places) */}
         <div className="col-span-1 md:col-span-2">
-          <label className="block mb-2 text-gray-700 font-medium">
-            Search Locality
+          <label className="block text-sm font-medium text-gray-700 mb-1">
+            Search Locality <span className="required: text-red-500">*</span>
           </label>
           <GooglePlacesAutocomplete
             apiKey="AIzaSyAR_v8jpeLQrfsuZ0MvEWmxc6zomaCKPw4"
@@ -435,10 +407,14 @@ const AddProperty = () => {
               isClearable: true,
             }}
           />
+          <p className="text-red-500 text-sm mt-1">{error}</p>
         </div>
 
         {/* Description */}
         <div className="col-span-1 md:col-span-2">
+          <label className="block text-sm font-medium text-gray-700 mb-1">
+            Description <span className="required: text-red-500">*</span>
+          </label>
           <textarea
             placeholder="Description"
             {...register("description")}
@@ -451,9 +427,9 @@ const AddProperty = () => {
         </div>
 
         {/* Property Images */}
-        {propertyData &&
+        {property &&
           id &&
-          propertyData?.propertyImages?.map((imgUrl, index) => (
+          property?.propertyImages?.map((imgUrl, index) => (
             <img
               key={index}
               src={imgUrl}
@@ -461,21 +437,21 @@ const AddProperty = () => {
               className="w-24 h-20 object-cover rounded"
             />
           ))}
-
-        <div className="col-span-1 md:col-span-2">
-          <input
-            type="file"
-            {...register("propertyImages")}
-            multiple
-            className="w-full h-12 px-4 py-2 border rounded bg-white focus:outline-none focus:ring-2 focus:ring-blue-400"
-          />
-          <p className="text-red-500 text-sm mt-1">
-            {errors.propertyImages?.message}
-          </p>
-        </div>
+        <InputField
+          label="Select Images"
+          register={register}
+          name="propertyImages"
+          type="file"
+          multiple
+          placeholder="Select Images*"
+          error={errors.propertyImages?.message}
+        />
 
         {/* Facilities */}
         <div className="col-span-1 md:col-span-2">
+          <label className="block text-sm font-medium text-gray-700 mb-1">
+            Select Facilities <span className="required: text-red-500">*</span>
+          </label>
           <Controller
             control={control}
             name="facilities"
@@ -498,7 +474,8 @@ const AddProperty = () => {
         <div className="col-span-1 md:col-span-2 text-center mt-6">
           <button
             type="submit"
-            className="px-6 py-3 bg-green-600 hover:bg-green-700 text-white rounded shadow transition-all duration-200 cursor-pointer w-full"
+            disabled={loading}
+            className="w-75 p-6 bg-[#005555] hover:bg-[#004444] transition-all duration-300 text-white py-3 rounded-lg font-semibold shadow-md"
           >
             {id ? "Update Property" : "Create Property"}
           </button>

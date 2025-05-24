@@ -45,20 +45,21 @@ export const Enquiries = ({ setUser }) => {
   };
 
   const columns = [
+    { header: "S No.", render: (_, index) => index + 1 },
     { header: "Name", accessor: "fullname" },
     { header: "Mobile", accessor: "mobile" },
     { header: "Email", accessor: "email" },
-    { header: "Message", accessor: "message" },
+    { header: "Message", accessor: "message", className: "max-w-xs" },
     {
       header: "Actions",
       render: (row) => (
         <div className="flex space-x-2">
           <button
+            className="bg-red-100 text-red-500 hover:bg-rose-200 p-2 rounded-lg transition-colors"
+            title={`Delete ${row.fullname}`}
             onClick={() => handleDelete(row._id)}
-            className="text-red-500 hover:text-red-700"
-            title="Delete Booking"
           >
-            <FaTrash />
+            <FaTrash size={14} />
           </button>
         </div>
       ),
@@ -92,9 +93,7 @@ export const Enquiries = ({ setUser }) => {
           setUser={setUser}
         />
         <div className="mt-6 mb-6 bg-gray-100 p-4 shadow-md w-[96%] ml-4">
-          <h2 className="text-2xl font-bold mb-6 text-slate-700">
-            Enquiries
-          </h2>
+          <h2 className="text-2xl font-bold mb-6 text-slate-700">Enquiries</h2>
 
           {/* Booking Table */}
           <PaginatedTable

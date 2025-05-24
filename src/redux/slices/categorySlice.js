@@ -96,6 +96,22 @@ export const updateCategory = createAsyncThunk(
   }
 );
 
+export const updateCategoryStatus = createAsyncThunk(
+  "category/updateCategoryStatus",
+  async ({ categoryId, status }, { rejectWithValue }) => {
+    try {
+      const response = await axios.patch(
+        `${BASE_URL}/api/categories/category/update-status`,
+        { categoryId, status },
+        { withCredentials: true }
+      );
+      return response.data;
+    } catch (error) {
+      return rejectWithValue(error.response?.data || "Failed to update status");
+    }
+  }
+);
+
 const categorySlice = createSlice({
   name: "category",
   initialState: {
@@ -103,6 +119,7 @@ const categorySlice = createSlice({
     category: null,
     loading: false,
     error: null,
+    successMessage: null,
     totalCategories: 0,
     totalPages: 0,
     hasNextPage: false,
@@ -174,6 +191,17 @@ const categorySlice = createSlice({
         state.category = action.payload.data;
       })
       .addCase(getCategoriesById.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload;
+      })
+      .addCase(updateCategoryStatus.pending, (state) => {
+        state.loading = true;
+      })
+      .addCase(updateCategoryStatus.fulfilled, (state, action) => {
+        state.loading = false;
+        state.successMessage = action.payload.message;
+      })
+      .addCase(updateCategoryStatus.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload;
       });

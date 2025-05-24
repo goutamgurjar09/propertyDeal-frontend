@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { useLocation, useNavigate, useSearchParams } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import {
   getProperties,
@@ -18,6 +18,8 @@ import Select from "react-select";
 import { Controller, useForm } from "react-hook-form";
 import axios from "axios";
 import PaginatedTable from "../CommonComponent/PaginatedTable";
+import AddProperty from "./AddProperty";
+import Modal from "../CommonComponent/Modal";
 
 export const Properties = ({ setUser }) => {
   const dispatch = useDispatch();
@@ -30,6 +32,8 @@ export const Properties = ({ setUser }) => {
   const [locality, setLocality] = useState(null);
   const [lat, setLat] = useState(null);
   const [lng, setLng] = useState(null);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [editPropertyId, setEditPropertyId] = useState(null);
   const { control, register, setValue } = useForm();
   const property = useSelector((state) => state.property);
   const { cities } = useSelector((state) => state.city);
@@ -55,16 +59,7 @@ export const Properties = ({ setUser }) => {
         lng,
       })
     );
-  }, [
-    dispatch,
-    page,
-    limit,
-    propertyType,
-    cityId,
-    lat,
-    lng,
-
-  ]);
+  }, [dispatch, page, limit, propertyType, cityId, lat, lng]);
 
   useEffect(() => {
     dispatch(getCities());
@@ -84,8 +79,14 @@ export const Properties = ({ setUser }) => {
     }
   };
 
-  const handleEdit = (id) => navigate(`/property/edit/${id}`);
-  const handleAddProperty = () => navigate("/addProperty");
+  const handleEdit = (id) => {
+    setEditPropertyId(id);
+    setIsModalOpen(true);
+  };
+  const handleAddProperty = () => {
+    setIsModalOpen(true);
+    setEditPropertyId(null);
+  };
   const handleView = (id) => navigate(`/propertyDetails/${id}`);
 
   useEffect(() => {
@@ -192,27 +193,28 @@ export const Properties = ({ setUser }) => {
     {
       header: "Actions",
       render: (row) => (
-        <div className="flex gap-2">
+        <div className="flex gap-3">
           <button
             onClick={() => handleView(row._id)}
-            className="text-green-600 hover:text-green-800"
+            className="bg-emerald-100 text-emerald-600 hover:bg-emerald-200 p-2 rounded-lg transition-colors"
             title="View"
           >
-            <FaEye />
+            <FaEye size={14} />
           </button>
+
           <button
-            onClick={() => handleEdit(row._id)}
-            className="text-blue-500 hover:text-blue-700"
+            className="bg-sky-100 text-sky-600 hover:bg-sky-200 p-2 rounded-lg transition-colors"
             title="Edit"
+            onClick={() => handleEdit(row._id)}
           >
-            <FaEdit />
+            <FaEdit size={14} />
           </button>
           <button
+            className="bg-red-100 text-red-500 hover:bg-rose-200 p-2 rounded-lg transition-colors"
+            title={`Delete ${row.title}`}
             onClick={() => handleDelete(row._id)}
-            className="text-red-500 hover:text-red-700"
-            title="Delete"
           >
-            <FaTrash />
+            <FaTrash size={14} />
           </button>
         </div>
       ),
@@ -333,6 +335,18 @@ export const Properties = ({ setUser }) => {
           )}
         </div>
       </div>
+      <Modal
+        isOpen={isModalOpen}
+        onClose={() => setIsModalOpen(false)}
+        title="Add Property"
+        size="w-[90%] md:w-[60%] h-[75%]"
+      >
+        <AddProperty
+          setIsModalOpen={setIsModalOpen}
+          id={editPropertyId}
+          onSuccess={() => dispatch(getProperties({ page, limit }))}
+        />
+      </Modal>
     </div>
   );
 };

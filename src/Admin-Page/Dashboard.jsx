@@ -7,33 +7,8 @@ import { getUsers } from "../redux/slices/authSlice";
 import { getBookings, getTotalRevenue } from "../redux/slices/bookingSlice";
 import { getEnquiries } from "../redux/slices/enquirySlices";
 import { getTrackViewersCount } from "../redux/slices/trackViewers";
-
-import { Bar } from "react-chartjs-2";
-import {
-  Chart as ChartJS,
-  BarElement,
-  CategoryScale,
-  LinearScale,
-  Tooltip,
-  Legend,
-} from "chart.js";
-
-ChartJS.register(BarElement, CategoryScale, LinearScale, Tooltip, Legend);
-
-const monthShortNames = [
-  "Jan",
-  "Feb",
-  "Mar",
-  "Apr",
-  "May",
-  "Jun",
-  "Jul",
-  "Aug",
-  "Sep",
-  "Oct",
-  "Nov",
-  "Dec",
-];
+import Highcharts from "highcharts";
+import HighchartsReact from "highcharts-react-official";
 
 export default function Dashboard() {
   const [sidebarOpen, setSidebarOpen] = useState(true);
@@ -55,57 +30,93 @@ export default function Dashboard() {
     enquiry: { totalEnquiries },
   } = useSelector((state) => state);
 
+  const totalRevenueCalculated =
+  totalRevenueData?.bookings?.reduce(
+    (sum, item) => sum + item.totalRevenue,
+    0
+  ) || 0;
+
   const stats = [
     { title: "Total Properties", value: totalProperties },
     { title: "Total Users", value: `${totalUsers}` },
     { title: "Total Bookings", value: totalBookings },
     { title: "Total Enquiries", value: totalEnquiries },
     { title: "Total Visiters", value: trackViewersCount },
-    { title: "Total Revenue", value: totalRevenueData?.totalRevenue || 0 },
+    { title: "Total Revenue", value: totalRevenueCalculated.toLocaleString() || 0 },
   ];
 
-  const options = {
-    plugins: {
-      tooltip: {
-        callbacks: {
-          title: function (context) {
-            // context[0].label is in YYYY-MM-DD format
-            const dateStr = context[0].label;
-            const dateObj = new Date(dateStr);
-            const day = dateObj.getDate();
-            const month = monthShortNames[dateObj.getMonth()];
-            const year = dateObj.getFullYear();
-            return `${day} ${month} ${year}`;
-          },
-          label: function (context) {
-            return `Revenue: ₹${context.parsed.y}`;
-          },
-        },
-      },
-    },
-  };
+  // Convert date to "MMM" format
+  const monthShortNames = [
+    "Jan",
+    "Feb",
+    "Mar",
+    "Apr",
+    "May",
+    "Jun",
+    "Jul",
+    "Aug",
+    "Sep",
+    "Oct",
+    "Nov",
+    "Dec",
+  ];
 
   const revenueByDate =
     totalRevenueData && Array.isArray(totalRevenueData.bookings)
       ? totalRevenueData.bookings.reduce((acc, item) => {
-          const date = new Date(item.createdAt)?.toISOString()?.split("T")[0];
-          acc[date] = (acc[date] || 0) + item.price;
+          const month = item._id.month - 1; // MongoDB months are 1-indexed
+          const year = item._id.year;
+          const label = `${monthShortNames[month]} ${year}`;
+          acc[label] = item.totalRevenue;
           return acc;
         }, {})
       : {};
 
-  const labels = Object.keys(revenueByDate);
-  const data = Object.values(revenueByDate);
+  const highChartData = Object.entries(revenueByDate).map(
+    ([date, revenue]) => ({
+      date,
+      revenue,
+    })
+  );
 
-  const chartData = {
-    labels,
-    datasets: [
+  const highChartOptions = {
+    chart: {
+      type: "column",
+      backgroundColor: "#f9fafb",
+    },
+    title: {
+      text: "Monthly Revenue Chart",
+    },
+    xAxis: {
+      categories: highChartData.map((item) => item.date),
+      labels: {
+        rotation: -45,
+      },
+      title: {
+        text: "Month",
+      },
+    },
+    yAxis: {
+      min: 0,
+      title: {
+        text: "Revenue (₹)",
+      },
+    },
+    tooltip: {
+      pointFormat: "Revenue: <b>₹{point.y}</b>",
+    },
+    series: [
       {
-        label: "Revenue (₹)",
-        data,
-        backgroundColor: "rgba(75, 192, 192, 0.6)",
-        borderColor: "rgba(75, 192, 192, 1)",
-        borderWidth: 1,
+        name: "Revenue",
+        data: highChartData.map((item) => item.revenue),
+        color: {
+          linearGradient: { x1: 0, y1: 0, x2: 0, y2: 1 },
+          stops: [
+            [0, "#f472b6"], // pink at top
+            [0.5, "#60A5FA"], // blue in middle
+            [1, "#ef4444"], // red at bottom
+          ],
+        },
       },
     ],
   };
@@ -144,9 +155,9 @@ export default function Dashboard() {
             </div>
           ))}
         </div>
-        <div className="w-full max-w-4xl mx-auto mt-8 p-6 bg-gray-100 shadow-md rounded-lg mb-3">
-          <h3 className="text-center my-4">Daily Revenue Chart</h3>
-          <Bar data={chartData} options={options} />
+
+        <div className="max-w-6xl mx-auto mt-8 p-6 bg-gray-100 shadow-md rounded-lg mb-3">
+          <HighchartsReact highcharts={Highcharts} options={highChartOptions} />
         </div>
       </div>
     </div>

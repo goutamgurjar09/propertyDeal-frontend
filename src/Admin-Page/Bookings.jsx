@@ -1,6 +1,10 @@
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { getBookings, deleteBooking, updateBookingStatus } from "../redux/slices/bookingSlice";
+import {
+  getBookings,
+  deleteBooking,
+  updateBookingStatus,
+} from "../redux/slices/bookingSlice";
 import Sidebar from "../Pages/Layout/Sidebar";
 import Header from "../Pages/Layout/Header";
 import { FaTrash, FaEye } from "react-icons/fa";
@@ -9,7 +13,7 @@ import { showSuccess, showError } from "../Alert";
 import Loader from "../CommonComponent/Loader";
 import PaginatedTable from "../CommonComponent/PaginatedTable";
 
-const Booking = ({setUser}) => {
+const Booking = ({ setUser }) => {
   const [sidebarOpen, setSidebarOpen] = useState(true);
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -50,12 +54,16 @@ const Booking = ({setUser}) => {
 
   const handleStatusChange = async (id, newStatus) => {
     try {
-      const response = await dispatch(updateBookingStatus({ id, status: newStatus }));
+      const response = await dispatch(
+        updateBookingStatus({ id, status: newStatus })
+      );
       if (response.payload.status) {
         showSuccess(response.payload.message);
         dispatch(getBookings({ page, limit }));
       } else {
-        showError(response.payload.message || "Failed to update booking status.");
+        showError(
+          response.payload.message || "Failed to update booking status."
+        );
       }
     } catch (err) {
       showError("An error occurred while updating the booking status.");
@@ -76,6 +84,7 @@ const Booking = ({setUser}) => {
   };
 
   const columns = [
+    { header: "S No.", render: (_, index) => index + 1 },
     { header: "Name", accessor: "name" },
     { header: "Mobile", accessor: "mobile" },
     {
@@ -86,14 +95,20 @@ const Booking = ({setUser}) => {
       header: "Date & Time",
       render: (row) => new Date(row.dateTime).toLocaleString(),
     },
-    { header: "Message", accessor: "message" },
+    {
+      header: "Message",
+      accessor: "message",
+      className: "max-w-xs",
+    },
     {
       header: "Status",
       render: (row) => (
         <select
           value={row.status}
           onChange={(e) => handleStatusChange(row._id, e.target.value)}
-          className={`border border-gray-300 rounded p-1 ${getStatusColor(row.status)}`}
+          className={`border border-gray-300 rounded p-1 ${getStatusColor(
+            row.status
+          )}`}
         >
           <option value="pending" className="bg-yellow-200 text-yellow-800">
             Pending
@@ -110,20 +125,20 @@ const Booking = ({setUser}) => {
     {
       header: "Actions",
       render: (row) => (
-        <div className="flex space-x-2">
+        <div className="flex space-x-3">
           <button
             onClick={() => handleViewProperty(row.propertyId?._id)}
-            className="text-blue-500 hover:text-blue-700"
-            title="View Property"
+            className="bg-emerald-100 text-emerald-600 hover:bg-emerald-200 p-2 rounded-lg transition-colors"
+            title="View"
           >
-            <FaEye />
+            <FaEye size={14} />
           </button>
           <button
+            className="bg-red-100 text-red-500 hover:bg-rose-200 p-2 rounded-lg transition-colors"
+            title={`Delete ${row.name}`}
             onClick={() => handleDelete(row._id)}
-            className="text-red-500 hover:text-red-700"
-            title="Delete Booking"
           >
-            <FaTrash />
+            <FaTrash size={14} />
           </button>
         </div>
       ),
@@ -151,11 +166,13 @@ const Booking = ({setUser}) => {
           sidebarOpen ? "w-2/3" : "w-full"
         } bg-white`}
       >
-        <Header sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen} setUser={setUser} />
+        <Header
+          sidebarOpen={sidebarOpen}
+          setSidebarOpen={setSidebarOpen}
+          setUser={setUser}
+        />
         <div className="mt-6 mb-6 bg-gray-100 p-4 shadow-md w-[96%] ml-4">
-          <h2 className="text-2xl  font-bold mb-6 text-slate-700">
-            Bookings
-          </h2>
+          <h2 className="text-2xl  font-bold mb-6 text-slate-700">Bookings</h2>
 
           {/* Booking Table */}
           <PaginatedTable

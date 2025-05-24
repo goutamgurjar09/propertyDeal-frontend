@@ -1,4 +1,3 @@
-// src/components/AddCategoryForm.jsx
 import React, { useEffect } from "react";
 import { useForm, useFieldArray } from "react-hook-form";
 import { useDispatch, useSelector } from "react-redux";
@@ -8,10 +7,38 @@ import {
   updateCategory,
 } from "../../redux/slices/categorySlice";
 import { showSuccess } from "../../Alert";
+import { InputField } from "../../CommonComponent/InputField";
+import * as yup from "yup";
+import { yupResolver } from "@hookform/resolvers/yup";
+
+// ✅ Yup Validation Schema
+const schema = yup.object().shape({
+  categoryName: yup
+    .string()
+    .required("Category name is required")
+    .min(3, "Category name must be at least 3 characters")
+    .matches(
+      /^[A-Za-z\s]+$/,
+      "Category name must contain only letters and spaces"
+    ),
+
+  subCategories: yup.array().of(
+    yup.object().shape({
+      name: yup
+        .string()
+        .required("Subcategory name is required")
+        .min(2, "Subcategory name must be at least 2 characters")
+        .matches(
+          /^[A-Za-z\s]+$/,
+          "Subcategory name must contain only letters and spaces"
+        ),
+    })
+  ),
+});
 
 const AddCategoryForm = ({ setIsModalOpen, userId, id, onSuccess }) => {
   const dispatch = useDispatch();
-  const { loading, success, error } = useSelector((state) => state.category);
+  const { loading, category } = useSelector((state) => state.category);
 
   const {
     register,
@@ -20,9 +47,10 @@ const AddCategoryForm = ({ setIsModalOpen, userId, id, onSuccess }) => {
     reset,
     formState: { errors },
   } = useForm({
+    resolver: yupResolver(schema),
     defaultValues: {
       categoryName: "",
-      createdBy: userId, // Replace with actual logic
+      createdBy: userId,
       subCategories: [{ name: "" }],
     },
   });
@@ -32,32 +60,23 @@ const AddCategoryForm = ({ setIsModalOpen, userId, id, onSuccess }) => {
     name: "subCategories",
   });
 
-  const { category } = useSelector((state) => state.category);
-
   const onSubmit = async (data) => {
-    if (id) {
-      const res = await dispatch(updateCategory({ id, data }));
-      if (res.payload.success) {
-        reset();
-        showSuccess(res.payload.message);
-        setIsModalOpen(false);
-        if (onSuccess) onSuccess();
-      }
-    } else {
-      const res = await dispatch(createCategory(data));
-      if (res.payload.success) {
-        reset();
-        showSuccess(res.payload.message);
-        setIsModalOpen(false);
-        if (onSuccess) onSuccess();
-      }
+    const payload = { ...data, createdBy: userId };
+    const action = id
+      ? updateCategory({ id, data: payload })
+      : createCategory(payload);
+    const res = await dispatch(action);
+
+    if (res.payload?.success) {
+      showSuccess(res.payload.message);
+      reset();
+      setIsModalOpen(false);
+      onSuccess && onSuccess();
     }
   };
 
   useEffect(() => {
-    if (id) {
-      dispatch(getCategoriesById(id));
-    }
+    if (id) dispatch(getCategoriesById(id));
   }, [dispatch, id]);
 
   useEffect(() => {
@@ -73,39 +92,31 @@ const AddCategoryForm = ({ setIsModalOpen, userId, id, onSuccess }) => {
   }, [id, category]);
 
   return (
-    <div className="p-4 max-w-lg mx-auto bg-white shadow rounded">
-      <h2 className="text-lg font-bold mb-3">Add Category</h2>
+    <div className="p-4 no-scrollbar max-h-[40vh] overflow-scroll">
       <form onSubmit={handleSubmit(onSubmit)}>
-        <div>
-          <input
-            placeholder="Category Name"
-            {...register("categoryName", {
-              required: "Category name is required",
-            })}
-            className="border w-full p-2 mb-2"
-          />
-          {errors.categoryName && (
-            <p className="text-red-500 text-sm">
-              {errors.categoryName.message}
-            </p>
-          )}
-        </div>
+        <InputField
+          label="Category Name"
+          placeholder="Category Name"
+          register={register}
+          name="categoryName"
+          error={errors?.categoryName?.message}
+        />
 
-        <div>
-          <label className="block font-medium mb-1">Subcategories</label>
+        <div className="mt-4">
           {fields.map((field, index) => (
-            <div key={field.id} className="flex gap-2 mb-2">
-              <input
+            <div key={field.id} className="flex items-center gap-4 mb-2">
+              <InputField
+                label="SubCategory Name"
                 placeholder={`Subcategory ${index + 1}`}
-                {...register(`subCategories.${index}.name`, {
-                  required: "Subcategory name is required",
-                })}
-                className="border flex-1 p-2"
+                register={register}
+                name={`subCategories.${index}.name`}
+                error={errors?.subCategories?.[index]?.name?.message}
+                className="w-96"
               />
               <button
                 type="button"
                 onClick={() => remove(index)}
-                className="text-red-500"
+                className="text-red-500 h-10 flex items-center justify-center mt-6"
               >
                 ✕
               </button>
@@ -120,22 +131,19 @@ const AddCategoryForm = ({ setIsModalOpen, userId, id, onSuccess }) => {
           </button>
         </div>
 
-        <button
-          type="submit"
-          className="bg-blue-600 text-white px-4 py-2 rounded"
-          disabled={loading}
-        >
-          {loading ? "Creating..." : "Create Category"}
-        </button>
-
-        {success && (
-          <p className="text-green-600 mt-2">Category created successfully!</p>
-        )}
-        {error && (
-          <p className="text-red-600 mt-2">
-            {error.message || "Something went wrong"}
-          </p>
-        )}
+        <div className="flex justify-center align-middle mt-10">
+          <button
+            type="submit"
+            disabled={loading}
+            className="w-75 p-6 bg-[#005555] hover:bg-[#004444] transition-all duration-300 text-white py-3 rounded-lg font-semibold shadow-md"
+          >
+            {loading
+              ? "Creating..."
+              : id
+              ? "Update Category"
+              : "Create Category"}
+          </button>
+        </div>
       </form>
     </div>
   );
