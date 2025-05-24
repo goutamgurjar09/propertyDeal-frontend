@@ -28,8 +28,7 @@ function Navbar() {
     };
   }, []);
 
-  
-    const { categories } = useSelector((state) => state.category);
+  const { categories } = useSelector((state) => state.category);
   // const { singleProperty } = useSelector((state) => state.property);
 
   // Fetch categories on mount
@@ -53,7 +52,7 @@ function Navbar() {
       <div className="max-w-7xl mx-auto flex items-center justify-between">
         {!isDashboard ? (
           <>
-           {/* Logo */}
+            {/* Logo */}
             <Link to="/" className="flex items-center">
               <img
                 src={Logo}
@@ -83,51 +82,12 @@ function Navbar() {
               >
                 Home
               </Link>
-
-              {/* <div
-                className="relative"
-                onMouseEnter={() => setDropdownOpen("properties")}
-                onMouseLeave={() => setDropdownOpen(null)}
-              >
-                <button className="text-[#005555] hover:text-[#52b9b9] transition">
-                  Properties
-                </button>
-                {dropdownOpen === "properties" && (
-                  <div className="absolute top-full left-0 bg-white text-gray-800 rounded-md shadow-lg w-52 border border-gray-200 z-50">
-                    <Link
-                      to="/commercial"
-                      className="block px-5 py-3 hover:bg-blue-100 transition-colors"
-                    >
-                      Commercial
-                    </Link>
-                    <Link
-                      to="/luxury"
-                      className="block px-5 py-3 hover:bg-blue-100 transition-colors"
-                    >
-                      Luxury
-                    </Link>
-                    <Link
-                      to="/rental"
-                      className="block px-5 py-3 hover:bg-blue-100 transition-colors"
-                    >
-                      Rental
-                    </Link>
-                    <Link
-                      to="/premium"
-                      className="block px-5 py-3 hover:bg-blue-100 transition-colors"
-                    >
-                      Premium
-                    </Link>
-                  </div>
-                )}
-              </div> */}
-
               <li
-                className="relative"
+                className="relative list-none"
                 onMouseEnter={() => setDropdownOpen("properties")}
                 onMouseLeave={() => setDropdownOpen(null)}
               >
-                <button className="hover:text-blue-500 transition-colors duration-300">
+                <button className="hover:text-[#52b9b9]  text-[#005555] transition-colors duration-300">
                   Properties
                 </button>
                 {dropdownOpen === "properties" && (

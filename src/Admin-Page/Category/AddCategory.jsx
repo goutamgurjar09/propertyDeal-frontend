@@ -6,7 +6,7 @@ import {
   getCategoriesById,
   updateCategory,
 } from "../../redux/slices/categorySlice";
-import { showSuccess } from "../../Alert";
+import { showError, showSuccess } from "../../Alert";
 import { InputField } from "../../CommonComponent/InputField";
 import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
@@ -72,6 +72,8 @@ const AddCategoryForm = ({ setIsModalOpen, userId, id, onSuccess }) => {
       reset();
       setIsModalOpen(false);
       onSuccess && onSuccess();
+    }else {
+      showError(res.payload?.message || "Failed to create/update category");
     }
   };
 
