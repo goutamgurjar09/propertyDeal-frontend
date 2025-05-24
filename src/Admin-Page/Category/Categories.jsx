@@ -10,6 +10,7 @@ import PaginatedTable from "../../CommonComponent/PaginatedTable";
 import {
   deleteCategory,
   getCategories,
+  updateCategoryStatus,
 } from "../../redux/slices/categorySlice";
 import AddCategoryForm from "./AddCategory";
 import Modal from "../../CommonComponent/Modal";
@@ -57,7 +58,26 @@ export const Categories = ({ setUser }) => {
     setIsModalOpen(true);
   };
 
+  const handleStatusToggle = async (id, newStatus) => {
+    try {
+      const response = await dispatch(
+        updateCategoryStatus({ categoryId: id, status: newStatus })
+      );
+      if (response.payload.status) {
+        showSuccess(response.payload.message || "Status updated!");
+        dispatch(getCategories({ page, limit }));
+      } else {
+        showError(
+          response.payload.message || "Failed to update category status."
+        );
+      }
+    } catch (err) {
+      showError("An error occurred while updating the category status.");
+    }
+  };
+
   const columns = [
+    { header: "S No.", render: (_, index) => index + 1 },
     { header: "Category Name", accessor: "categoryName" },
     {
       header: "Sub Categories",
@@ -81,16 +101,24 @@ export const Categories = ({ setUser }) => {
     },
     {
       header: "Status",
-      render: (row) =>
-        row.status ? (
-          <span className="px-2 py-1 rounded bg-green-100 text-green-700 text-xs">
+      render: (row) => (
+        <select
+          value={row.status}
+          onChange={(e) => handleStatusToggle(row._id, e.target.value)}
+          className={`ml-2 px-2 py-1 rounded border text-xs ${
+            row.status === "Active"
+              ? "bg-green-100 text-green-700"
+              : "bg-red-100 text-red-700"
+          }`}
+        >
+          <option value="Active" className="bg-green-100 text-green-700">
             Active
-          </span>
-        ) : (
-          <span className="px-2 py-1 rounded bg-red-100 text-red-700 text-xs">
+          </option>
+          <option value="Inactive" className="bg-red-100 text-red-700">
             Inactive
-          </span>
-        ),
+          </option>
+        </select>
+      ),
     },
     {
       header: "Created At",
@@ -99,20 +127,20 @@ export const Categories = ({ setUser }) => {
     {
       header: "Actions",
       render: (row) => (
-        <div className="flex gap-2">
+        <div className="flex gap-3">
           <button
-            onClick={() => handleEdit(row._id)}
-            className="text-blue-500 hover:text-blue-700"
+            className="bg-sky-100 text-sky-600 hover:bg-sky-200 p-2 rounded-lg transition-colors"
             title="Edit"
+            onClick={() => handleEdit(row._id)}
           >
-            <FaEdit />
+            <FaEdit size={14} />
           </button>
           <button
+            className="bg-red-100 text-red-500 hover:bg-rose-200 p-2 rounded-lg transition-colors"
+            title={`Delete ${row.categoryName}`}
             onClick={() => handleDelete(row._id)}
-            className="text-red-500 hover:text-red-700"
-            title="Delete"
           >
-            <FaTrash />
+            <FaTrash size={14} />
           </button>
         </div>
       ),
@@ -146,11 +174,9 @@ export const Categories = ({ setUser }) => {
             setSidebarOpen={setSidebarOpen}
             setUser={setUser}
           />
-          <div className="mt-6 mb-6 bg-gray-100 p-4 shadow-md w-[96%] ml-4">
+          <div className="mt-6 bg-gray-100 p-4 shadow-md w-[96%] ml-4">
             <div className="flex justify-between items-center mb-10 mt-2">
-              <h2 className="text-2xl font-bold mb-6 text-slate-700">
-                Categories
-              </h2>
+              <h2 className="text-2xl font-bold text-slate-700">Categories</h2>
 
               <button
                 onClick={() => {
@@ -183,6 +209,7 @@ export const Categories = ({ setUser }) => {
         isOpen={isModalOpen}
         onClose={() => setIsModalOpen(false)}
         title="Add Category"
+        size="w-[30%] h-[55%]"
       >
         <AddCategoryForm
           setIsModalOpen={setIsModalOpen}

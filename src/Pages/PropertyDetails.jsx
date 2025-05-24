@@ -52,17 +52,9 @@ const PropertyDetails = () => {
   const lat = property?.location?.lat;
   const lng = property?.location?.lng;
 
-  const destination = { lat: lat, lng: lng };
-  const offsetLat = 0.001;
-
-  const dashedLine = [
-    destination,
-    { lat: destination.lat + offsetLat, lng: destination.lng },
-  ];
-
   return (
-    <div className="w-full flex flex-col items-center bg-gray-100">
-      <div className="w-full mt-4 max-w-6xl mx-auto px-4 mb-6">
+    <div className="bg-gray-50 min-h-screen">
+      <div className="max-w-7xl mx-auto px-4 py-6">
         <Link
           to={
             user.role === "admin"
@@ -72,7 +64,7 @@ const PropertyDetails = () => {
               : "/"
           }
         >
-          <button className="px-6 py-3 bg-blue-500 hover:bg-blue-600 text-white rounded-lg shadow-md transition duration-300 flex items-center gap-2">
+          <button className="mb-6 flex items-center gap-2 px-5 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 transition">
             <svg
               xmlns="http://www.w3.org/2000/svg"
               className="h-5 w-5"
@@ -81,64 +73,59 @@ const PropertyDetails = () => {
               stroke="currentColor"
               strokeWidth={2}
             >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                d="M15 19l-7-7 7-7"
-              />
+              <path strokeLinecap="round" strokeLinejoin="round" d="M15 19l-7-7 7-7" />
             </svg>
-            Go Back
+            Back
           </button>
         </Link>
-      </div>
 
-      {/* Image Slider */}
-      <div className="w-full max-w-6xl mx-auto overflow-hidden rounded-xl">
-        <Slider {...settings} className="h-screen">
-          {(property.propertyImages || []).map((img, index) => (
-            <div key={index} className="h-screen">
-              <img
-                src={img}
-                alt={`Slide ${index + 1}`}
-                className="w-full h-full object-cover"
-              />
-            </div>
-          ))}
-        </Slider>
-      </div>
+        {/* Image Slider */}
+        <div className="rounded-lg overflow-hidden mb-10">
+          <Slider {...settings}>
+            {(property.propertyImages || []).map((img, index) => (
+              <div key={index}>
+                <img
+                  src={img}
+                  alt={`Slide ${index + 1}`}
+                  className="w-full h-[400px] object-cover"
+                />
+              </div>
+            ))}
+          </Slider>
+        </div>
 
-      {/* Property Details */}
-      <div className="w-full mb-10 max-w-6xl p-6 sm:p-10 mt-10 bg-white rounded-xl shadow-lg border border-gray-300">
-        <div className="flex flex-col lg:flex-row gap-8">
-          {/* Left column */}
-          <div className="w-full lg:w-2/3">
-            <h2 className="text-3xl font-semibold text-gray-900 mb-4">
+        <div className="grid lg:grid-cols-3 gap-6">
+          {/* Details */}
+          <div className="lg:col-span-2 bg-white p-6 rounded-lg shadow">
+            <h2 className="text-2xl font-bold mb-4 text-gray-900">
               {property.title}
             </h2>
 
-            <div className="text-gray-700 mb-4 space-y-1">
+            <div className="text-gray-700 space-y-1 mb-4">
               <p>City: {property.location?.city?.name || "N/A"}</p>
-              <p>Address: {property.location.locality || "N/A"}</p>
+              <p>Locality: {property.location?.locality || "N/A"}</p>
               <p>State: {property.location?.state || "N/A"}</p>
               <p>Country: {property.location?.country || "N/A"}</p>
             </div>
 
-            <p className="text-gray-600 mb-4">{property.description}</p>
+            <p className="text-gray-600 mb-4 leading-relaxed">
+              {property.description}
+            </p>
 
             <div className="flex flex-wrap gap-2 mb-4">
-              {(property.facilities || []).map((feature, index) => (
+              {(property.facilities || []).map((item, idx) => (
                 <span
-                  key={index}
-                  className="bg-blue-100 text-blue-800 px-3 py-1 rounded-full text-sm font-medium"
+                  key={idx}
+                  className="bg-blue-100 text-blue-700 px-3 py-1 text-sm rounded-full"
                 >
-                  {feature}
+                  {item}
                 </span>
               ))}
             </div>
 
             <button
               onClick={() => setIsModalOpen(true)}
-              className="mt-6 w-full sm:w-64 px-6 py-3 text-white rounded-lg shadow-md bg-[#005555] hover:bg-gray-700 transition duration-300"
+              className="mt-6 px-6 py-3 bg-emerald-600 text-white rounded shadow hover:bg-emerald-700 transition"
             >
               Book Now
             </button>
@@ -146,36 +133,38 @@ const PropertyDetails = () => {
             <Modal
               isOpen={isModalOpen}
               onClose={() => setIsModalOpen(false)}
-              title="Book this Property"
+              title="Book Property"
+              size="w-[20%] h-[75%]"
             >
               <BookingPage propertyId={id} setIsModalOpen={setIsModalOpen} />
             </Modal>
           </div>
 
-          {/* Right column */}
-          <div className="w-full lg:w-1/3 bg-gray-50 p-6 rounded-lg border">
-            <div className="text-gray-900 text-xl font-bold mb-4">
-              ₹{property.price}
+          <div className="bg-white p-6 rounded-lg shadow space-y-4">
+            <div className="text-2xl font-semibold text-gray-900">
+              ₹{property.price.toLocaleString()}
             </div>
-            <p className="text-gray-600 mb-2">Type: {property.propertyType}</p>
-            <p className="text-gray-600 mb-2">
+            <div className="text-gray-700">Type: {property.propertyType}</div>
+            <div className="text-gray-700">
               Category: {property.category?.categoryName}
-            </p>
-            <div className="flex flex-wrap gap-2 mb-4">
-              <p className="text-gray-600 mb-2">Sub Category: </p>
-              {(property?.subCategory || []).map((feature, index) => (
-                <span
-                  key={index}
-                  className="bg-blue-100 text-blue-800 px-3 py-1 rounded-full text-sm font-medium"
-                >
-                  {feature}
-                </span>
-              ))}
-            </div>{" "}
-            <p className="text-gray-600 mb-2">
-              Status:{" "}
+            </div>
+            <div className="text-gray-700">
+              Sub Categories:
+              <div className="flex flex-wrap gap-2 mt-1">
+                {(property.subCategory || []).map((sub, idx) => (
+                  <span
+                    key={idx}
+                    className="bg-green-100 text-green-700 text-sm px-3 py-1 rounded-full"
+                  >
+                    {sub}
+                  </span>
+                ))}
+              </div>
+            </div>
+            <div className="text-gray-700">
+              Status:
               <span
-                className={`mb-2 ${
+                className={`ml-1 font-medium ${
                   property.status === "Available"
                     ? "text-green-600"
                     : property.status === "Sold"
@@ -183,28 +172,27 @@ const PropertyDetails = () => {
                     : "text-gray-600"
                 }`}
               >
-                {property.status.charAt(0).toUpperCase() +
-                  property.status.slice(1)}
+                {property.status}
               </span>
-            </p>
-            <p className="text-gray-600 mb-2">Size: {property.size} sqft</p>
-            <p className="text-gray-600 mb-2">Bedrooms: {property.bedrooms}</p>
-            <p className="text-gray-600 mb-2">
-              Bathrooms: {property.bathrooms}
-            </p>
-            <p className="text-gray-500 mb-2">
-              Listed on: {new Date(property.postedAt).toLocaleDateString()}
-            </p>
-            <p className="text-gray-500">
+            </div>
+            <div className="text-gray-700">Size: {property.size} sqft</div>
+            <div className="text-gray-700">Bedrooms: {property.bedrooms}</div>
+            <div className="text-gray-700">Bathrooms: {property.bathrooms}</div>
+            <div className="text-sm text-gray-500">
+              Posted on: {new Date(property.postedAt).toLocaleDateString()}
+            </div>
+            <div className="text-sm text-gray-500">
               Posted by: {property.owner?.name || "Unknown"}
-            </p>
+            </div>
           </div>
         </div>
 
         {/* Google Map */}
         {isLoaded && lat && lng && (
           <div className="mt-10">
-            <h3 className="text-xl font-semibold mb-4">Location on Map</h3>
+            <h3 className="text-lg font-semibold mb-4 text-gray-900">
+              Location on Map
+            </h3>
             <GoogleMap
               mapContainerStyle={containerStyle}
               center={{ lat, lng }}

@@ -14,7 +14,7 @@ import ForgotPassword from "./ForgotPassword";
 import CommercialPage from "././Pages/Categories/CommercialPage";
 import PremiumPage from "././Pages/Categories/PremiumPage";
 import LuxuryPage from "././Pages/Categories/PremiumPage";
-import Cards from "./Pages/HomePage/Cards"
+import Cards from "./Pages/HomePage/Cards";
 import AboutUs from "./Pages/AboutUs";
 import { TrendingProperty } from "./Pages/HomePage/TrendingProperty";
 import { GoogleOAuthProvider } from "@react-oauth/google";
@@ -36,7 +36,6 @@ import PrivacyPolicy from "./Pages/PrivacyPolicy";
 import TermsAndConditions from "./Pages/TermsAndConditions";
 import HowItWorks from "./Pages/HomePage/HowItWorks";
 import ScrollToTop from "./Pages/ScrollToTop";
-
 
 function App() {
   const CLIENT_ID =
@@ -63,20 +62,17 @@ function App() {
       <div>
         {/* Show navbar only if user is not an admin */}
         {userRole ? null : <Navbar />}
-       <ScrollToTop/>
+        <ScrollToTop />
         <Routes>
           <Route
             path="/"
             element={
               <>
-               
-
-                <HomeSection/>
+                <HomeSection />
                 <TrendingProperty />
-                
                 <Services />
                 <Cards />
-                <HowItWorks/>
+                <HowItWorks />
                 <FAQ />
                 <CoustomContact />
               </>
@@ -103,7 +99,7 @@ function App() {
           <Route path="/contact" element={<CoustomContact />} />
           <Route path="/About" element={<AboutUs />} />
           <Route path="/PrivacyPolicy" element={<PrivacyPolicy />} />
-          <Route path="/TermsConditions" element={<TermsAndConditions/>} />
+          <Route path="/TermsConditions" element={<TermsAndConditions />} />
           <Route
             path="/dashboard"
             element={

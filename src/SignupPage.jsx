@@ -1,59 +1,86 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
 import { useDispatch, useSelector } from "react-redux";
-import { signupUser } from "./redux/slices/authSlice"; // Ensure correct path
+import { signupUser } from "./redux/slices/authSlice";
 import { useNavigate } from "react-router-dom";
 import { showSuccess } from "./Alert";
+import { useForm } from "react-hook-form";
+import { yupResolver } from "@hookform/resolvers/yup";
+import * as yup from "yup";
+
+const schema = yup.object().shape({
+  fullname: yup
+    .string()
+    .required("Full name is required")
+    .matches(/^[A-Za-z\s]+$/, "Full name must contain only letters and spaces")
+    .min(3, "Full name must be at least 3 characters"),
+
+  mobile: yup
+    .string()
+    .required("Mobile number is required")
+    .matches(/^[0-9]{10}$/, "Mobile number must be exactly 10 digits"),
+
+  email: yup
+    .string()
+    .required("Email is required")
+    .email("Invalid email format"),
+
+  role: yup.string().required("Role is required"),
+
+  password: yup
+    .string()
+    .required("Password is required")
+    .min(8, "Password must be at least 8 characters")
+    .max(20, "Password must be at most 20 characters")
+    .matches(
+      /[A-Z]/,
+      "Password must contain at least one uppercase letter (A-Z)"
+    )
+    .matches(
+      /[a-z]/,
+      "Password must contain at least one lowercase letter (a-z)"
+    )
+    .matches(/[0-9]/, "Password must contain at least one number (0-9)")
+    .matches(
+      /[@$!%*?&]/,
+      "Password must contain at least one special character (@$!%*?&)"
+    ),
+
+  confirmPassword: yup
+    .string()
+    .oneOf([yup.ref("password"), null], "Passwords must match")
+    .required("Please confirm your password"),
+});
 
 function SignupPage() {
   const dispatch = useDispatch();
-  const { loading, error } = useSelector((state) => state.auth);
-
-  const [fullname, setFullName] = useState("");
-  const [mobile, setMobile] = useState("");
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [confirmPassword, setConfirmPassword] = useState("");
+  const { loading } = useSelector((state) => state.auth);
+  const navigate = useNavigate();
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
-  const [role, setRole] = useState("");
   const [profileImg, setProfileImg] = useState(null);
-  const navigate = useNavigate();
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-  
-    if (password !== confirmPassword) {
-      alert("Passwords do not match!");
-      return;
-    }
-  
-    // Create FormData object
+  const {
+    register,
+    handleSubmit,
+    setValue,
+    formState: { errors },
+  } = useForm({
+    resolver: yupResolver(schema),
+  });
+
+  const onSubmit = async (data) => {
     const formData = new FormData();
-    formData.append("fullname", fullname);
-    formData.append("mobile", mobile);
-    formData.append("email", email);
-    formData.append("password", password);
-    formData.append("confirmPassword", confirmPassword);
-    formData.append("role", role);
-    if (profileImg) {
-      formData.append("profileImg", profileImg);
-    }
-  
-    const result = await dispatch(signupUser(formData));  
+    for (const key in data) formData.append(key, data[key]);
+    if (profileImg) formData.append("profileImg", profileImg);
+
+    const result = await dispatch(signupUser(formData));
     if (result.payload?.status === "Success") {
       navigate("/login");
       showSuccess(result.payload?.message);
     }
   };
-  
 
-  const handleImageChange = (e) => {
-    setProfileImg(e.target.files[0]);
-  };
-  const handleImageChanges = (event) => {
-    const files = Array.from(event.target.files); // Convert FileList to an array
-  };
   return (
     <div className="flex min-h-screen items-center justify-center bg-[#005555] text-white p-4 relative mt-16">
       {/* Background Blur */}
@@ -63,46 +90,47 @@ function SignupPage() {
         <h2 className="text-center text-3xl font-semibold mb-6">
           Create Your Account
         </h2>
-        <form className="space-y-4" onSubmit={handleSubmit}>
+        <form className="space-y-4" onSubmit={handleSubmit(onSubmit)}>
           <div className="w-full border-b-2 border-gray-900 focus-within:border-indigo-500">
             <input
+              {...register("fullname")}
               type="text"
               placeholder="Full Name"
-              value={fullname}
-              onChange={(e) => setFullName(e.target.value)}
               className="w-full bg-transparent p-2 outline-none placeholder-gray-500 text-gray-900"
-              required
             />
+            {errors.fullname && (
+              <p className="text-red-600 text-sm">{errors.fullname.message}</p>
+            )}
           </div>
 
           <div className="w-full border-b-2 border-gray-900 focus-within:border-indigo-500">
             <input
+              {...register("mobile")}
               type="tel"
               placeholder="Mobile No"
-              value={mobile}
-              onChange={(e) => setMobile(e.target.value)}
               className="w-full bg-transparent p-2 outline-none placeholder-gray-500 text-gray-900"
-              required
             />
+            {errors.mobile && (
+              <p className="text-red-600 text-sm">{errors.mobile.message}</p>
+            )}
           </div>
 
           <div className="w-full border-b-2 border-gray-900 focus-within:border-indigo-500">
             <input
+              {...register("email")}
               type="email"
               placeholder="Email Address"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
               className="w-full bg-transparent p-2 outline-none placeholder-gray-500 text-gray-900"
-              required
             />
+            {errors.email && (
+              <p className="text-red-600 text-sm">{errors.email.message}</p>
+            )}
           </div>
 
           <div className="w-full border-b-2 border-gray-900 focus-within:border-indigo-500">
             <select
-              value={role}
-              onChange={(e) => setRole(e.target.value)}
+              {...register("role")}
               className="w-full bg-transparent p-2 outline-none placeholder-gray-500 text-gray-900 pr-10"
-              required
             >
               <option value="" disabled>
                 Select Role
@@ -110,16 +138,17 @@ function SignupPage() {
               <option value="Buyer">Buyer</option>
               <option value="Seller">Seller</option>
             </select>
+            {errors.role && (
+              <p className="text-red-600 text-sm">{errors.role.message}</p>
+            )}
           </div>
 
           <div className="w-full border-b-2 border-gray-900 focus-within:border-indigo-500 relative">
             <input
+              {...register("password")}
               type={showPassword ? "text" : "password"}
               placeholder="Password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
               className="w-full bg-transparent p-2 outline-none placeholder-gray-500 text-gray-900 pr-10"
-              required
             />
             <button
               type="button"
@@ -128,16 +157,17 @@ function SignupPage() {
             >
               {showPassword ? <FaEyeSlash /> : <FaEye />}
             </button>
+            {errors.password && (
+              <p className="text-red-600 text-sm">{errors.password.message}</p>
+            )}
           </div>
 
           <div className="w-full border-b-2 border-gray-900 focus-within:border-indigo-500 relative">
             <input
+              {...register("confirmPassword")}
               type={showConfirmPassword ? "text" : "password"}
               placeholder="Confirm Password"
-              value={confirmPassword}
-              onChange={(e) => setConfirmPassword(e.target.value)}
               className="w-full bg-transparent p-2 outline-none placeholder-gray-500 text-gray-900 pr-10"
-              required
             />
             <button
               type="button"
@@ -146,15 +176,22 @@ function SignupPage() {
             >
               {showConfirmPassword ? <FaEyeSlash /> : <FaEye />}
             </button>
+            {errors.confirmPassword && (
+              <p className="text-red-600 text-sm">
+                {errors.confirmPassword.message}
+              </p>
+            )}
           </div>
+
           <div className="w-full border-b-2 border-gray-900 focus-within:border-indigo-500">
             <input
               type="file"
               accept="image/*"
-              onChange={handleImageChange}
+              onChange={(e) => setProfileImg(e.target.files[0])}
               className="w-full bg-transparent p-2 outline-none placeholder-gray-500 text-gray-900 pr-10"
             />
           </div>
+
           <div className="flex justify-center">
             <button
               type="submit"

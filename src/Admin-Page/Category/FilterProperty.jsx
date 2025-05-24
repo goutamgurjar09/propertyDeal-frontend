@@ -9,6 +9,7 @@ import Pagination from "../../CommonComponent/Pagination";
 import Loader from "../../CommonComponent/Loader";
 import { getCategoriesById } from "../../redux/slices/categorySlice";
 import Navbar from "../../Pages/Layout/Navbar";
+import { motion } from "framer-motion";
 
 export const FilterProperty = ({ setUser }) => {
   const navigate = useNavigate();
@@ -94,78 +95,58 @@ export const FilterProperty = ({ setUser }) => {
           {loading && <Loader />}
           <Navbar />
           {/* Properties Grid */}
-          <h1 className="mt-16 text-5xl font-bold">
-            {categories?.category?.categoryName}
-          </h1>
-          <div className="grid mt-8 grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+          <div className="mt-16 mb-8 flex justify-start">
+            <div className="bg-gradient-to-r from-[#005555] to-[#00baba] px-8 py-4 rounded-2xl shadow-lg">
+              <h1 className="text-4xl font-bold text-white tracking-wide drop-shadow">
+                {categories?.category?.categoryName
+                  ? categories.category.categoryName.charAt(0).toUpperCase() +
+                    categories.category.categoryName.slice(1)
+                  : ""}
+              </h1>
+            </div>
+          </div>
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8">
             {properties.map((property, index) => (
-              <div
+              <motion.div
                 key={index}
-                className="relative bg-white rounded-2xl shadow-md hover:shadow-xl transition-shadow p-4 flex flex-col justify-between h-full"
+                initial={{ opacity: 0, x: index % 2 === 0 ? -50 : 50 }}
+                whileInView={{ opacity: 1, x: 0 }}
+                transition={{ duration: 0.6, delay: index * 0.1 }}
+                viewport={{ once: false, amount: 0.3 }}
+                className="bg-white rounded-2xl shadow-md hover:shadow-2xl transition-all p-4 flex flex-col justify-between"
               >
-                {/* Card Content */}
-                <div
-                  className="flex-grow cursor-pointer"
-                  onClick={() => navigate(`/propertyDetails/${property._id}`)}
-                >
-                  <div className="flex justify-center items-center mb-4">
-                    <img
-                      src={
-                        property.propertyImages?.[0] ||
-                        "https://via.placeholder.com/400x250?text=No+Image"
-                      }
-                      alt={property.title}
-                      className="rounded-lg object-cover w-full h-48"
-                    />
-                  </div>
-
-                  <h3 className="text-xl font-semibold text-gray-800 truncate">
+                <div className="cursor-pointer">
+                  <img
+                    src={
+                      property.propertyImages?.[0] ||
+                      "https://via.placeholder.com/400x250?text=No+Image"
+                    }
+                    alt={property.title}
+                    className="rounded-xl w-full h-48 object-cover mb-4"
+                  />
+                  <h3 className="text-lg font-semibold text-gray-800 mb-1 truncate">
                     {property.title}
                   </h3>
-                  <p className="text-sm text-gray-500 mb-2">
-                    {property.propertyType}
+                  <p className="text-sm text-gray-600">
+                    {property.location?.city?.name}
                   </p>
-                  <p className="text-gray-700 font-medium mb-2">
-                    ₹ {property.price.toLocaleString()}
-                  </p>
-
-                  <div className="text-sm text-gray-600 mb-2">
-                    {property.location?.city?.name}, {property.location?.state},{" "}
-                    {property.location?.country}
-                  </div>
-
-                  <div className="flex flex-wrap text-sm text-gray-600 gap-2 mb-2">
-                    <span>🛏 {property.bedrooms} Beds</span>
-                    <span>🛁 {property.bathrooms} Baths</span>
-                    <span>📐 {property.size} sqft</span>
-                  </div>
-
-                  <div className="text-sm text-gray-500">
-                    Posted by: {property.owner?.name}
-                  </div>
-                  <div
-                    className={`mt-2 ${
-                      property.status === "available"
-                        ? "text-green-600"
-                        : property.status === "sold"
-                        ? "text-red-600"
-                        : "text-gray-600"
-                    }`}
-                  >
-                    {property.status.charAt(0).toUpperCase() +
-                      property.status.slice(1)}
-                  </div>
                 </div>
-              </div>
+                <button
+                  className="mt-4 bg-[#005555] text-white px-4 py-2 rounded-lg hover:bg-[#007777] transition"
+                  onClick={() => navigate("/login")}
+                >
+                  View
+                </button>
+              </motion.div>
             ))}
           </div>
 
-          {/* Pagination */}
-          <div className="flex justify-between items-center mt-4">
-            <div className="text-sm text-slate-500">
+          {/* Pagination Section */}
+          <div className="flex justify-between items-center mt-10">
+            <p className="text-sm text-gray-600">
               Showing <b>{start}</b> to <b>{end}</b> of <b>{totalProperties}</b>{" "}
               properties
-            </div>
+            </p>
             <Pagination
               currentPage={page}
               totalPages={totalPages}

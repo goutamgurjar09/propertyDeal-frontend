@@ -1,21 +1,47 @@
 import React, { useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { useDispatch, useSelector } from "react-redux";
-// import {
-//   submitEnquiryForm,
-//   resetFormStatus,
-// } from "../redux/slices/enquirySlices";
 import {
   submitEnquiryForm,
   resetFormStatus,
-} from "../../redux/slices/enquirySlices"
-// import { showError, showSuccess } from "../Alert";
+} from "../../redux/slices/enquirySlices";
 import { showError, showSuccess } from "../../Alert";
+import * as yup from "yup";
+import { yupResolver } from "@hookform/resolvers/yup";
 
+// Yup validation schema
+const schema = yup.object().shape({
+  fullname: yup
+    .string()
+    .required("Full name is required")
+    .matches(/^[A-Za-z\s]+$/, "Full name must contain only letters and spaces")
+    .min(3, "Full name must be at least 3 characters"),
+  email: yup.string().email("Invalid email").required("Email is required"),
+  mobile: yup
+    .string()
+    .required("Mobile number is required")
+    .matches(/^[6-9]\d{9}$/, "Enter a valid 10-digit mobile number"),
+  message: yup
+    .string()
+    .required("Message is required")
+    .matches(
+      /^[A-Za-z0-9\s]+$/,
+      "Message can only contain letters, numbers, and spaces"
+    ),
+});
 
 const CoustomContact = () => {
   const dispatch = useDispatch();
-  const { register, handleSubmit, reset } = useForm();
+
+  const {
+    register,
+    handleSubmit,
+    reset,
+    formState: { errors },
+  } = useForm({
+    resolver: yupResolver(schema),
+  });
+
   const { loading, success, error } = useSelector((state) => state.enquiry);
 
   const onSubmit = async (formData) => {
@@ -53,40 +79,61 @@ const CoustomContact = () => {
                   <label className="block mb-2 font-semibold">Your Name</label>
                   <input
                     type="text"
-                    {...register("fullname", { required: true })}
+                    {...register("fullname")}
                     className="w-full px-5 py-3 rounded-lg bg-gray-50 border border-gray-400 focus:outline-none focus:ring-2 focus:ring-[#005555]"
                     placeholder="Enter your name"
                   />
+                  {errors.fullname && (
+                    <p className="text-red-500 text-sm mt-1">
+                      {errors.fullname.message}
+                    </p>
+                  )}
                 </div>
+
                 <div className="w-full md:w-1/2">
                   <label className="block mb-2 font-semibold">Your Email</label>
                   <input
                     type="email"
-                    {...register("email", { required: true })}
+                    {...register("email")}
                     className="w-full px-5 py-3 rounded-lg bg-gray-50 border border-gray-400 focus:outline-none focus:ring-2 focus:ring-[#005555]"
                     placeholder="Enter your email"
                   />
+                  {errors.email && (
+                    <p className="text-red-500 text-sm mt-1">
+                      {errors.email.message}
+                    </p>
+                  )}
                 </div>
               </div>
 
               <div>
                 <label className="block mb-2 font-semibold">Mobile</label>
                 <input
-                  type="number"
-                  {...register("mobile", { required: true })}
+                  type="text"
+                  {...register("mobile")}
                   className="w-full px-5 py-3 rounded-lg bg-gray-50 border border-gray-400 focus:outline-none focus:ring-2 focus:ring-[#005555]"
                   placeholder="Enter Mobile Number"
                 />
+                {errors.mobile && (
+                  <p className="text-red-500 text-sm mt-1">
+                    {errors.mobile.message}
+                  </p>
+                )}
               </div>
 
               <div>
                 <label className="block mb-2 font-semibold">Your Message</label>
                 <textarea
                   rows="4"
-                  {...register("message", { required: true })}
+                  {...register("message")}
                   className="w-full px-5 py-3 rounded-lg bg-gray-50 border border-gray-400 focus:outline-none focus:ring-2 focus:ring-[#005555]"
                   placeholder="Enter your message"
                 ></textarea>
+                {errors.message && (
+                  <p className="text-red-500 text-sm mt-1">
+                    {errors.message.message}
+                  </p>
+                )}
               </div>
 
               <button
@@ -96,15 +143,6 @@ const CoustomContact = () => {
               >
                 {loading ? "Submitting..." : "Submit"}
               </button>
-
-              {success && (
-                <p className="text-green-600 font-medium">
-                  Message sent successfully!
-                </p>
-              )}
-              {error && (
-                <p className="text-red-600 font-medium">Error: {error}</p>
-              )}
             </form>
           </div>
 

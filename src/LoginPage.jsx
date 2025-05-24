@@ -5,32 +5,57 @@ import { useDispatch } from "react-redux";
 import { googleAuth, loginUser } from "./redux/slices/authSlice";
 import { GoogleLogin } from "@react-oauth/google";
 import { showError, showSuccess } from "./Alert";
+import { useForm } from "react-hook-form";
+import { yupResolver } from "@hookform/resolvers/yup";
+import * as yup from "yup";
+
+const schema = yup.object().shape({
+  email: yup.string().email("Invalid email").required("Email is required"),
+  password: yup
+    .string()
+    .required("Password is required")
+    .min(8, "Password must be at least 8 characters")
+    .max(20, "Password must be at most 20 characters")
+    .matches(
+      /[A-Z]/,
+      "Password must contain at least one uppercase letter (A-Z)"
+    )
+    .matches(
+      /[a-z]/,
+      "Password must contain at least one lowercase letter (a-z)"
+    )
+    .matches(/[0-9]/, "Password must contain at least one number (0-9)")
+    .matches(
+      /[@$!%*?&]/,
+      "Password must contain at least one special character (@$!%*?&)"
+    ),
+});
+
 function LoginPage({ setUser }) {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [selectedRole, setSelectedRole] = useState("");
 
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const handleSubmit = async (e) => {
-    e.preventDefault();
+
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm({
+    resolver: yupResolver(schema),
+  });
+
+  const onSubmit = async (data) => {
     try {
-      const { payload } = await dispatch(
-        loginUser({ email: email.trim(), password })
-      );
+      const { payload } = await dispatch(loginUser(data));
 
       if (payload?.data) {
         const { accessToken, isVerified, role } = payload.data;
         if (accessToken) {
           if (isVerified) {
-            if (role === "admin") {
-              showSuccess(payload.message || "Login successful!");
-              navigate("/dashboard");
-            } else if (role === "buyer") {
-              showSuccess("Login successful");
-              navigate("/properties-list");
-            }
+            showSuccess(payload.message || "Login successful!");
+            navigate(role === "admin" ? "/dashboard" : "/properties-list");
             setUser(payload.data);
           } else {
             showError("Please verify your email to complete the login.");
@@ -47,46 +72,29 @@ function LoginPage({ setUser }) {
     }
   };
 
-  // Google login handler
   const handleGoogleLogin = async (response) => {
     try {
       const tokenId = response?.credential;
-      if (!tokenId) {
-        showError("Invalid Google response.");
-        return;
-      }
+      if (!tokenId) return showError("Invalid Google response.");
 
       const result = await dispatch(
-        googleAuth({
-          tokenId,
-          role: selectedRole || null,
-        })
+        googleAuth({ tokenId, role: selectedRole || null })
       );
 
       if (result.error) {
         const msg = result?.payload?.message;
-
-        // 🔍 Check if it's the new user
-        if (msg) {
-          showError(
+        if (msg)
+          return showError(
             "Please select a role before continuing with Google login."
           );
-          return;
-        }
-
-        // Generic error fallback
-        showError(msg || "Google login failed");
-        return;
+        return showError(msg || "Google login failed");
       }
+
       const user = result.payload?.data;
-      if (user?.accessToken && user?.role === "admin") {
+      if (user?.accessToken) {
         showSuccess("Login successful");
-        navigate("/dashboard");
-      } else if (user?.accessToken && user?.role === "buyer") {
-        showSuccess("Login successful");
-        navigate("/properties-list");
+        navigate(user.role === "admin" ? "/dashboard" : "/properties-list");
       } else {
-        showSuccess("Login successful");
         navigate("/");
       }
     } catch (error) {
@@ -103,26 +111,27 @@ function LoginPage({ setUser }) {
           Log In
         </h2>
 
-        <form className="space-y-6" onSubmit={handleSubmit}>
+        <form className="space-y-6" onSubmit={handleSubmit(onSubmit)}>
           <div className="w-full border-b border-gray-900 focus-within:border-indigo-500">
             <input
               type="text"
-              placeholder="Email or Username"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
+              placeholder="Email"
+              {...register("email")}
               className="w-full bg-transparent p-2 outline-none text-gray-800 placeholder-gray-500"
-              required
             />
+            {errors.email && (
+              <p className="text-red-500 text-sm mt-1">
+                {errors.email.message}
+              </p>
+            )}
           </div>
 
           <div className="w-full border-b border-gray-900 focus-within:border-indigo-500 relative">
             <input
               type={showPassword ? "text" : "password"}
               placeholder="Password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
+              {...register("password")}
               className="w-full bg-transparent p-2 outline-none text-gray-800 placeholder-gray-500 pr-10"
-              required
             />
             <button
               type="button"
@@ -131,6 +140,11 @@ function LoginPage({ setUser }) {
             >
               {showPassword ? <FaEyeSlash /> : <FaEye />}
             </button>
+            {errors.password && (
+              <p className="text-red-500 text-sm mt-1">
+                {errors.password.message}
+              </p>
+            )}
           </div>
 
           <Link
@@ -156,6 +170,7 @@ function LoginPage({ setUser }) {
             Create One
           </Link>
         </p>
+
         <div className="flex justify-center items-center mt-4 gap-4">
           <GoogleLogin
             onSuccess={handleGoogleLogin}

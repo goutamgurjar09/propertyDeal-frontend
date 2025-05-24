@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { IoMenu, IoClose } from "react-icons/io5";
 import { Link, useLocation, useNavigate } from "react-router-dom";
-// import { getAuthToken, clearAuthSession } from "../redux/slices/authUtlis";
 import { getAuthToken, clearAuthSession } from "../../redux/slices/authUtlis";
 import { getCategories } from "../../redux/slices/categorySlice";
 import { useDispatch, useSelector } from "react-redux";
@@ -28,8 +27,7 @@ function Navbar() {
     };
   }, []);
 
-  
-    const { categories } = useSelector((state) => state.category);
+  const { categories } = useSelector((state) => state.category);
   // const { singleProperty } = useSelector((state) => state.property);
 
   // Fetch categories on mount
@@ -83,14 +81,6 @@ function Navbar() {
               >
                 Home
               </Link>
-
-              <Link
-                to="/About"
-                className="text-[#005555] hover:text-[#52b9b9] transition"
-              >
-                About
-              </Link>
-
               <li
                 className="relative list-none"
                 onMouseEnter={() => setDropdownOpen("properties")}

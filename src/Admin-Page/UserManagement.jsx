@@ -8,7 +8,7 @@ import { FaTrash } from "react-icons/fa";
 import PaginatedTable from "../CommonComponent/PaginatedTable";
 import Loader from "../CommonComponent/Loader";
 
-const UserManagement = ({setUser}) => {
+const UserManagement = ({ setUser }) => {
   const [sidebarOpen, setSidebarOpen] = useState(true);
 
   const dispatch = useDispatch();
@@ -46,6 +46,7 @@ const UserManagement = ({setUser}) => {
   };
 
   const columns = [
+    { header: "S No.", render: (_, index) => index + 1 },
     { header: "Name", accessor: "fullname" },
     { header: "Email", accessor: "email" },
     { header: "Role", accessor: "role" },
@@ -54,11 +55,11 @@ const UserManagement = ({setUser}) => {
       header: "Actions",
       render: (row) => (
         <button
-          className="text-red-500 hover:text-red-700"
-          title="Delete"
+          className="bg-red-100 text-red-500 hover:bg-rose-200 p-2 rounded-lg transition-colors"
+          title={`Delete ${row.fullname}`}
           onClick={() => handleDelete(row._id)}
         >
-          <FaTrash />
+          <FaTrash size={14} />
         </button>
       ),
     },
@@ -86,11 +87,13 @@ const UserManagement = ({setUser}) => {
         } bg-white`}
       >
         {/* Header */}
-        <Header sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen} setUser={setUser} />
+        <Header
+          sidebarOpen={sidebarOpen}
+          setSidebarOpen={setSidebarOpen}
+          setUser={setUser}
+        />
         <div className="mt-6 mb-6 bg-gray-100 p-4 shadow-md w-[96%] ml-4">
-          <h2 className="text-2xl font-bold mb-6 text-slate-700">
-            Users List
-          </h2>
+          <h2 className="text-2xl font-bold mb-6 text-slate-700">Users List</h2>
 
           {/* User Table */}
           <PaginatedTable
