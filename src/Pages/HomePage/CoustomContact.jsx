@@ -141,7 +141,7 @@ const CoustomContact = () => {
                 disabled={loading}
                 className="w-full bg-[#005555] hover:bg-[#004444] transition-all duration-300 text-white py-3 rounded-lg font-semibold shadow-md"
               >
-                {loading ? "Sending..." : "Send Message"}
+                {loading ? "Submitting..." : "Submit"}
               </button>
             </form>
           </div>

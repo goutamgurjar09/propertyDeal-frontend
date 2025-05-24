@@ -4,6 +4,9 @@
 body {
   font-family: 'Poppins', sans-serif;
 }
+.group::before, .group::after {
+  content: none !important;
+}
 
 .form-input {
   height: 40px;

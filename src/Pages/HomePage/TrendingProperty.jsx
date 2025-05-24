@@ -53,7 +53,7 @@ export const TrendingProperty = () => {
 
   return (
     <div
-      className="bg-gray-50 min-h-screen px-6 py-12 font-serif"
+      className="bg-gray-50 min-h-screen px-6 py-3 font-serif"
       ref={containerRef}
     >
       <div className="max-w-7xl mx-auto bg-white rounded-2xl p-8 shadow-2xl">
@@ -66,8 +66,8 @@ export const TrendingProperty = () => {
           {properties.map((property, index) => (
             <motion.div
               key={index}
-              initial={{ opacity: 0, x: index % 2 === 0 ? -50 : 50 }}
-              whileInView={{ opacity: 1, x: 0 }}
+              initial={{ opacity: 0, y: index % 2 === 0 ? -50 : 50 }}
+              whileInView={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6, delay: index * 0.1 }}
               viewport={{ once: false, amount: 0.3 }}
               className="bg-white rounded-2xl shadow-md hover:shadow-2xl transition-all p-4 flex flex-col justify-between"

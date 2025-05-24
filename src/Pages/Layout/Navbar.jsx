@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { IoMenu, IoClose } from "react-icons/io5";
 import { Link, useLocation, useNavigate } from "react-router-dom";
-// import { getAuthToken, clearAuthSession } from "../redux/slices/authUtlis";
 import { getAuthToken, clearAuthSession } from "../../redux/slices/authUtlis";
 import { getCategories } from "../../redux/slices/categorySlice";
 import { useDispatch, useSelector } from "react-redux";
@@ -87,7 +86,7 @@ function Navbar() {
                 onMouseEnter={() => setDropdownOpen("properties")}
                 onMouseLeave={() => setDropdownOpen(null)}
               >
-                <button className="hover:text-[#52b9b9]  text-[#005555] transition-colors duration-300">
+                <button className="hover:text-[#52b9b9] text-[#005555] transition-colors duration-300 focus:outline-none appearance-none">
                   Properties
                 </button>
                 {dropdownOpen === "properties" && (
@@ -117,13 +116,6 @@ function Navbar() {
               </li>
 
               <Link
-                to="/booking"
-                className="text-[#005555] hover:text-[#52b9b9] transition"
-              >
-                Booking
-              </Link>
-
-              <Link
                 to="/contact"
                 className="text-[#005555] hover:text-[#52b9b9] transition"
               >
@@ -145,7 +137,7 @@ function Navbar() {
                       to="/login"
                       className="bg-[#005555] text-white px-5 py-2 rounded-md font-medium hover:text-[#52b9b9] transition"
                     >
-                      Sign In
+                      LogIn
                     </Link>
                     <Link
                       to="/signup"
