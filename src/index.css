@@ -4,3 +4,6 @@
 body {
   font-family: 'Poppins', sans-serif;
 }
+.group::before, .group::after {
+  content: none !important;
+}

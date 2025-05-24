@@ -84,50 +84,19 @@ function Navbar() {
                 Home
               </Link>
 
-              {/* <div
-                className="relative"
-                onMouseEnter={() => setDropdownOpen("properties")}
-                onMouseLeave={() => setDropdownOpen(null)}
+              <Link
+                to="/About"
+                className="text-[#005555] hover:text-[#52b9b9] transition"
               >
-                <button className="text-[#005555] hover:text-[#52b9b9] transition">
-                  Properties
-                </button>
-                {dropdownOpen === "properties" && (
-                  <div className="absolute top-full left-0 bg-white text-gray-800 rounded-md shadow-lg w-52 border border-gray-200 z-50">
-                    <Link
-                      to="/commercial"
-                      className="block px-5 py-3 hover:bg-blue-100 transition-colors"
-                    >
-                      Commercial
-                    </Link>
-                    <Link
-                      to="/luxury"
-                      className="block px-5 py-3 hover:bg-blue-100 transition-colors"
-                    >
-                      Luxury
-                    </Link>
-                    <Link
-                      to="/rental"
-                      className="block px-5 py-3 hover:bg-blue-100 transition-colors"
-                    >
-                      Rental
-                    </Link>
-                    <Link
-                      to="/premium"
-                      className="block px-5 py-3 hover:bg-blue-100 transition-colors"
-                    >
-                      Premium
-                    </Link>
-                  </div>
-                )}
-              </div> */}
+                About
+              </Link>
 
               <li
-                className="relative"
+                className="relative list-none"
                 onMouseEnter={() => setDropdownOpen("properties")}
                 onMouseLeave={() => setDropdownOpen(null)}
               >
-                <button className="hover:text-[#52b9b9]  text-[#005555] transition-colors duration-300">
+                <button className="hover:text-[#52b9b9] text-[#005555] transition-colors duration-300 focus:outline-none appearance-none">
                   Properties
                 </button>
                 {dropdownOpen === "properties" && (
@@ -157,13 +126,6 @@ function Navbar() {
               </li>
 
               <Link
-                to="/booking"
-                className="text-[#005555] hover:text-[#52b9b9] transition"
-              >
-                Booking
-              </Link>
-
-              <Link
                 to="/contact"
                 className="text-[#005555] hover:text-[#52b9b9] transition"
               >
@@ -185,7 +147,7 @@ function Navbar() {
                       to="/login"
                       className="bg-[#005555] text-white px-5 py-2 rounded-md font-medium hover:text-[#52b9b9] transition"
                     >
-                      Sign In
+                      LogIn
                     </Link>
                     <Link
                       to="/signup"
