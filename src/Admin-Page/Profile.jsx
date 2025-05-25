@@ -25,7 +25,11 @@ const Profile = ({ setUser }) => {
           sidebarOpen ? "w-72" : "w-0"
         } bg-white shadow-2xl overflow-hidden`}
       >
-        <Sidebar sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen}  setUser={setUser} />
+        <Sidebar
+          sidebarOpen={sidebarOpen}
+          setSidebarOpen={setSidebarOpen}
+          setUser={setUser}
+        />
       </div>
 
       {/* Main Content */}

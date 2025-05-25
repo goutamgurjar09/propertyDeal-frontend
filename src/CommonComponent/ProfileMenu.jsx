@@ -52,7 +52,17 @@ const ProfileMenu = ({ setUser = null }) => {
               : "User"
           }`}
         </span>
-        <FaUserCircle className="text-2xl cursor-pointer" />
+        {user?.profileImg ? (
+          <img
+            src={user.profileImg}
+            alt="Profile"
+            className="w-8 h-8 rounded-full object-cover"
+          />
+        ) : (
+          <div className="w-20 h-20 rounded-full bg-gray-300 flex items-center justify-center text-4xl font-bold text-gray-700">
+            {getInitials(user?.full_name || "U")}
+          </div>
+        )}
         <FaChevronDown className="text-xs cursor-pointer" />
       </button>
 
