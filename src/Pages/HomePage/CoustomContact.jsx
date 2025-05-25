@@ -61,7 +61,7 @@ const CoustomContact = () => {
   }, [success, dispatch, reset]);
 
   return (
-    <div className="text-[#005555] py-12 px-10 md:px-32 ">
+    <div className="text-[#005555] py-12 px-10 md:px-32 mt-10">
       <div className="max-w-8xl mx-auto">
         <div className="text-center mb-12">
           <h2 className="text-5xl font-bold font-serif mb-4">Get in Touch</h2>
