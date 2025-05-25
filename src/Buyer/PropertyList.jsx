@@ -11,6 +11,7 @@ import { getCities } from "../redux/slices/citySlice";
 import { Controller, useForm } from "react-hook-form";
 import axios from "axios";
 import Navbar from "../Pages/Layout/Navbar";
+import { motion } from "framer-motion";
 
 export const PropertiesList = ({ setUser }) => {
   const navigate = useNavigate();
@@ -183,64 +184,37 @@ export const PropertiesList = ({ setUser }) => {
           {/* Properties Grid */}
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
             {properties.map((property, index) => (
-              <div
+              <motion.div
                 key={index}
-                className="relative bg-white rounded-2xl shadow-md hover:shadow-xl transition-shadow p-4 flex flex-col justify-between h-full"
+                initial={{ opacity: 0, y: index % 2 === 0 ? -50 : 50 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.6, delay: index * 0.1 }}
+                viewport={{ once: false, amount: 0.3 }}
+                className="bg-white rounded-2xl shadow-md hover:shadow-2xl transition-all p-4 flex flex-col justify-between"
               >
-                {/* Card Content */}
-                <div
-                  className="flex-grow cursor-pointer"
-                  onClick={() => navigate(`/propertyDetails/${property._id}`)}
-                >
-                  <div className="flex justify-center items-center mb-4">
-                    <img
-                      src={
-                        property.propertyImages?.[0] ||
-                        "https://via.placeholder.com/400x250?text=No+Image"
-                      }
-                      alt={property.title}
-                      className="rounded-lg object-cover w-full h-48"
-                    />
-                  </div>
-
-                  <h3 className="text-xl font-semibold text-gray-800 truncate">
+                <div className="cursor-pointer">
+                  <img
+                    src={
+                      property.propertyImages?.[0] ||
+                      "https://via.placeholder.com/400x250?text=No+Image"
+                    }
+                    alt={property.title}
+                    className="rounded-xl w-full h-48 object-cover mb-4"
+                  />
+                  <h3 className="text-lg font-semibold text-gray-800 mb-1 truncate">
                     {property.title}
                   </h3>
-                  <p className="text-sm text-gray-500 mb-2">
-                    {property.propertyType}
+                  <p className="text-sm text-gray-600">
+                    {property.location?.city?.name}
                   </p>
-                  <p className="text-gray-700 font-medium mb-2">
-                    ₹ {property.price.toLocaleString()}
-                  </p>
-
-                  <div className="text-sm text-gray-600 mb-2">
-                    {property.location?.city?.name}, {property.location?.state},{" "}
-                    {property.location?.country}
-                  </div>
-
-                  <div className="flex flex-wrap text-sm text-gray-600 gap-2 mb-2">
-                    <span>🛏 {property.bedrooms} Beds</span>
-                    <span>🛁 {property.bathrooms} Baths</span>
-                    <span>📐 {property.size} sqft</span>
-                  </div>
-
-                  <div className="text-sm text-gray-500">
-                    Posted by: {property.owner?.name}
-                  </div>
-                  <div
-                    className={`mt-2 ${
-                      property.status === "available"
-                        ? "text-green-600"
-                        : property.status === "sold"
-                        ? "text-red-600"
-                        : "text-gray-600"
-                    }`}
-                  >
-                    {property.status.charAt(0).toUpperCase() +
-                      property.status.slice(1)}
-                  </div>
                 </div>
-              </div>
+                <button
+                  className="mt-4 bg-[#005555] text-white px-4 py-2 rounded-lg hover:bg-[#007777] transition"
+                  onClick={() => navigate(`/propertyDetails/${property?._id}`)}
+                >
+                  View
+                </button>
+              </motion.div>
             ))}
           </div>
 

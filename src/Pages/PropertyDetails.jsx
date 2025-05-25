@@ -54,7 +54,7 @@ const PropertyDetails = () => {
 
   return (
     <div className="bg-gray-50 min-h-screen">
-      <div className="max-w-7xl mx-auto px-4 py-6">
+      <div className="max-w-7xl mx-auto px-4 py-6 mt-16">
         <Link
           to={
             user.role === "admin"

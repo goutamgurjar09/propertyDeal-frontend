@@ -20,7 +20,7 @@ const Profile = ({ setUser }) => {
   return (
     <div className="flex min-h-screen overflow-hidden bg-gray-100">
       {/* Profile Card Container */}
-      <main className="flex-grow p-8">
+      <main className="flex-grow p-8 mt-14">
         <Link to="/properties-list">
           <button className="mb-6 flex items-center gap-2 px-5 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 transition">
             <svg
