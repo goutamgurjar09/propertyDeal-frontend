@@ -104,8 +104,11 @@ export const Categories = ({ setUser }) => {
       render: (row) => (
         <select
           value={row.status}
+          disabled={user?.role === "seller"}
           onChange={(e) => handleStatusToggle(row._id, e.target.value)}
           className={`ml-2 px-2 py-1 rounded border text-xs ${
+            user?.role === "seller" ? "cursor-not-allowed" : "cursor-pointer"
+          } ${
             row.status === "Active"
               ? "bg-green-100 text-green-700"
               : "bg-red-100 text-red-700"
@@ -137,7 +140,12 @@ export const Categories = ({ setUser }) => {
           </button>
           <button
             className="bg-red-100 text-red-500 hover:bg-rose-200 p-2 rounded-lg transition-colors"
-            title={`Delete ${row.categoryName}`}
+            title={
+              user?.role === "seller"
+                ? "Seller can't delete category"
+                : `Delete ${row.categoryName}`
+            }
+            disabled={user?.role === "seller"}
             onClick={() => handleDelete(row._id)}
           >
             <FaTrash size={14} />
@@ -216,7 +224,7 @@ export const Categories = ({ setUser }) => {
       >
         <AddCategoryForm
           setIsModalOpen={setIsModalOpen}
-          userId={user.userId}
+          userId={user?.userId}
           id={editCategoryId}
           onSuccess={() => dispatch(getCategories({ page, limit }))}
         />

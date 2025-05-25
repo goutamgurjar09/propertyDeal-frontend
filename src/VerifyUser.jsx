@@ -3,6 +3,7 @@ import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { generateOtp, verifyUser } from "./redux/slices/authSlice";
 import { showError, showSuccess } from "./Alert";
+import { getUserDetail } from "./redux/slices/authUtlis";
 
 const VerifyUser = () => {
   const [email, setEmail] = useState("");
@@ -10,6 +11,7 @@ const VerifyUser = () => {
   const [otpSent, setOtpSent] = useState(false);
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const user = getUserDetail();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -24,7 +26,7 @@ const VerifyUser = () => {
       showSuccess("OTP sent successfully! Please check your email.");
     } else if (result.payload?.data?.otp_verified) {
       showSuccess("OTP verified successfully!");
-      navigate("/dashboard"); // Or wherever you want to redirect
+      navigate(user?.role === "buyer" ? "/properties-list" : "/dashboard"); // Or wherever you want to redirect
     } else if (result.payload?.message) {
       showError(result.payload.message); // Show any error message returned by the API
     }

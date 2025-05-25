@@ -36,8 +36,8 @@ const getSchema = (hasExistingImages) =>
       .required("Price is required"),
     propertyType: yup.string().required(),
     size: yup.number().typeError("Must be a number"),
-    bedrooms: yup.number().typeError("Must be a number").required("Required"),
-    bathrooms: yup.number().typeError("Must be a number").required("Required"),
+    bedrooms: yup.number().required("Required").typeError("Must be a number"),
+    bathrooms: yup.number().required("Required").typeError("Must be a number"),
     city: yup.string().required("City is required"),
     owner: yup.string().required("Owner name is required"),
     facilities: yup.array().min(1, "Select at least one facility"),
@@ -57,8 +57,8 @@ const getSchema = (hasExistingImages) =>
           value: yup.string().required(),
         })
       )
-      .min(1, "Select at least one subcategory")
-      .required("Subcategory is required"),
+      .required("Subcategory is required")
+      .min(1, "Select at least one subcategory"),
   });
 const AddProperty = ({ id, setIsModalOpen, onSuccess }) => {
   const dispatch = useDispatch();
@@ -452,7 +452,7 @@ const AddProperty = ({ id, setIsModalOpen, onSuccess }) => {
             <button
               type="button"
               onClick={() => handleRemoveImage(index)}
-              className="absolute top-0 right-0 bg-red-500 text-white rounded-full w-6 h-6 flex items-center justify-center"
+              className="absolute top-0 right-0 bg-red-500 text-white rounded-full w-6 h-6 flex items-center justify-center cursor-pointer"
               title="Remove"
             >
               ✕

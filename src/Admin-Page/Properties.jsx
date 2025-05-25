@@ -20,6 +20,7 @@ import axios from "axios";
 import PaginatedTable from "../CommonComponent/PaginatedTable";
 import AddProperty from "./AddProperty";
 import Modal from "../CommonComponent/Modal";
+import { getUserDetail } from "../redux/slices/authUtlis";
 
 export const Properties = ({ setUser }) => {
   const dispatch = useDispatch();
@@ -37,6 +38,7 @@ export const Properties = ({ setUser }) => {
   const { control, register, setValue } = useForm();
   const property = useSelector((state) => state.property);
   const { cities } = useSelector((state) => state.city);
+  const user = getUserDetail();
 
   const {
     properties,
@@ -169,8 +171,11 @@ export const Properties = ({ setUser }) => {
       render: (row) => (
         <select
           value={row.status}
+          disabled={user?.role === "seller"}
           onChange={(e) => handleStatusToggle(row._id, e.target.value)}
           className={`ml-2 px-2 py-1 rounded border text-xs ${
+            user?.role === "seller" ? "cursor-not-allowed" : "cursor-pointer"
+          } ${
             row.status === "Available"
               ? "bg-green-100 text-green-700"
               : row.status === "Sold"
@@ -211,7 +216,12 @@ export const Properties = ({ setUser }) => {
           </button>
           <button
             className="bg-red-100 text-red-500 hover:bg-rose-200 p-2 rounded-lg transition-colors"
-            title={`Delete ${row.title}`}
+            title={
+              user?.role === "seller"
+                ? "Seller can't delete property"
+                : `Delete ${row.title}`
+            }
+            disabled={user?.role === "seller"}
             onClick={() => handleDelete(row._id)}
           >
             <FaTrash size={14} />
@@ -228,7 +238,11 @@ export const Properties = ({ setUser }) => {
           sidebarOpen ? "w-70" : "w-0"
         } bg-gray-100 shadow-2xl overflow-hidden`}
       >
-        <Sidebar sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen}  setUser={setUser} />
+        <Sidebar
+          sidebarOpen={sidebarOpen}
+          setSidebarOpen={setSidebarOpen}
+          setUser={setUser}
+        />
       </div>
 
       {/* Main Content */}

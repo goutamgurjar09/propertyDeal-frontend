@@ -47,7 +47,7 @@ function App() {
   const [user, setUser] = useState(getUserDetail());
 
   useEffect(() => {
-    if (user && user.role === "admin") {
+    if (user && user?.role === "admin" || user?.role === "seller") {
       setUserRole(true);
     } else {
       setUserRole(null);

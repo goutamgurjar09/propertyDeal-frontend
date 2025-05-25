@@ -5,9 +5,9 @@ import Header from "../Pages/Layout/Header";
 import { FaTrash, FaEye } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
 import { showSuccess, showError } from "../Alert";
-import Loader from "../CommonComponent/Loader";
 import PaginatedTable from "../CommonComponent/PaginatedTable";
 import { deleteEnquiry, getEnquiries } from "../redux/slices/enquirySlices";
+import { getUserDetail } from "../redux/slices/authUtlis";
 
 export const Enquiries = ({ setUser }) => {
   const [sidebarOpen, setSidebarOpen] = useState(true);
@@ -15,6 +15,7 @@ export const Enquiries = ({ setUser }) => {
   const navigate = useNavigate();
   const [page, setPage] = useState(1);
   const limit = 10;
+  const user = getUserDetail();
 
   const {
     enquiryData,
@@ -34,9 +35,11 @@ export const Enquiries = ({ setUser }) => {
     if (window.confirm("Are you sure you want to delete this booking?")) {
       try {
         const response = await dispatch(deleteEnquiry(id));
-        if (response.payload.status) {
+        if (response.payload.status === "success") {
           dispatch(getEnquiries({ page, limit })); // Refresh bookings after deletion
           showSuccess(response.payload.message);
+        } else {
+          showError(response.payload.message || "Failed to delete booking.");
         }
       } catch (err) {
         showError("Failed to delete booking. Please try again.");
@@ -56,7 +59,12 @@ export const Enquiries = ({ setUser }) => {
         <div className="flex space-x-2">
           <button
             className="bg-red-100 text-red-500 hover:bg-rose-200 p-2 rounded-lg transition-colors"
-            title={`Delete ${row.fullname}`}
+            title={
+              user?.role === "seller"
+                ? "Seller can't delete enquiry"
+                : `Delete ${row.fullname}`
+            }
+            disabled={user?.role === "seller"}
             onClick={() => handleDelete(row._id)}
           >
             <FaTrash size={14} />
@@ -78,7 +86,11 @@ export const Enquiries = ({ setUser }) => {
           sidebarOpen ? "w-70" : "w-0"
         } bg-gray-100 shadow-2xl overflow-hidden`}
       >
-        <Sidebar sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen}  setUser={setUser} />
+        <Sidebar
+          sidebarOpen={sidebarOpen}
+          setSidebarOpen={setSidebarOpen}
+          setUser={setUser}
+        />
       </div>
 
       {/* Main Content */}

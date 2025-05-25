@@ -12,6 +12,7 @@ import { useNavigate } from "react-router-dom";
 import { showSuccess, showError } from "../Alert";
 import Loader from "../CommonComponent/Loader";
 import PaginatedTable from "../CommonComponent/PaginatedTable";
+import { getUserDetail } from "../redux/slices/authUtlis";
 
 const Booking = ({ setUser }) => {
   const [sidebarOpen, setSidebarOpen] = useState(true);
@@ -19,6 +20,7 @@ const Booking = ({ setUser }) => {
   const navigate = useNavigate();
   const [page, setPage] = useState(1);
   const limit = 10;
+  const user = getUserDetail();
 
   const {
     booking: bookings,
@@ -105,8 +107,11 @@ const Booking = ({ setUser }) => {
       render: (row) => (
         <select
           value={row.status}
+          disabled={user?.role === "seller"}
           onChange={(e) => handleStatusChange(row._id, e.target.value)}
-          className={`border border-gray-300 rounded p-1 ${getStatusColor(
+          className={`border border-gray-300 rounded p-1 ${
+            user?.role === "seller" ? "cursor-not-allowed" : "cursor-pointer"
+          } ${getStatusColor(
             row.status
           )}`}
         >
@@ -127,7 +132,7 @@ const Booking = ({ setUser }) => {
       render: (row) => (
         <div className="flex space-x-3">
           <button
-            onClick={() => handleViewProperty(row.propertyId?._id)}
+            onClick={() => handleViewProperty(row?._id)}
             className="bg-emerald-100 text-emerald-600 hover:bg-emerald-200 p-2 rounded-lg transition-colors"
             title="View"
           >
@@ -135,7 +140,8 @@ const Booking = ({ setUser }) => {
           </button>
           <button
             className="bg-red-100 text-red-500 hover:bg-rose-200 p-2 rounded-lg transition-colors"
-            title={`Delete ${row.name}`}
+            title={user?.role === "seller" ? "Seller can't delete booking" : `Delete ${row.name}`}
+            disabled={user?.role === "seller"}
             onClick={() => handleDelete(row._id)}
           >
             <FaTrash size={14} />
@@ -157,7 +163,11 @@ const Booking = ({ setUser }) => {
           sidebarOpen ? "w-70" : "w-0"
         } bg-gray-100 shadow-2xl overflow-hidden`}
       >
-        <Sidebar sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen}  setUser={setUser} />
+        <Sidebar
+          sidebarOpen={sidebarOpen}
+          setSidebarOpen={setSidebarOpen}
+          setUser={setUser}
+        />
       </div>
 
       {/* Main Content */}

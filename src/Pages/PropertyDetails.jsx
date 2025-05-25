@@ -57,7 +57,7 @@ const PropertyDetails = () => {
       <div className="max-w-7xl mx-auto px-4 py-6 mt-16">
         <Link
           to={
-            user.role === "admin"
+            user.role === "admin" || user.role === "seller"
               ? "/properties"
               : user.role === "buyer"
               ? "/properties-list"
@@ -73,7 +73,11 @@ const PropertyDetails = () => {
               stroke="currentColor"
               strokeWidth={2}
             >
-              <path strokeLinecap="round" strokeLinejoin="round" d="M15 19l-7-7 7-7" />
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                d="M15 19l-7-7 7-7"
+              />
             </svg>
             Back
           </button>

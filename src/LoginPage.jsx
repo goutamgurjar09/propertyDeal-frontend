@@ -55,7 +55,7 @@ function LoginPage({ setUser }) {
         if (accessToken) {
           if (isVerified) {
             showSuccess(payload.message || "Login successful!");
-            navigate(role === "admin" ? "/dashboard" : "/properties-list");
+            navigate(role === "buyer" ?  "/properties-list" : "/dashboard");
             setUser(payload.data);
           } else {
             showError("Please verify your email to complete the login.");
@@ -93,7 +93,7 @@ function LoginPage({ setUser }) {
       const user = result.payload?.data;
       if (user?.accessToken) {
         showSuccess("Login successful");
-        navigate(user.role === "admin" ? "/dashboard" : "/properties-list");
+        navigate(user.role === "buyer" ? "/properties-list" : "/dashboard" );
       } else {
         navigate("/");
       }

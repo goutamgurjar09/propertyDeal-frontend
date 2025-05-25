@@ -7,6 +7,7 @@ import { showSuccess, showError } from "../Alert";
 import { FaTrash } from "react-icons/fa";
 import PaginatedTable from "../CommonComponent/PaginatedTable";
 import Loader from "../CommonComponent/Loader";
+import { getUserDetail } from "../redux/slices/authUtlis";
 
 const UserManagement = ({ setUser }) => {
   const [sidebarOpen, setSidebarOpen] = useState(true);
@@ -14,6 +15,7 @@ const UserManagement = ({ setUser }) => {
   const dispatch = useDispatch();
   const [page, setPage] = useState(1);
   const limit = 10;
+  const user = getUserDetail();
 
   const {
     users,
@@ -33,7 +35,7 @@ const UserManagement = ({ setUser }) => {
     if (window.confirm("Are you sure you want to delete this user?")) {
       try {
         const response = await dispatch(deleteUser(id));
-        if (response.payload.status) {
+        if (response.payload.status === "success") {
           showSuccess("User deleted successfully!");
           dispatch(getUsers({ page, limit })); // Refresh users after deletion
         } else {
@@ -56,7 +58,12 @@ const UserManagement = ({ setUser }) => {
       render: (row) => (
         <button
           className="bg-red-100 text-red-500 hover:bg-rose-200 p-2 rounded-lg transition-colors"
-          title={`Delete ${row.fullname}`}
+          title={
+            user?.role === "seller"
+              ? "Seller can't delete users"
+              : `Delete ${row.fullname}`
+          }
+          disabled={user?.role === "seller"}
           onClick={() => handleDelete(row._id)}
         >
           <FaTrash size={14} />
@@ -77,7 +84,11 @@ const UserManagement = ({ setUser }) => {
           sidebarOpen ? "w-70" : "w-0"
         } bg-gray-100 shadow-2xl overflow-hidden`}
       >
-        <Sidebar sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen}  setUser={setUser} />
+        <Sidebar
+          sidebarOpen={sidebarOpen}
+          setSidebarOpen={setSidebarOpen}
+          setUser={setUser}
+        />
       </div>
 
       {/* Main Content */}
