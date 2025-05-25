@@ -4,11 +4,12 @@ import { RxCross2 } from "react-icons/rx";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { clearAuthSession } from "../../redux/slices/authUtlis";
 
-const Sidebar = ({ sidebarOpen, setSidebarOpen }) => {
+const Sidebar = ({ sidebarOpen, setSidebarOpen, setUser }) => {
   const navigate = useNavigate();
   const handleLogout = () => {
     clearAuthSession();
     navigate("/login");
+    setUser(null);
   };
 
   const location = useLocation(); // Get the current path

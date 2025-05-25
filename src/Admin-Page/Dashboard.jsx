@@ -10,7 +10,7 @@ import { getTrackViewersCount } from "../redux/slices/trackViewers";
 import Highcharts from "highcharts";
 import HighchartsReact from "highcharts-react-official";
 
-export default function Dashboard() {
+export default function Dashboard({setUser}) {
   const [sidebarOpen, setSidebarOpen] = useState(true);
   const dispatch = useDispatch();
   useEffect(() => {
@@ -129,7 +129,7 @@ export default function Dashboard() {
           sidebarOpen ? "w-72" : "w-0"
         } bg-gray-100 shadow-2xl overflow-hidden`}
       >
-        <Sidebar sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen} />
+        <Sidebar sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen}  setUser={setUser} />
       </div>
 
       {/* Main Content */}
@@ -139,7 +139,7 @@ export default function Dashboard() {
         } bg-white`}
       >
         {/* Header */}
-        <Header sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen} />
+        <Header sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen}  setUser={setUser} />
 
         {/* Dashboard Cards */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mt-6 p-6">

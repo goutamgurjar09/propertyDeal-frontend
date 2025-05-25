@@ -1,5 +1,3 @@
-import React from "react";
-
 export const SelectField = ({ label, register, name, options, error, placeholder }) => (
   <div>
    <label

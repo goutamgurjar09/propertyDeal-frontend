@@ -8,6 +8,7 @@ import gsap from "gsap";
 import Pagination from "../../CommonComponent/Pagination";
 import Loader from "../../CommonComponent/Loader";
 import { trackViewers } from "../../redux/slices/trackViewers";
+import { getUserDetail } from "../../redux/slices/authUtlis";
 
 export const TrendingProperty = () => {
   const dispatch = useDispatch();
@@ -15,6 +16,7 @@ export const TrendingProperty = () => {
   const [page, setPage] = useState(1);
   const [limit] = useState(10);
   const navigate = useNavigate();
+  const user = getUserDetail();
 
   const property = useSelector((state) => state.property);
   const {
@@ -90,7 +92,11 @@ export const TrendingProperty = () => {
               </div>
               <button
                 className="mt-4 bg-[#005555] text-white px-4 py-2 rounded-lg hover:bg-[#007777] transition"
-                onClick={() => navigate("/login")}
+                onClick={() =>
+                  user?.role
+                    ? navigate(`/propertyDetails/${property?._id}`)
+                    : navigate("/login")
+                }
               >
                 View
               </button>

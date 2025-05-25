@@ -154,13 +154,16 @@ export const Categories = ({ setUser }) => {
   return (
     <>
       <div className="flex min-h-screen overflow-hidden">
-        {/* Sidebar */}
         <div
           className={`transition-all duration-300 ${
             sidebarOpen ? "w-70" : "w-0"
           } bg-gray-100 shadow-2xl overflow-hidden`}
         >
-          <Sidebar sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen} />
+          <Sidebar
+            sidebarOpen={sidebarOpen}
+            setSidebarOpen={setSidebarOpen}
+            setUser={setUser}
+          />
         </div>
 
         {/* Main Content */}

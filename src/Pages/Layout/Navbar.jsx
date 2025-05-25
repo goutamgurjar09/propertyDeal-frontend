@@ -5,6 +5,7 @@ import { getAuthToken, clearAuthSession } from "../../redux/slices/authUtlis";
 import { getCategories } from "../../redux/slices/categorySlice";
 import { useDispatch, useSelector } from "react-redux";
 import Logo from "../../assets/Image/logo.png";
+import ProfileMenu from "../../CommonComponent/ProfileMenu";
 
 function Navbar() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -48,7 +49,7 @@ function Navbar() {
           : "bg-white bg-opacity-95 text-gray-800"
       }`}
     >
-      <div className="max-w-7xl mx-auto flex items-center justify-between">
+      <div className="mx-auto flex items-center justify-between">
         {!isDashboard ? (
           <>
             {/* Logo */}
@@ -125,12 +126,7 @@ function Navbar() {
               {/* Auth Buttons for mobile */}
               <div className="flex flex-col md:hidden gap-3 mt-4">
                 {token ? (
-                  <button
-                    onClick={handleLogout}
-                    className="bg-[#005555] text-white px-5 py-2 rounded-md font-medium hover:bg-blue-600 transition"
-                  >
-                    Logout
-                  </button>
+                  <ProfileMenu />
                 ) : (
                   <>
                     <Link
@@ -153,12 +149,7 @@ function Navbar() {
             {/* Auth Buttons for desktop */}
             <div className="hidden md:flex items-center gap-4">
               {token ? (
-                <button
-                  onClick={handleLogout}
-                  className="bg-[#005555] text-white px-5 py-2 rounded-md font-medium hover:bg-blue-600 transition shadow-md"
-                >
-                  Logout
-                </button>
+                <ProfileMenu />
               ) : (
                 <>
                   <Link

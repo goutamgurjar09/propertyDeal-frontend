@@ -36,6 +36,8 @@ import PrivacyPolicy from "./Pages/PrivacyPolicy";
 import TermsAndConditions from "./Pages/TermsAndConditions";
 import HowItWorks from "./Pages/HomePage/HowItWorks";
 import ScrollToTop from "./Pages/ScrollToTop";
+import AdminProfile from "./Admin-Page/Profile"
+import BuyerProfile from "./Buyer/Profile";
 
 function App() {
   const CLIENT_ID =
@@ -45,7 +47,7 @@ function App() {
   const [user, setUser] = useState(getUserDetail());
 
   useEffect(() => {
-    if (user && user.role) {
+    if (user && user.role === "admin") {
       setUserRole(true);
     } else {
       setUserRole(null);
@@ -171,6 +173,22 @@ function App() {
             element={
               <ProtectedRoute>
                 <Categories setUser={setUser} />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/profile"
+            element={
+              <ProtectedRoute>
+                <AdminProfile setUser={setUser} />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/buyer-profile"
+            element={
+              <ProtectedRoute>
+                <BuyerProfile setUser={setUser} />
               </ProtectedRoute>
             }
           />

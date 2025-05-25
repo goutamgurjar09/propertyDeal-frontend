@@ -228,7 +228,7 @@ export const Properties = ({ setUser }) => {
           sidebarOpen ? "w-70" : "w-0"
         } bg-gray-100 shadow-2xl overflow-hidden`}
       >
-        <Sidebar sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen} />
+        <Sidebar sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen}  setUser={setUser} />
       </div>
 
       {/* Main Content */}

@@ -10,6 +10,7 @@ import Loader from "../../CommonComponent/Loader";
 import { getCategoriesById } from "../../redux/slices/categorySlice";
 import Navbar from "../../Pages/Layout/Navbar";
 import { motion } from "framer-motion";
+import { getUserDetail } from "../../redux/slices/authUtlis";
 
 export const FilterProperty = ({ setUser }) => {
   const navigate = useNavigate();
@@ -39,6 +40,8 @@ export const FilterProperty = ({ setUser }) => {
   const [page, setPage] = useState(1);
   const [limit] = useState(10); // You can also make limit changeable
   const categories = useSelector((state) => state.category);
+  const user = getUserDetail();
+  
   useEffect(() => {
     dispatch(
       getProperties({
@@ -133,7 +136,11 @@ export const FilterProperty = ({ setUser }) => {
                 </div>
                 <button
                   className="mt-4 bg-[#005555] text-white px-4 py-2 rounded-lg hover:bg-[#007777] transition"
-                  onClick={() => navigate("/login")}
+                  onClick={() =>
+                    user?.role
+                      ? navigate(`/propertyDetails/${property?._id}`)
+                      : navigate("/login")
+                  }
                 >
                   View
                 </button>

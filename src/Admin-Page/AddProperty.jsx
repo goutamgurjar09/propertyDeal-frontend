@@ -12,7 +12,6 @@ import {
 } from "../redux/slices/propertySlice";
 import { getCities } from "../redux/slices/citySlice";
 import { showError, showSuccess } from "../Alert";
-import { Link } from "react-router-dom";
 import axios from "axios";
 import { useNavigate, useParams } from "react-router-dom";
 import { getCategories } from "../redux/slices/categorySlice";
@@ -69,6 +68,8 @@ const AddProperty = ({ id, setIsModalOpen, onSuccess }) => {
   const [error, setError] = useState("");
   const [lat, setLat] = useState("");
   const [lng, setLng] = useState("");
+  const [remainingImages, setRemainingImages] = useState([]);
+
   const initialValues = {
     title: "",
     price: "",
@@ -98,6 +99,12 @@ const AddProperty = ({ id, setIsModalOpen, onSuccess }) => {
     dispatch(getCategories({ page: 1, limit: 100 }));
   }, [dispatch]);
 
+  const handleRemoveImage = (indexToRemove) => {
+    setRemainingImages((prev) =>
+      prev.filter((_, index) => index !== indexToRemove)
+    );
+  };
+
   const {
     register,
     handleSubmit,
@@ -117,6 +124,13 @@ const AddProperty = ({ id, setIsModalOpen, onSuccess }) => {
       dispatch(getPropertyById(id));
     }
   }, [dispatch, id]);
+
+  useEffect(() => {
+    if (property && id) {
+      setRemainingImages(property.propertyImages || []);
+      // ...rest of the reset logic
+    }
+  }, [property, reset, id]);
 
   useEffect(() => {
     if (property && id) {
@@ -227,8 +241,9 @@ const AddProperty = ({ id, setIsModalOpen, onSuccess }) => {
     images.forEach((img) => {
       formData.append("propertyImages", img);
     });
-    if (id && property?.propertyImages?.length > 0) {
-      property.propertyImages.forEach((img) => {
+
+    if (id && remainingImages.length > 0) {
+      remainingImages.forEach((img) => {
         formData.append("existingImages", img);
       });
     }
@@ -427,16 +442,24 @@ const AddProperty = ({ id, setIsModalOpen, onSuccess }) => {
         </div>
 
         {/* Property Images */}
-        {property &&
-          id &&
-          property?.propertyImages?.map((imgUrl, index) => (
+        {remainingImages.map((imgUrl, index) => (
+          <div key={index} className="relative inline-block mr-2">
             <img
-              key={index}
               src={imgUrl}
               alt="Existing"
               className="w-24 h-20 object-cover rounded"
             />
-          ))}
+            <button
+              type="button"
+              onClick={() => handleRemoveImage(index)}
+              className="absolute top-0 right-0 bg-red-500 text-white rounded-full w-6 h-6 flex items-center justify-center"
+              title="Remove"
+            >
+              ✕
+            </button>
+          </div>
+        ))}
+
         <InputField
           label="Select Images"
           register={register}
