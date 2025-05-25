@@ -62,7 +62,7 @@ export const TrendingProperty = () => {
           Properties List
         </h1>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8">
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8 mt-12">
           {properties.map((property, index) => (
             <motion.div
               key={index}
