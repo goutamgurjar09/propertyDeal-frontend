@@ -41,7 +41,7 @@ function FAQ() {
   };
 
   return (
-    <div className="bg-white py-20 px-6 sm:px-12 rounded-3xl shadow-2xl">
+    <div className="bg-white py-12 px-6 sm:px-12 rounded-3xl shadow-2xl">
       <div className="max-w-5xl mx-auto w-full">
        
         <div className="flex justify-center">

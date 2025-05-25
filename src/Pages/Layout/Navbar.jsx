@@ -117,6 +117,13 @@ function Navbar() {
               </li>
 
               <Link
+                to="/About"
+                className="text-[#005555] hover:text-[#52b9b9] transition"
+              >
+                About
+              </Link>
+
+              <Link
                 to="/contact"
                 className="text-[#005555] hover:text-[#52b9b9] transition"
               >

@@ -118,8 +118,8 @@ const Services = () => {
   return (
    
 
-    <div className="max-w-7xl mx-auto py-16 px-4 sm:px-8 bg-gradient-to-r from-white via-[#f0fdfa]">
-      <h2 className="text-4xl font-bold text-center text-[#005555] font-serif mb-16">
+    <div className="max-w-7xl mx-auto  px-4 sm:px-8 bg-gradient-to-r from-white via-[#f0fdfa]">
+      <h2 className="text-4xl font-bold text-center text-[#005555] font-serif mb-8">
         Explore Our Categories
       </h2>
 
