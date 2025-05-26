@@ -6,7 +6,7 @@ import {
   FaSignOutAlt,
   FaUser,
 } from "react-icons/fa";
-import { clearAuthSession, getUserDetail } from "../redux/slices/authUtlis";
+import { clearAuthSession, getInitials, getUserDetail } from "../redux/slices/authUtlis";
 
 const ProfileMenu = ({ setUser = null }) => {
   const [open, setOpen] = useState(false);
@@ -59,7 +59,7 @@ const ProfileMenu = ({ setUser = null }) => {
             className="w-8 h-8 rounded-full object-cover"
           />
         ) : (
-          <div className="w-20 h-20 rounded-full bg-gray-300 flex items-center justify-center text-4xl font-bold text-gray-700">
+          <div className="w-8 h-8 rounded-full bg-gray-300 flex items-center justify-center text-2xl font-bold text-gray-700">
             {getInitials(user?.full_name || "U")}
           </div>
         )}

@@ -25,8 +25,6 @@ const schema = yup.object().shape({
     .required("Email is required")
     .email("Invalid email format"),
 
-  role: yup.string().required("Role is required"),
-
   password: yup
     .string()
     .required("Password is required")
@@ -82,10 +80,7 @@ function SignupPage() {
   };
 
   return (
-    <div className="flex min-h-screen items-center justify-center bg-[#005555] text-white p-4 relative mt-16">
-      {/* Background Blur */}
-      <div className="absolute inset-0 bg-gray-900 bg-center blur-lg opacity-30"></div>
-
+    <div className="flex min-h-screen items-center justify-center bg-[#e7e7e7] text-white p-4 relative mt-16">
       <div className="w-full max-w-xl bg-white text-[#005555]  font-serif p-10 rounded-lg shadow-2xl border border-gy-300 relative z-10">
         <h2 className="text-center text-3xl font-semibold mb-6">
           Create Your Account
@@ -124,22 +119,6 @@ function SignupPage() {
             />
             {errors.email && (
               <p className="text-red-600 text-sm">{errors.email.message}</p>
-            )}
-          </div>
-
-          <div className="w-full border-b-2 border-gray-900 focus-within:border-indigo-500">
-            <select
-              {...register("role")}
-              className="w-full bg-transparent p-2 outline-none placeholder-gray-500 text-gray-900 pr-10"
-            >
-              <option value="" disabled>
-                Select Role
-              </option>
-              <option value="Buyer">Buyer</option>
-              <option value="Seller">Seller</option>
-            </select>
-            {errors.role && (
-              <p className="text-red-600 text-sm">{errors.role.message}</p>
             )}
           </div>
 

@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import Slider from "react-slick";
 import { useDispatch, useSelector } from "react-redux";
 import { getPropertyById } from "../redux/slices/propertySlice";
-import { Link, useParams } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import BookingPage from "./BookingPage";
@@ -16,6 +16,7 @@ const PropertyDetails = () => {
   const dispatch = useDispatch();
   const { property, loading, error } = useSelector((state) => state.property);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const navigate = useNavigate();
 
   const { isLoaded } = useJsApiLoader({
     googleMapsApiKey: "AIzaSyAR_v8jpeLQrfsuZ0MvEWmxc6zomaCKPw4",
@@ -51,6 +52,46 @@ const PropertyDetails = () => {
 
   const lat = property?.location?.lat;
   const lng = property?.location?.lng;
+
+  if (!user || !user.role) {
+    return (
+      <div className="max-w-5xl mx-auto mt-20 bg-white p-6 rounded-lg shadow">
+        <div className="rounded-lg overflow-hidden mb-10">
+          <Slider {...settings}>
+            {(property.propertyImages || []).map((img, index) => (
+              <div key={index}>
+                <img
+                  src={img}
+                  alt={`Slide ${index + 1}`}
+                  className="w-full h-[400px] object-cover"
+                />
+              </div>
+            ))}
+          </Slider>
+        </div>
+        <h2 className="text-2xl font-bold text-gray-900 mb-2">
+          {property.title}
+        </h2>
+        <p className="text-gray-600 mb-1">
+          City: {property.location?.city?.name || "N/A"}
+        </p>
+        <p className="text-gray-600 mb-1">
+          Locality: {property.location?.locality || "N/A"}
+        </p>
+        <p className="text-gray-600 mb-1">Size: {property.size} sqft</p>
+        <p className="text-gray-600 mb-1">Bedrooms: {property.bedrooms}</p>
+        <p className="text-gray-600 mb-4">Bathrooms: {property.bathrooms}</p>
+        <div className="flex justify-center mt-8">
+          <button
+            onClick={() => navigate("/login")}
+            className="px-6 py-3 bg-[#005555] hover:bg-[#007777] text-white rounded shadow transition"
+          >
+            View More...
+          </button>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="bg-gray-50 min-h-screen">

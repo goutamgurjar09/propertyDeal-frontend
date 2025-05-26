@@ -92,11 +92,7 @@ export const TrendingProperty = () => {
               </div>
               <button
                 className="mt-4 bg-[#005555] text-white px-4 py-2 rounded-lg hover:bg-[#007777] transition"
-                onClick={() =>
-                  user?.role
-                    ? navigate(`/propertyDetails/${property?._id}`)
-                    : navigate("/login")
-                }
+                onClick={() => navigate(`/propertyDetails/${property?._id}`)}
               >
                 View
               </button>

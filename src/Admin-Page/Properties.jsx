@@ -215,13 +215,19 @@ export const Properties = ({ setUser }) => {
             <FaEdit size={14} />
           </button>
           <button
-            className="bg-red-100 text-red-500 hover:bg-rose-200 p-2 rounded-lg transition-colors"
+            className={`bg-red-100 text-red-500 hover:bg-rose-200 p-2 rounded-lg transition-colors
+              ${
+                user?.role === "seller" || row?.status === "Sold"
+                  ? "opacity-50 pointer-events-none"
+                  : ""
+              }
+            `}
             title={
               user?.role === "seller"
                 ? "Seller can't delete property"
                 : `Delete ${row.title}`
             }
-            disabled={user?.role === "seller"}
+            disabled={user?.role === "seller" || row?.status === "Sold"}
             onClick={() => handleDelete(row._id)}
           >
             <FaTrash size={14} />

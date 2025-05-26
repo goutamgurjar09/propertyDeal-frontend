@@ -58,7 +58,9 @@ export const Enquiries = ({ setUser }) => {
       render: (row) => (
         <div className="flex space-x-2">
           <button
-            className="bg-red-100 text-red-500 hover:bg-rose-200 p-2 rounded-lg transition-colors"
+            className={`bg-red-100 text-red-500 hover:bg-rose-200 p-2 rounded-lg transition-colors ${
+              user?.role === "seller" ? "opacity-50 pointer-events-none" : ""
+            }`}
             title={
               user?.role === "seller"
                 ? "Seller can't delete enquiry"

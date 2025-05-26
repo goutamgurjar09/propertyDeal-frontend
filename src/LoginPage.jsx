@@ -33,7 +33,6 @@ const schema = yup.object().shape({
 
 function LoginPage({ setUser }) {
   const [showPassword, setShowPassword] = useState(false);
-  const [selectedRole, setSelectedRole] = useState("");
 
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -51,18 +50,11 @@ function LoginPage({ setUser }) {
       const { payload } = await dispatch(loginUser(data));
 
       if (payload?.data) {
-        const { accessToken, isVerified, role } = payload.data;
+        const { accessToken, role } = payload.data;
         if (accessToken) {
-          if (isVerified) {
-            showSuccess(payload.message || "Login successful!");
-            navigate(role === "buyer" ?  "/properties-list" : "/dashboard");
-            setUser(payload.data);
-          } else {
-            showError("Please verify your email to complete the login.");
-            navigate("/verify");
-          }
-        } else {
-          showError("Login failed. Try again.");
+          showSuccess(payload.message || "Login successful!");
+          navigate(role === "buyer" ? "/properties-list" : "/dashboard");
+          setUser(payload.data);
         }
       } else {
         showError(payload.message || "Login failed. Try again.");
@@ -77,24 +69,21 @@ function LoginPage({ setUser }) {
       const tokenId = response?.credential;
       if (!tokenId) return showError("Invalid Google response.");
 
-      const result = await dispatch(
-        googleAuth({ tokenId, role: selectedRole || null })
-      );
+      const result = await dispatch(googleAuth({ tokenId }));
+      const payload = result?.payload;
 
-      if (result.error) {
-        const msg = result?.payload?.message;
-        if (msg)
-          return showError(
-            "Please select a role before continuing with Google login."
-          );
-        return showError(msg || "Google login failed");
+      if (payload?.error) {
+        showError(payload.message || "Google login failed.");
+        return navigate("/signup");
       }
 
-      const user = result.payload?.data;
+      const user = payload?.data;
       if (user?.accessToken) {
-        showSuccess("Login successful");
-        navigate(user.role === "buyer" ? "/properties-list" : "/dashboard" );
+        showSuccess(payload?.message || "Google login successful!");
+        navigate(user.role === "buyer" ? "/properties-list" : "/dashboard");
+        setUser(user);
       } else {
+        showError("Google login failed. Try again.");
         navigate("/");
       }
     } catch (error) {
@@ -103,7 +92,7 @@ function LoginPage({ setUser }) {
   };
 
   return (
-    <div className="flex min-h-screen items-center justify-center bg-[#005555] text-white p-4 relative">
+    <div className="flex min-h-screen items-center justify-center bg-[#e7e7e7] text-white p-4 relative">
       <div className="absolute inset-0 bg-[url('/path-to-your-image.jpg')] bg-cover bg-center blur-lg opacity-30"></div>
 
       <div className="w-full max-w-md bg-white p-8 rounded-lg shadow-xl border border-gray-300 relative z-10">
@@ -176,17 +165,6 @@ function LoginPage({ setUser }) {
             onSuccess={handleGoogleLogin}
             onError={() => showError("Google Login Failed")}
           />
-
-          <select
-            className="border border-gray-300 rounded p-2 text-[#005555]"
-            value={selectedRole}
-            onChange={(e) => setSelectedRole(e.target.value)}
-            required
-          >
-            <option value="">-- Select Role --</option>
-            <option value="buyer">Buyer</option>
-            <option value="seller">Seller</option>
-          </select>
         </div>
       </div>
     </div>

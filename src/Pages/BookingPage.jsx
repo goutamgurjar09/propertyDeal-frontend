@@ -23,8 +23,6 @@ const schema = yup.object().shape({
     .matches(/^[0-9]{10}$/, "Mobile number must be 10 digits")
     .required("Mobile number is required"),
 
-  dateTime: yup.string().required("Date and time is required"),
-
   message: yup
     .string()
     .required("Message is required")
@@ -51,7 +49,6 @@ const BookingPage = ({ propertyId, setIsModalOpen }) => {
     defaultValues: {
       name: "",
       mobile: "",
-      dateTime: "",
       message: "",
     },
   });
@@ -105,14 +102,6 @@ const BookingPage = ({ propertyId, setIsModalOpen }) => {
           register={register}
           name="mobile"
           error={errors?.mobile?.message}
-        />
-        <InputField
-          label="Date and Time"
-          type="datetime-local"
-          placeholder="Select date and time"
-          register={register}
-          name="dateTime"
-          error={errors?.dateTime?.message}
         />
         <TextareaField
           label="Message"

@@ -20,7 +20,6 @@ import { TrendingProperty } from "./Pages/HomePage/TrendingProperty";
 import { GoogleOAuthProvider } from "@react-oauth/google";
 import ProtectedRoute from "./Protected/ProtectedRoute";
 import AddProperty from "./Admin-Page/AddProperty";
-import VerifyUser from "./VerifyUser";
 import { getUserDetail } from "./redux/slices/authUtlis";
 import { useEffect, useState } from "react";
 import UserManagement from "./Admin-Page/UserManagement";
@@ -91,7 +90,6 @@ function App() {
           />
           <Route path="/signup" element={<SignupPage />} />
           <Route path="/forgetPassword" element={<ForgotPassword />} />
-          <Route path="/verify" element={<VerifyUser />} />
           <Route path="/propertyCard" element={<PropertyCard />} />
           <Route path="/commercial" element={<CommercialPage />} />
           <Route path="/premium" element={<PremiumPage />} />

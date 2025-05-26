@@ -9,8 +9,9 @@ import { getEnquiries } from "../redux/slices/enquirySlices";
 import { getTrackViewersCount } from "../redux/slices/trackViewers";
 import Highcharts from "highcharts";
 import HighchartsReact from "highcharts-react-official";
-
-export default function Dashboard({setUser}) {
+import { Link } from "react-router-dom";
+import MetricsPieChart from "../CommonComponent/PieChart";
+export default function Dashboard({ setUser }) {
   const [sidebarOpen, setSidebarOpen] = useState(true);
   const dispatch = useDispatch();
   useEffect(() => {
@@ -26,23 +27,41 @@ export default function Dashboard({setUser}) {
     viewers: { trackViewersCount },
     property: { totalProperties },
     auth: { totalUsers },
-    booking: { totalBookings, totalRevenueData },
+    booking: {
+      totalBookings,
+      totalRevenueData,
+      totalConfirmedBookings,
+      totalPendingBookings,
+    },
     enquiry: { totalEnquiries },
   } = useSelector((state) => state);
 
   const totalRevenueCalculated =
-  totalRevenueData?.bookings?.reduce(
-    (sum, item) => sum + item.totalRevenue,
-    0
-  ) || 0;
+    totalRevenueData?.bookings?.reduce(
+      (sum, item) => sum + item.totalRevenue,
+      0
+    ) || 0;
 
   const stats = [
-    { title: "Total Properties", value: totalProperties },
-    { title: "Total Users", value: `${totalUsers}` },
-    { title: "Total Bookings", value: totalBookings },
-    { title: "Total Enquiries", value: totalEnquiries },
+    { title: "Total Properties", value: totalProperties, path: "/properties" },
+    { title: "Total Users", value: `${totalUsers}`, path: "/users" },
+    { title: "Total Bookings", value: totalBookings, path: "/bookings" },
+    {
+      title: "Total Confirmed Bookings",
+      value: totalConfirmedBookings,
+      path: "/bookings",
+    },
+    {
+      title: "Total Pending Bookings",
+      value: totalPendingBookings,
+      path: "/bookings",
+    },
+    { title: "Total Enquiries", value: totalEnquiries, path: "/enquiries" },
     { title: "Total Visiters", value: trackViewersCount },
-    { title: "Total Revenue", value: totalRevenueCalculated.toLocaleString() || 0 },
+    {
+      title: "Total Revenue",
+      value: totalRevenueCalculated.toLocaleString() || 0,
+    },
   ];
 
   // Convert date to "MMM" format
@@ -121,6 +140,78 @@ export default function Dashboard({setUser}) {
     ],
   };
 
+  // const donutChartOptions = {
+  //   chart: {
+  //     type: "pie",
+  //     backgroundColor: "#f9fafb",
+  //   },
+  //   title: {
+  //     text: "System Metrics Overview",
+  //   },
+  //   subtitle: {
+  //     text: "Custom entrance animation of pie series",
+  //   },
+  //   tooltip: {
+  //     pointFormat: "<b>{point.y}</b> ({point.percentage:.1f}%)",
+  //   },
+  //   plotOptions: {
+  //     pie: {
+  //       allowPointSelect: true,
+  //       cursor: "pointer",
+  //       innerSize: "60%",
+  //       colorByPoint: true, // ✅ Important for different colors
+  //       dataLabels: {
+  //         enabled: true,
+  //         format: "<b>{point.name}</b>: {point.y}",
+  //       },
+  //     },
+  //   },
+  //   series: [
+  //     {
+  //       type: "pie",
+  //       name: "System Metrics",
+  //       colorByPoint: true, // ✅ Also needed here
+  //       data: [
+  //         {
+  //           name: "Total Bookings",
+  //           y: totalBookings || 0,
+  //           color: "#3b82f6",
+  //         },
+  //         {
+  //           name: "Confirmed Bookings",
+  //           y: totalConfirmedBookings || 0,
+  //           color: "#10b981",
+  //         },
+  //         {
+  //           name: "Pending Bookings",
+  //           y: totalPendingBookings || 0,
+  //           color: "#f59e0b",
+  //         },
+  //         {
+  //           name: "Total Properties",
+  //           y: totalProperties || 0,
+  //           color: "#6366f1",
+  //         },
+  //         {
+  //           name: "Total Users",
+  //           y: totalUsers || 0,
+  //           color: "#8b5cf6",
+  //         },
+  //         {
+  //           name: "Total Enquiries",
+  //           y: totalEnquiries || 0,
+  //           color: "#ec4899",
+  //         },
+  //         {
+  //           name: "Total Revenue",
+  //           y: totalRevenueCalculated || 0,
+  //           color: "#ef4444",
+  //         },
+  //       ],
+  //     },
+  //   ],
+  // };
+
   return (
     <div className="flex min-h-screen overflow-hidden">
       {/* Sidebar */}
@@ -129,7 +220,11 @@ export default function Dashboard({setUser}) {
           sidebarOpen ? "w-72" : "w-0"
         } bg-gray-100 shadow-2xl overflow-hidden`}
       >
-        <Sidebar sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen}  setUser={setUser} />
+        <Sidebar
+          sidebarOpen={sidebarOpen}
+          setSidebarOpen={setSidebarOpen}
+          setUser={setUser}
+        />
       </div>
 
       {/* Main Content */}
@@ -139,25 +234,44 @@ export default function Dashboard({setUser}) {
         } bg-white`}
       >
         {/* Header */}
-        <Header sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen}  setUser={setUser} />
+        <Header
+          sidebarOpen={sidebarOpen}
+          setSidebarOpen={setSidebarOpen}
+          setUser={setUser}
+        />
 
         {/* Dashboard Cards */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mt-6 p-6">
           {stats.map((item, index) => (
-            <div
-              key={index}
-              className="p-6 bg-gray-100 shadow-md rounded-lg text-center hover:bg-gray-200 transition"
-            >
-              <h3 className="text-lg font-bold text-gray-900">{item.title}</h3>
-              <p className="text-gray-700 font-semibold text-xl mt-2">
-                {item.value}
-              </p>
-            </div>
+            <Link to={item?.path || ""}>
+              <div
+                key={index}
+                className="p-6 bg-gray-100 shadow-md rounded-lg text-center hover:bg-gray-200 transition"
+              >
+                <h3 className="text-lg font-bold text-gray-900">
+                  {item.title}
+                </h3>
+                <p className="text-gray-700 font-semibold text-xl mt-2">
+                  {item.value}
+                </p>
+              </div>
+            </Link>
           ))}
         </div>
 
         <div className="max-w-6xl mx-auto mt-8 p-6 bg-gray-100 shadow-md rounded-lg mb-3">
           <HighchartsReact highcharts={Highcharts} options={highChartOptions} />
+        </div>
+        <div className="max-w-6xl mx-auto mt-8 p-8 bg-gray-100 shadow-md rounded-lg mb-10">
+          <MetricsPieChart
+            totalBookings={totalBookings}
+            totalConfirmedBookings={totalConfirmedBookings}
+            totalPendingBookings={totalPendingBookings}
+            totalProperties={totalProperties}
+            totalUsers={totalUsers}
+            totalEnquiries={totalEnquiries}
+            totalRevenue={totalRevenueCalculated}
+          />
         </div>
       </div>
     </div>

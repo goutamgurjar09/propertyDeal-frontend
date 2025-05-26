@@ -24,10 +24,10 @@ export const createBooking = createAsyncThunk(
 
 export const getBookings = createAsyncThunk(
   "booking/getBooking",
-  async ({ page, limit }, { rejectWithValue }) => {
+  async ({ page, limit, status, name }, { rejectWithValue }) => {
     try {
       const response = await axios.get(
-        `${BASE_URL}/api/bookings/get-bookings?page=${page}&limit=${limit}`,
+        `${BASE_URL}/api/bookings/get-bookings?page=${page}&limit=${limit}&status=${status || ""}&name=${name || ""}`,
         {
           withCredentials: true,
         }
@@ -100,6 +100,8 @@ const bookingSlice = createSlice({
     error: null,
     successMessage: null,
     totalBookings: 0,
+    totalConfirmedBookings: 0,
+    totalPendingBookings: 0,
     totalPages: 0,
     hasNextPage: false,
     hasPrevPage: false,
@@ -136,6 +138,8 @@ const bookingSlice = createSlice({
         state.booking = action.payload.data;
         state.success = action.payload.message;
         state.totalBookings = action.payload.totalBookings;
+        state.totalConfirmedBookings = action.payload.totalConfirmedBookings;
+        state.totalPendingBookings = action.payload.totalPendingBookings;
         state.totalPages = action.payload.totalPages;
         state.hasNextPage = action.payload.hasNextPage;
         state.hasPrevPage = action.payload.hasPrevPage;

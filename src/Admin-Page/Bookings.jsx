@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import {
   getBookings,
@@ -7,10 +7,9 @@ import {
 } from "../redux/slices/bookingSlice";
 import Sidebar from "../Pages/Layout/Sidebar";
 import Header from "../Pages/Layout/Header";
-import { FaTrash, FaEye } from "react-icons/fa";
+import { FaTrash, FaEye, FaTimes } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
 import { showSuccess, showError } from "../Alert";
-import Loader from "../CommonComponent/Loader";
 import PaginatedTable from "../CommonComponent/PaginatedTable";
 import { getUserDetail } from "../redux/slices/authUtlis";
 
@@ -21,6 +20,8 @@ const Booking = ({ setUser }) => {
   const [page, setPage] = useState(1);
   const limit = 10;
   const user = getUserDetail();
+  const [statusFilter, setStatusFilter] = useState("");
+  const [nameFilter, setNameFilter] = useState("");
 
   const {
     booking: bookings,
@@ -33,8 +34,10 @@ const Booking = ({ setUser }) => {
   } = useSelector((state) => state.booking);
 
   useEffect(() => {
-    dispatch(getBookings({ page, limit }));
-  }, [dispatch, page]);
+    dispatch(
+      getBookings({ page, limit, status: statusFilter, name: nameFilter })
+    );
+  }, [dispatch, page, limit, statusFilter, nameFilter]);
 
   const handleDelete = async (id) => {
     if (window.confirm("Are you sure you want to delete this booking?")) {
@@ -90,14 +93,6 @@ const Booking = ({ setUser }) => {
     { header: "Name", accessor: "name" },
     { header: "Mobile", accessor: "mobile" },
     {
-      header: "Address",
-      render: (row) => row.propertyId?.location?.address || "N/A",
-    },
-    {
-      header: "Date & Time",
-      render: (row) => new Date(row.dateTime).toLocaleString(),
-    },
-    {
       header: "Message",
       accessor: "message",
       className: "max-w-xs",
@@ -111,9 +106,7 @@ const Booking = ({ setUser }) => {
           onChange={(e) => handleStatusChange(row._id, e.target.value)}
           className={`border border-gray-300 rounded p-1 ${
             user?.role === "seller" ? "cursor-not-allowed" : "cursor-pointer"
-          } ${getStatusColor(
-            row.status
-          )}`}
+          } ${getStatusColor(row.status)}`}
         >
           <option value="pending" className="bg-yellow-200 text-yellow-800">
             Pending
@@ -132,15 +125,21 @@ const Booking = ({ setUser }) => {
       render: (row) => (
         <div className="flex space-x-3">
           <button
-            onClick={() => handleViewProperty(row?._id)}
+            onClick={() => handleViewProperty(row?.propertyId?._id)}
             className="bg-emerald-100 text-emerald-600 hover:bg-emerald-200 p-2 rounded-lg transition-colors"
             title="View"
           >
             <FaEye size={14} />
           </button>
           <button
-            className="bg-red-100 text-red-500 hover:bg-rose-200 p-2 rounded-lg transition-colors"
-            title={user?.role === "seller" ? "Seller can't delete booking" : `Delete ${row.name}`}
+            className={`bg-red-100 text-red-500 hover:bg-rose-200 p-2 rounded-lg transition-colors ${
+              user?.role === "seller" ? "opacity-50 pointer-events-none" : ""
+            }`}
+            title={
+              user?.role === "seller"
+                ? "Seller can't delete booking"
+                : `Delete ${row.name}`
+            }
             disabled={user?.role === "seller"}
             onClick={() => handleDelete(row._id)}
           >
@@ -183,6 +182,38 @@ const Booking = ({ setUser }) => {
         />
         <div className="mt-6 mb-6 bg-gray-100 p-4 shadow-md w-[96%] ml-4">
           <h2 className="text-2xl  font-bold mb-6 text-slate-700">Bookings</h2>
+
+          <div className="flex gap-4 mb-4">
+            <div className="relative">
+              <input
+                type="text"
+                placeholder="Search by Name"
+                value={nameFilter}
+                onChange={(e) => setNameFilter(e.target.value)}
+                className="border rounded px-3 py-2 pr-8" // pr-8 for icon space
+              />
+              {nameFilter && (
+                <button
+                  type="button"
+                  className="absolute right-2 top-1/2 -translate-y-1/2 text-gray-400 hover:text-red-500"
+                  onClick={() => setNameFilter("")}
+                  tabIndex={-1}
+                >
+                  <FaTimes />
+                </button>
+              )}
+            </div>
+            <select
+              value={statusFilter}
+              onChange={(e) => setStatusFilter(e.target.value)}
+              className="border rounded px-3 py-2"
+            >
+              <option value="">All Status</option>
+              <option value="pending">Pending</option>
+              <option value="confirmed">Confirmed</option>
+              <option value="cancelled">Cancelled</option>
+            </select>
+          </div>
 
           {/* Booking Table */}
           <PaginatedTable

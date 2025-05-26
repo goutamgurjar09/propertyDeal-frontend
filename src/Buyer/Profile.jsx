@@ -1,5 +1,5 @@
 import React from "react";
-import { getUserDetail } from "../redux/slices/authUtlis";
+import { getInitials, getUserDetail } from "../redux/slices/authUtlis";
 import { FaEnvelope, FaPhone, FaShieldAlt } from "react-icons/fa";
 import Sidebar from "../Pages/Layout/Sidebar";
 import Header from "../Pages/Layout/Header";
@@ -7,15 +7,6 @@ import { Link } from "react-router-dom";
 
 const Profile = ({ setUser }) => {
   const user = getUserDetail();
-
-  // Extract initials from full_name
-  const getInitials = (name = "") => {
-    return name
-      .split(" ")
-      .map((n) => n[0])
-      .join("")
-      .toUpperCase();
-  };
 
   return (
     <div className="flex min-h-screen overflow-hidden bg-gray-100">
@@ -49,10 +40,10 @@ const Profile = ({ setUser }) => {
               <img
                 src={user.profileImg}
                 alt="Profile"
-                className="w-20 h-20 rounded-full object-cover"
+                className="w-8 h-8 rounded-full object-cover"
               />
             ) : (
-              <div className="w-20 h-20 rounded-full bg-gray-300 flex items-center justify-center text-4xl font-bold text-gray-700">
+              <div className="w-8 h-8 rounded-full bg-gray-300 flex items-center justify-center text-4xl font-bold text-gray-700">
                 {getInitials(user?.full_name || "U")}
               </div>
             )}
