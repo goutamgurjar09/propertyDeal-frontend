@@ -1,10 +1,9 @@
 import React, { useState } from "react";
 import rental from "../../../src/assets/Image/rental.jpg";
-import commercial from "../../../src/assets/Image/commercial.jpg" // Use real images if available
 import PG from "../../../src/assets/Image/PG.jpg";
 import House from "../../../src/assets/Image/House.jpg";
 import Hostel from "../../../src/assets/Image/Hostel.jpg";
-import Plot from "../../../src/assets/Image/plot.jpg";
+import plot from "../../../src/assets/Image/plot.jpg";
 
 
 
@@ -39,7 +38,7 @@ const services = [
         <path d="M4 6h16M4 10h16M4 14h16M4 18h16" />
       </svg>
     ),
-    image: commercial,
+    image: House,
   },
   {
     title: "PG",
@@ -105,7 +104,7 @@ const services = [
         <path d="M7 8V6h10v2" />
       </svg>
     ),
-    image: Plot,
+    image: plot,
   },
 ];
 
