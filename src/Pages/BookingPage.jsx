@@ -9,7 +9,7 @@ import { getUserDetail } from "../redux/slices/authUtlis";
 import { showSuccess } from "../Alert";
 import { sendSms } from "../redux/slices/authSlice";
 import { InputField } from "../CommonComponent/InputField";
-import { TextareaField } from "../CommonComponent/TextareaField";
+import { TextAreaField } from "../CommonComponent/TextAreaField";
 
 const schema = yup.object().shape({
   name: yup
@@ -103,7 +103,7 @@ const BookingPage = ({ propertyId, setIsModalOpen }) => {
           name="mobile"
           error={errors?.mobile?.message}
         />
-        <TextareaField
+        <TextAreaField
           label="Message"
           name="message"
           register={register}

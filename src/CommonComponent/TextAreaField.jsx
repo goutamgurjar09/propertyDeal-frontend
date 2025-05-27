@@ -1,5 +1,5 @@
 // components/form/TextareaField.js
-export const TextareaField = ({ label, register, name, required, errors }) => (
+export const TextAreaField = ({ label, register, name, required, errors }) => (
   <div className="w-full">
   {console.log(errors[name])}
     <label
