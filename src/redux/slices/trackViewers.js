@@ -1,7 +1,8 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "axios";
 
-const API_URL = "http://localhost:8000/api";
+const API_URL =
+  import.meta.env.VITE_API_ENDPOINT_BASE_URL || "http://localhost:8000";
 
 // Track Viewers
 export const trackViewers = createAsyncThunk(
@@ -25,10 +26,9 @@ export const getTrackViewersCount = createAsyncThunk(
   "trackViewers/getTrack",
   async (_, { rejectWithValue }) => {
     try {
-      const response = await axios.get(
-        `${API_URL}/viewers/get-viewers`,
-        { withCredentials: true }
-      );
+      const response = await axios.get(`${API_URL}/viewers/get-viewers`, {
+        withCredentials: true,
+      });
       return response.data;
     } catch (error) {
       return rejectWithValue(error.response.data);

@@ -1,7 +1,7 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "axios";
 
-const API_URL = "http://localhost:8000/api";
+const API_URL = import.meta.env.VITE_API_ENDPOINT_BASE_URL;
 
 // Create Property
 export const createProperty = createAsyncThunk(
@@ -27,7 +27,16 @@ export const createProperty = createAsyncThunk(
 export const getProperties = createAsyncThunk(
   "property/getProperties",
   async (
-    { page = 1, limit = 10, propertyType = "", cityId, lat, lng, categoryId, subCategory },
+    {
+      page = 1,
+      limit = 10,
+      propertyType = "",
+      cityId,
+      lat,
+      lng,
+      categoryId,
+      subCategory,
+    },
     { rejectWithValue }
   ) => {
     try {
@@ -43,7 +52,7 @@ export const getProperties = createAsyncThunk(
       }
 
       if (categoryId) params.append("categoryId", categoryId);
-    if (subCategory) params.append("subCategory", subCategory);
+      if (subCategory) params.append("subCategory", subCategory);
 
       // Only append propertyType if it exists and is non-empty
       if (propertyType.trim()) {

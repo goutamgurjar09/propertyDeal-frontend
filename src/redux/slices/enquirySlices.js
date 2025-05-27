@@ -2,7 +2,7 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import axios from "axios";
 
-const BASE_URL = "http://localhost:8000";
+const BASE_URL = import.meta.env.VITE_API_ENDPOINT_BASE_URL || "http://localhost:8000";
 
 // Async action to submit form data
 export const submitEnquiryForm = createAsyncThunk(
@@ -10,7 +10,7 @@ export const submitEnquiryForm = createAsyncThunk(
   async (formData, thunkAPI) => {
     try {
       const response = await axios.post(
-        `${BASE_URL}/api/enquiries/enquiry`,
+        `${BASE_URL}/enquiries/enquiry`,
         formData,
         {
           withCredentials: true,
@@ -28,7 +28,7 @@ export const getEnquiries = createAsyncThunk(
   "enquiryForm/getEnquiries",
   async (params, thunkAPI) => {
     try {
-      const response = await axios.get(`${BASE_URL}/api/enquiries/enquiries`, {
+      const response = await axios.get(`${BASE_URL}/enquiries/enquiries`, {
         params,
         withCredentials: true,
       });
@@ -45,7 +45,7 @@ export const deleteEnquiry = createAsyncThunk(
   async (id, thunkAPI) => {
     try {
       const response = await axios.delete(
-        `${BASE_URL}/api/enquiries/enquiry/${id}`,
+        `${BASE_URL}/enquiries/enquiry/${id}`,
         {
           withCredentials: true,
         }

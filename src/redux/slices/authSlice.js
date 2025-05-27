@@ -2,7 +2,7 @@ import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "axios";
 import { setAuthSession, clearAuthSession } from "./authUtlis";
 
-const BASE_URL = "http://localhost:8000";
+const BASE_URL = import.meta.env.VITE_API_ENDPOINT_BASE_URL;
 
 // ========== AUTH THUNKS ==========
 
@@ -12,7 +12,7 @@ export const signupUser = createAsyncThunk(
   async (userData, { rejectWithValue }) => {
     try {
       const response = await axios.post(
-        `${BASE_URL}/api/auth/signup`,
+        `${BASE_URL}/auth/signup`,
         userData,
         {
           withCredentials: true,
@@ -32,7 +32,7 @@ export const generateOtp = createAsyncThunk(
   async (userData, { rejectWithValue }) => {
     try {
       const response = await axios.post(
-        `${BASE_URL}/api/auth/generate-otp`,
+        `${BASE_URL}/auth/generate-otp`,
         userData,
         {
           withCredentials: true,
@@ -51,7 +51,7 @@ export const verifyUser = createAsyncThunk(
   async (userData, { rejectWithValue }) => {
     try {
       const response = await axios.post(
-        `${BASE_URL}/api/auth/verify-otp`,
+        `${BASE_URL}/auth/verify-otp`,
         userData,
         {
           withCredentials: true,
@@ -70,7 +70,7 @@ export const loginUser = createAsyncThunk(
   async (userData, { rejectWithValue }) => {
     try {
       const response = await axios.post(
-        `${BASE_URL}/api/auth/login`,
+        `${BASE_URL}/auth/login`,
         userData,
         {
           withCredentials: true,
@@ -89,7 +89,7 @@ export const resetPassword = createAsyncThunk(
   async (userData, { rejectWithValue }) => {
     try {
       const response = await axios.post(
-        `${BASE_URL}/api/auth/reset-password`,
+        `${BASE_URL}/auth/reset-password`,
         userData,
         {
           withCredentials: true,
@@ -108,7 +108,7 @@ export const googleAuth = createAsyncThunk(
   async (userData, { rejectWithValue }) => {
     try {
       const response = await axios.post(
-        `${BASE_URL}/api/auth/google-auth`,
+        `${BASE_URL}/auth/google-auth`,
         userData,
         {
           withCredentials: true,
@@ -124,10 +124,12 @@ export const googleAuth = createAsyncThunk(
 // ========== GET USERS API ==========
 export const getUsers = createAsyncThunk(
   "auth/getUsers",
-  async ({ page, limit }, { rejectWithValue }) => {
+  async ({ page, limit, search, role }, { rejectWithValue }) => {
     try {
       const response = await axios.get(
-        `${BASE_URL}/api/auth/users?page=${page}&limit=${limit}`,
+        `${BASE_URL}/auth/users?page=${page}&limit=${limit}${
+          search ? `&search=${search}` : ""
+        }${role ? `&role=${role}` : ""}`,
         {
           withCredentials: true,
         }
@@ -145,7 +147,7 @@ export const deleteUser = createAsyncThunk(
   async (userId, { rejectWithValue }) => {
     try {
       const response = await axios.delete(
-        `${BASE_URL}/api/auth/users/${userId}`,
+        `${BASE_URL}/auth/users/${userId}`,
         {
           withCredentials: true,
         }
@@ -163,7 +165,7 @@ export const sendSms = createAsyncThunk(
   async (userData, { rejectWithValue }) => {
     try {
       const response = await axios.post(
-        `${BASE_URL}/api/auth/send-sms`,
+        `${BASE_URL}/auth/send-sms`,
         userData,
         {
           withCredentials: true,
@@ -172,6 +174,23 @@ export const sendSms = createAsyncThunk(
       return response.data;
     } catch (error) {
       return rejectWithValue(error.response?.data || "SMS sending failed");
+    }
+  }
+);
+
+// Update User Role
+export const updateUserRole = createAsyncThunk(
+  "auth/updateUserRole",
+  async ({userId, newRole}, { rejectWithValue }) => {
+    try {
+      const response = await axios.patch(
+        `${BASE_URL}/auth/update/user-role`,
+        { userId, newRole },
+        { withCredentials: true }
+      );
+      return response.data;
+    } catch (error) {
+      return rejectWithValue(error.response?.data || "Role update failed");
     }
   }
 );
@@ -333,6 +352,18 @@ const authSlice = createSlice({
         state.message = action.payload.message;
       })
       .addCase(sendSms.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload;
+      })
+      .addCase(updateUserRole.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(updateUserRole.fulfilled, (state, action) => {
+        state.loading = false;
+        state.user = action.payload.data;
+      })
+      .addCase(updateUserRole.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload;
       });

@@ -259,9 +259,6 @@ export default function Dashboard({ setUser }) {
           ))}
         </div>
 
-        <div className="max-w-6xl mx-auto mt-8 p-6 bg-gray-100 shadow-md rounded-lg mb-3">
-          <HighchartsReact highcharts={Highcharts} options={highChartOptions} />
-        </div>
         <div className="max-w-6xl mx-auto mt-8 p-8 bg-gray-100 shadow-md rounded-lg mb-10">
           <MetricsPieChart
             totalBookings={totalBookings}
@@ -272,6 +269,10 @@ export default function Dashboard({ setUser }) {
             totalEnquiries={totalEnquiries}
             totalRevenue={totalRevenueCalculated}
           />
+        </div>
+
+        <div className="max-w-6xl mx-auto mt-8 p-6 bg-gray-100 shadow-md rounded-lg mb-8">
+          <HighchartsReact highcharts={Highcharts} options={highChartOptions} />
         </div>
       </div>
     </div>

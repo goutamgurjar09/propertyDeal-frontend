@@ -10,6 +10,7 @@ import Modal from "../CommonComponent/Modal";
 import Loader from "../CommonComponent/Loader";
 import { getUserDetail } from "../redux/slices/authUtlis";
 import { GoogleMap, Marker, useJsApiLoader } from "@react-google-maps/api";
+import { showError } from "../Alert";
 
 const PropertyDetails = () => {
   const { id } = useParams();
@@ -34,6 +35,14 @@ const PropertyDetails = () => {
   }, [id, dispatch]);
 
   const user = getUserDetail();
+
+  const handleBooking = () => {
+    if (property?.status === "Sold") {
+      showError("This Property sold you can book another property");
+      return;
+    }
+    setIsModalOpen(true);
+  };
 
   const settings = {
     dots: true,
@@ -169,7 +178,7 @@ const PropertyDetails = () => {
             </div>
 
             <button
-              onClick={() => setIsModalOpen(true)}
+              onClick={handleBooking}
               className="mt-6 px-6 py-3 bg-emerald-600 text-white rounded shadow hover:bg-emerald-700 transition"
             >
               Book Now

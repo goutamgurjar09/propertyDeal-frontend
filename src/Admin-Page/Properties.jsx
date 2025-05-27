@@ -364,7 +364,7 @@ export const Properties = ({ setUser }) => {
         <AddProperty
           setIsModalOpen={setIsModalOpen}
           id={editPropertyId}
-          onSuccess={() => dispatch(getProperties({ page, limit }))}
+          onSuccess={() => dispatch(getProperties({ page, limit, propertyType, cityId, lat, lng }))}
         />
       </Modal>
     </div>

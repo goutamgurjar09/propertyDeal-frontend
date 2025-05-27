@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import Sidebar from "../Pages/Layout/Sidebar";
 import Header from "../Pages/Layout/Header";
-import { FaTrash, FaEye } from "react-icons/fa";
+import { FaTrash, FaEye, FaTimes } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
 import { showSuccess, showError } from "../Alert";
 import PaginatedTable from "../CommonComponent/PaginatedTable";
@@ -12,10 +12,10 @@ import { getUserDetail } from "../redux/slices/authUtlis";
 export const Enquiries = ({ setUser }) => {
   const [sidebarOpen, setSidebarOpen] = useState(true);
   const dispatch = useDispatch();
-  const navigate = useNavigate();
   const [page, setPage] = useState(1);
   const limit = 10;
   const user = getUserDetail();
+  const [search, setSearch] = useState("");
 
   const {
     enquiryData,
@@ -28,15 +28,15 @@ export const Enquiries = ({ setUser }) => {
   } = useSelector((state) => state.enquiry);
 
   useEffect(() => {
-    dispatch(getEnquiries({ page, limit }));
-  }, [dispatch, page]);
+    dispatch(getEnquiries({ page, limit, search }));
+  }, [dispatch, page, search, limit]);
 
   const handleDelete = async (id) => {
     if (window.confirm("Are you sure you want to delete this booking?")) {
       try {
         const response = await dispatch(deleteEnquiry(id));
         if (response.payload.status === "success") {
-          dispatch(getEnquiries({ page, limit })); // Refresh bookings after deletion
+          dispatch(getEnquiries({ page, limit, search })); // Refresh bookings after deletion
           showSuccess(response.payload.message);
         } else {
           showError(response.payload.message || "Failed to delete booking.");
@@ -108,6 +108,29 @@ export const Enquiries = ({ setUser }) => {
         />
         <div className="mt-6 mb-6 bg-gray-100 p-4 shadow-md w-[96%] ml-4">
           <h2 className="text-2xl font-bold mb-6 text-slate-700">Enquiries</h2>
+
+          <div className="flex gap-4 mb-6">
+            {/* Search Input with clear icon */}
+            <div className="relative">
+              <input
+                type="text"
+                placeholder="Search by category name"
+                value={search}
+                onChange={(e) => setSearch(e.target.value)}
+                className="border rounded px-3 py-2 pr-8"
+              />
+              {search && (
+                <button
+                  type="button"
+                  className="absolute right-2 top-1/2 -translate-y-1/2 text-gray-400 hover:text-red-500"
+                  onClick={() => setSearch("")}
+                  tabIndex={-1}
+                >
+                  <FaTimes />
+                </button>
+              )}
+            </div>
+          </div>
 
           {/* Booking Table */}
           <PaginatedTable

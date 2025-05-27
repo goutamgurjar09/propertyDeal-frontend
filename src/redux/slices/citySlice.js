@@ -1,14 +1,14 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "axios";
 
-const API_URL = "http://localhost:8000/api";
+const BASE_URL = import.meta.env.VITE_API_ENDPOINT_BASE_URL || "http://localhost:8000";
 
 // Get All Cities
 export const getCities = createAsyncThunk(
   "city/getAll",
   async (_, { rejectWithValue }) => {
     try {
-      const response = await axios.get(`${API_URL}/cities/get-cities`, { withCredentials: true });
+      const response = await axios.get(`${BASE_URL}/cities/get-cities`, { withCredentials: true });
       (response, "response");
       return response.data;
     } catch (error) {

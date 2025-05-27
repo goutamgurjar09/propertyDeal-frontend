@@ -1,14 +1,14 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "axios";
 
-const BASE_URL = "http://localhost:8000";
+const BASE_URL = import.meta.env.VITE_API_ENDPOINT_BASE_URL || "http://localhost:8000";
 
 export const createBooking = createAsyncThunk(
   "booking/createBooking",
   async (bookingData, { rejectWithValue }) => {
     try {
       const response = await axios.post(
-        `${BASE_URL}/api/bookings/create-booking`,
+        `${BASE_URL}/bookings/create-booking`,
         bookingData,
         {
           withCredentials: true,
@@ -27,7 +27,7 @@ export const getBookings = createAsyncThunk(
   async ({ page, limit, status, name }, { rejectWithValue }) => {
     try {
       const response = await axios.get(
-        `${BASE_URL}/api/bookings/get-bookings?page=${page}&limit=${limit}&status=${status || ""}&name=${name || ""}`,
+        `${BASE_URL}/bookings/get-bookings?page=${page}&limit=${limit}&status=${status || ""}&name=${name || ""}`,
         {
           withCredentials: true,
         }
@@ -44,7 +44,7 @@ export const deleteBooking = createAsyncThunk(
   async (bookingId, { rejectWithValue }) => {
     try {
       const response = await axios.delete(
-        `${BASE_URL}/api/bookings/delete-booking/${bookingId}`,
+        `${BASE_URL}/bookings/delete-booking/${bookingId}`,
         {
           withCredentials: true,
         }
@@ -61,7 +61,7 @@ export const updateBookingStatus = createAsyncThunk(
   async ({ id, status }, { rejectWithValue }) => {
     try {
       const response = await axios.patch(
-        `${BASE_URL}/api/bookings/update-status`,
+        `${BASE_URL}/bookings/update-status`,
         { bookingId: id, status },
         {
           withCredentials: true,
@@ -79,7 +79,7 @@ export const getTotalRevenue = createAsyncThunk(
   async (_, { rejectWithValue }) => {
     try {
       const response = await axios.get(
-        `${BASE_URL}/api/bookings/get-revenue`,
+        `${BASE_URL}/bookings/get-revenue`,
         {
           withCredentials: true,
         }

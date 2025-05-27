@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import Sidebar from "../../Pages/Layout/Sidebar";
 import Header from "../../Pages/Layout/Header";
-import { FaTrash, FaEye, FaEdit } from "react-icons/fa";
+import { FaTrash, FaEye, FaEdit, FaTimes } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
 import { showSuccess, showError } from "../../Alert";
 import Loader from "../../CommonComponent/Loader";
@@ -24,6 +24,9 @@ export const Categories = ({ setUser }) => {
   const limit = 10;
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [editCategoryId, setEditCategoryId] = useState(null);
+  const [search, setSearch] = useState("");
+  const [statusFilter, setStatusFilter] = useState("");
+
   const user = getUserDetail();
   const {
     categories,
@@ -36,8 +39,8 @@ export const Categories = ({ setUser }) => {
   } = useSelector((state) => state.category);
 
   useEffect(() => {
-    dispatch(getCategories({ page, limit }));
-  }, [dispatch, page, limit]);
+    dispatch(getCategories({ page, limit, search, status: statusFilter }));
+  }, [dispatch, page, limit, search, statusFilter]);
 
   const handleDelete = async (id) => {
     if (window.confirm("Are you sure you want to delete this booking?")) {
@@ -65,7 +68,7 @@ export const Categories = ({ setUser }) => {
       );
       if (response.payload.status) {
         showSuccess(response.payload.message || "Status updated!");
-        dispatch(getCategories({ page, limit }));
+        dispatch(getCategories({ page, limit, search, status: statusFilter })); // Refresh categories after status update
       } else {
         showError(
           response.payload.message || "Failed to update category status."
@@ -201,6 +204,41 @@ export const Categories = ({ setUser }) => {
                 Add Category
               </button>
             </div>
+
+            {/* Filters */}
+            <div className="flex gap-4 mb-6">
+              {/* Search Input with clear icon */}
+              <div className="relative">
+                <input
+                  type="text"
+                  placeholder="Search by category name"
+                  value={search}
+                  onChange={(e) => setSearch(e.target.value)}
+                  className="border rounded px-3 py-2 pr-8"
+                />
+                {search && (
+                  <button
+                    type="button"
+                    className="absolute right-2 top-1/2 -translate-y-1/2 text-gray-400 hover:text-red-500"
+                    onClick={() => setSearch("")}
+                    tabIndex={-1}
+                  >
+                    <FaTimes />
+                  </button>
+                )}
+              </div>
+              {/* Status Filter */}
+              <select
+                value={statusFilter}
+                onChange={(e) => setStatusFilter(e.target.value)}
+                className="border rounded px-3 py-2"
+              >
+                <option value="">All Status</option>
+                <option value="Active">Active</option>
+                <option value="Inactive">Inactive</option>
+              </select>
+            </div>
+
             {/* Booking Table */}
             <PaginatedTable
               columns={columns}
@@ -228,7 +266,11 @@ export const Categories = ({ setUser }) => {
           setIsModalOpen={setIsModalOpen}
           userId={user?.userId}
           id={editCategoryId}
-          onSuccess={() => dispatch(getCategories({ page, limit }))}
+          onSuccess={() =>
+            dispatch(
+              getCategories({ page, limit, search, status: statusFilter })
+            )
+          }
         />
       </Modal>
     </>

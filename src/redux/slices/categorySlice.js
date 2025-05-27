@@ -1,14 +1,14 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import axios from "axios";
 
-const BASE_URL = "http://localhost:8000";
+const BASE_URL = import.meta.env.VITE_API_ENDPOINT_BASE_URL || "http://localhost:8000";
 
 export const createCategory = createAsyncThunk(
   "category/createCategory",
   async (categoryData, { rejectWithValue }) => {
     try {
       const response = await axios.post(
-        `${BASE_URL}/api/categories/create-category`,
+        `${BASE_URL}/categories/create-category`,
         categoryData,
         {
           withCredentials: true,
@@ -23,10 +23,12 @@ export const createCategory = createAsyncThunk(
 
 export const getCategories = createAsyncThunk(
   "category/getCategories",
-  async ({ page, limit }, { rejectWithValue }) => {
+  async ({ page, limit, search, status }, { rejectWithValue }) => {
     try {
       const response = await axios.get(
-        `${BASE_URL}/api/categories/get-categories?page=${page}&limit=${limit}`,
+        `${BASE_URL}/categories/get-categories?page=${page}&limit=${limit}${
+          search ? `&search=${search}` : ""
+        }${status ? `&status=${status}` : ""}`,
         {
           withCredentials: true,
         }
@@ -45,7 +47,7 @@ export const deleteCategory = createAsyncThunk(
   async (id, { rejectWithValue }) => {
     try {
       const response = await axios.delete(
-        `${BASE_URL}/api/categories/delete-category/${id}`,
+        `${BASE_URL}/categories/delete-category/${id}`,
         {
           withCredentials: true,
         }
@@ -64,7 +66,7 @@ export const getCategoriesById = createAsyncThunk(
   async (id, { rejectWithValue }) => {
     try {
       const response = await axios.get(
-        `${BASE_URL}/api/categories/category/${id}`,
+        `${BASE_URL}/categories/category/${id}`,
         {
           withCredentials: true,
         }
@@ -83,7 +85,7 @@ export const updateCategory = createAsyncThunk(
   async ({ id, data }, { rejectWithValue }) => {
     try {
       const response = await axios.put(
-        `${BASE_URL}/api/categories/update-category/${id}`,
+        `${BASE_URL}/categories/update-category/${id}`,
         data,
         {
           withCredentials: true,
@@ -101,7 +103,7 @@ export const updateCategoryStatus = createAsyncThunk(
   async ({ categoryId, status }, { rejectWithValue }) => {
     try {
       const response = await axios.patch(
-        `${BASE_URL}/api/categories/category/update-status`,
+        `${BASE_URL}/categories/category/update-status`,
         { categoryId, status },
         { withCredentials: true }
       );
