@@ -6,6 +6,7 @@ import { getCategories } from "../../redux/slices/categorySlice";
 import { useDispatch, useSelector } from "react-redux";
 import Logo from "../../assets/Image/logo.png";
 import ProfileMenu from "../../CommonComponent/ProfileMenu";
+import Chatbot from "./Chatbox";
 
 function Navbar() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -74,7 +75,7 @@ function Navbar() {
             <div
               className={`${
                 isMenuOpen ? "flex" : "hidden"
-              } flex-col md:flex md:flex-row md:items-center absolute md:relative top-full left-0 w-full md:w-auto bg-white md:bg-transparent md:space-x-10 gap-6 md:gap-0 p-6 md:p-0 shadow-md md:shadow-none z-40 rounded-b-xl md:rounded-none`}
+              } flex-col md:flex md:flex-row md:items-center absolute md:relative top-full left-20 w-full md:w-auto bg-white md:bg-transparent md:space-x-10 gap-6 md:gap-0 p-6 md:p-0 shadow-md md:shadow-none z-40 rounded-b-xl md:rounded-none`}
             >
               <Link
                 to="/"
@@ -186,6 +187,7 @@ function Navbar() {
           </div>
         )}
       </div>
+      <Chatbot/>
     </nav>
   );
 }

@@ -9,22 +9,6 @@ import plot from "../../../src/assets/Image/plot.jpg";
 
 const services = [
   {
-    title: "Rental",
-    icon: (
-      <svg
-        xmlns="http://www.w3.org/2000/svg"
-        className="w-12 h-12"
-        fill="none"
-        viewBox="0 0 24 24"
-        stroke="currentColor"
-        strokeWidth={2}
-      >
-        <path d="M3 7h18M6 7v10m12-10v10M9 17v4h6v-4" />
-      </svg>
-    ),
-    image: rental,
-  },
-  {
     title: "Commercial",
     icon: (
       <svg
@@ -39,6 +23,22 @@ const services = [
       </svg>
     ),
     image: House,
+  },
+  {
+    title: "Rental",
+    icon: (
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        className="w-12 h-12"
+        fill="none"
+        viewBox="0 0 24 24"
+        stroke="currentColor"
+        strokeWidth={2}
+      >
+        <path d="M3 7h18M6 7v10m12-10v10M9 17v4h6v-4" />
+      </svg>
+    ),
+    image: rental,
   },
   {
     title: "PG",
@@ -118,13 +118,13 @@ const Services = () => {
    
 
     <div className="max-w-7xl mx-auto  px-4 sm:px-8 bg-gradient-to-r from-white via-[#f0fdfa]">
-      <h2 className="text-4xl font-bold text-center text-[#005555] font-serif mb-8">
+      <h2 className="text-4xl font-bold text-center text-[#005555] font-serif mb-8 mt-8">
         Explore Our Categories
       </h2>
 
-      <div className="flex flex-col lg:flex-row gap-12 items-start justify-between">
+      <div className="flex flex-col lg:flex-row gap-12 items-start justify-between mt-20">
         {/* Left: Category Grid */}
-        <div className="grid grid-cols-2 sm:grid-cols-3 gap-6 w-full lg:w-[60%] mt-12">
+        <div className="grid grid-cols-2 sm:grid-cols-3 gap-6 w-full lg:w-[60%] mt-8">
           {services.map((service) => {
             const isSelected = service.title === selected;
             return (
