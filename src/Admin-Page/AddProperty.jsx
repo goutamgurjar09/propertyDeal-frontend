@@ -149,6 +149,8 @@ const AddProperty = ({ id, setIsModalOpen, onSuccess }) => {
         subCategory,
       } = property;
 
+      console.log(location, "location");
+
       reset({
         title,
         price,
@@ -189,7 +191,9 @@ const AddProperty = ({ id, setIsModalOpen, onSuccess }) => {
       try {
         if (!placeId) return;
         const res = await axios.get(
-          `http://localhost:8000/api/properties/place-details?placeId=${placeId}`,
+          `${
+            import.meta.env.VITE_API_ENDPOINT_BASE_URL
+          }/properties/place-details?placeId=${placeId}`,
           { withCredentials: true }
         );
         const { location } = res.data.result.geometry;
