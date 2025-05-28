@@ -188,7 +188,7 @@ const PropertyDetails = () => {
               isOpen={isModalOpen}
               onClose={() => setIsModalOpen(false)}
               title="Book Property"
-              size="w-[20%] h-[75%]"
+              size="h-[75%]  w-[90%] md:w-[60%] lg:w-[50%] xl:w-[40%] 2xl:w-[30%]"
             >
               <BookingPage propertyId={id} setIsModalOpen={setIsModalOpen} />
             </Modal>
