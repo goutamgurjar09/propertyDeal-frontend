@@ -35,7 +35,7 @@ export const Enquiries = ({ setUser }) => {
     if (window.confirm("Are you sure you want to delete this booking?")) {
       try {
         const response = await dispatch(deleteEnquiry(id));
-        if (response.payload.status === "success") {
+        if (response.payload.status) {
           dispatch(getEnquiries({ page, limit, search })); // Refresh bookings after deletion
           showSuccess(response.payload.message);
         } else {
