@@ -1,12 +1,3 @@
-
-
-
-
-
-
-
-
-import React from "react";
 import about from "../../src/assets/video/aboutUs.mp4";
 import { Link } from "react-router-dom";
 import {
@@ -20,7 +11,7 @@ import {
 
 function AboutUs() {
   return (
-    <div className="bg-white mt-6 font-serif">
+    <div className="bg-white mt-12 font-serif">
       <div className=" bg-gray-50 rounded-3xl shadow-xl p-8 sm:p-16">
         {/* Heading */}
         <h2 className="text-4xl sm:text-5xl font-bold text-center text-[#005555] mb-14 relative">

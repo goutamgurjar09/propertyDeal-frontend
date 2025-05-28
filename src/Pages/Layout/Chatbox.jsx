@@ -18,19 +18,17 @@ const Chatbot = () => {
       }}
     >
       <button
-        className="btn rounded-full p-3 shadow-lg"
+        className="btn rounded-full p-3 mb-4 shadow-lg"
         onClick={toggleChatbot}
         title={isOpen ? "Close Chatbot" : "Open Chatbot"}
         style={{
-          width: "50px",
-          height: "50px",
           display: "flex",
           alignItems: "center",
           justifyContent: "center",
           backgroundColor: "#25D366",
         }}
       >
-        <FaRegCommentDots size={28} color="#fff" />
+        <FaRegCommentDots size={40} color="#fff" />
       </button>
 
       {isOpen && (
