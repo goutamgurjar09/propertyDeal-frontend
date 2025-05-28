@@ -35,7 +35,7 @@ const Chatbot = () => {
         <div
           style={{
             position: "absolute",
-            bottom: "70px",
+            bottom: "90px",
             right: "0",
             width: "90vw",
             maxWidth: "400px",
