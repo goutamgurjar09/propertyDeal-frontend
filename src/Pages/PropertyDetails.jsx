@@ -93,7 +93,7 @@ const PropertyDetails = () => {
         <div className="flex justify-center mt-8">
           <button
             onClick={() => navigate("/login")}
-            className="px-6 py-3 bg-[#005555] hover:bg-[#007777] text-white rounded shadow transition"
+            className="px-6 py-3 bg-[#005555] hover:bg-[#007777] hover:text-white rounded shadow transition bg-transparent text-[#005555] font-extrabold"
           >
             View More...
           </button>

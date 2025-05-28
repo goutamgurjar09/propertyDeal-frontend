@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { FaRegCommentDots } from "react-icons/fa";
 
 const Chatbot = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -29,7 +30,7 @@ const Chatbot = () => {
           backgroundColor: "#25D366",
         }}
       >
-        💬
+        <FaRegCommentDots size={28} color="#fff" />
       </button>
 
       {isOpen && (
@@ -38,23 +39,27 @@ const Chatbot = () => {
             position: "absolute",
             bottom: "70px",
             right: "0",
-            width: "400px",
-            height: "260px",
+            width: "90vw",
+            maxWidth: "400px",
+            height: "40vh",
+            minHeight: "200px",
             backgroundColor: "#fff",
             borderRadius: "10px",
             boxShadow: "0px 4px 10px rgba(0,0,0,0.2)",
             display: "flex",
             flexDirection: "column",
             overflow: "hidden",
+            zIndex: 1001,
           }}
         >
           <div
             style={{
               background: "#005A9C",
               color: "white",
-              padding: "5px",
+              padding: "10px",
               textAlign: "center",
               fontWeight: "bold",
+              fontSize: "1.1rem",
             }}
           >
             Chatbot
@@ -64,6 +69,7 @@ const Chatbot = () => {
               flex: 1,
               padding: "10px",
               overflowY: "auto",
+              fontSize: "1rem",
             }}
           >
             <p className="text-[#005555]">Welcome! How can I help you?</p>
@@ -73,24 +79,41 @@ const Chatbot = () => {
               padding: "10px",
               borderTop: "1px solid #ddd",
               display: "flex",
+              gap: "8px",
+              background: "#f9f9f9",
             }}
           >
-            <div className="input-group">
-              <button className="btn btn-outline-secondary bg-white btn-sm">
-                <i className="fas fa-microphone"></i>
-              </button>
-              <input
-                type="text"
-                className="form-control"
-                placeholder="Type a message..."
-                style={{ flex: 1 }}
-              />
-              {/* Yahan aapka send button agar hai to woh input ke right side rahega */}
-            </div>
-
             <button
-              className="btn btn ms-2 text-white p-1 rounded"
-              style={{ backgroundColor: "#005555" }}
+              className="btn btn-outline-secondary bg-white btn-sm"
+              style={{
+                border: "1px solid #ddd",
+                borderRadius: "6px",
+                padding: "0 8px",
+                marginRight: "4px",
+              }}
+            >
+              <i className="fas fa-microphone"></i>
+            </button>
+            <input
+              type="text"
+              className="form-control"
+              placeholder="Type a message..."
+              style={{
+                flex: 1,
+                border: "1px solid #ddd",
+                borderRadius: "6px",
+                padding: "6px 10px",
+                fontSize: "1rem",
+              }}
+            />
+            <button
+              className="btn btn text-white p-1 rounded"
+              style={{
+                backgroundColor: "#005555",
+                borderRadius: "6px",
+                padding: "0 16px",
+                fontSize: "1rem",
+              }}
             >
               Send
             </button>

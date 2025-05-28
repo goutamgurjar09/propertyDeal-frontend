@@ -35,8 +35,7 @@ const schema = yup.object().shape({
 const BookingPage = ({ propertyId, setIsModalOpen }) => {
   const dispatch = useDispatch();
   const user = getUserDetail();
-    const { loading } = useSelector((state) => state.booking);
-  
+  const { loading } = useSelector((state) => state.booking);
 
   const {
     register,
@@ -114,7 +113,9 @@ const BookingPage = ({ propertyId, setIsModalOpen }) => {
           <button
             type="submit"
             disabled={loading}
-            className="w-75 p-6 bg-[#005555] hover:bg-[#004444] transition-all duration-300 text-white py-3 rounded-lg font-semibold shadow-md"
+            className={`w-75 p-6 ${
+              loading ? "opacity-40" : ""
+            } bg-[#005555] hover:bg-[#004444] transition-all duration-300 text-white py-3 rounded-lg font-semibold shadow-md`}
           >
             Book Now
           </button>

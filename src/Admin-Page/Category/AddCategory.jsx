@@ -72,7 +72,7 @@ const AddCategoryForm = ({ setIsModalOpen, userId, id, onSuccess }) => {
       reset();
       setIsModalOpen(false);
       onSuccess && onSuccess();
-    }else {
+    } else {
       showError(res.payload?.message || "Failed to create/update category");
     }
   };
@@ -137,7 +137,9 @@ const AddCategoryForm = ({ setIsModalOpen, userId, id, onSuccess }) => {
           <button
             type="submit"
             disabled={loading}
-            className="w-75 p-6 bg-[#005555] hover:bg-[#004444] transition-all duration-300 text-white py-3 rounded-lg font-semibold shadow-md"
+            className={`w-75 p-6 ${
+              loading ? "opacity-40" : ""
+            } bg-[#005555] hover:bg-[#004444] transition-all duration-300 text-white py-3 rounded-lg font-semibold shadow-md`}
           >
             {loading
               ? "Creating..."
