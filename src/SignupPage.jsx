@@ -81,7 +81,7 @@ function SignupPage() {
 
   return (
     <div className="flex min-h-screen items-center justify-center bg-[#e7e7e7] text-white p-4 relative mt-16">
-      <div className="w-full max-w-xl bg-white text-[#005555]  font-serif p-10 rounded-lg shadow-2xl border border-gy-300 relative z-10">
+      <div className="w-full max-w-xl bg-white text-[#005555]  font-serif p-10 rounded-lg shadow-2xl border-gy-300 relative z-10">
         <h2 className="text-center text-3xl font-semibold mb-6">
           Create Your Account
         </h2>
