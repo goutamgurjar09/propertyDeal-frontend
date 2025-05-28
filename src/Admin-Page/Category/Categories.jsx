@@ -206,20 +206,20 @@ export const Categories = ({ setUser }) => {
             </div>
 
             {/* Filters */}
-            <div className="flex gap-4 mb-6">
+            <div className="flex flex-col sm:flex-row sm:items-center sm:gap-4 gap-3 mb-6 w-full">
               {/* Search Input with clear icon */}
-              <div className="relative">
+              <div className="relative w-full sm:w-auto">
                 <input
                   type="text"
                   placeholder="Search by category name"
                   value={search}
                   onChange={(e) => setSearch(e.target.value)}
-                  className="border rounded px-3 py-2 pr-8"
+                  className="border rounded px-3 py-2 pr-8 w-full sm:w-[250px] focus:outline-none focus:ring-2 focus:ring-[#52b9b9]"
                 />
                 {search && (
                   <button
                     type="button"
-                    className="absolute right-2 top-1/2 -translate-y-1/2 text-gray-400 hover:text-red-500"
+                    className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-red-500"
                     onClick={() => setSearch("")}
                     tabIndex={-1}
                   >
@@ -227,16 +227,19 @@ export const Categories = ({ setUser }) => {
                   </button>
                 )}
               </div>
+
               {/* Status Filter */}
-              <select
-                value={statusFilter}
-                onChange={(e) => setStatusFilter(e.target.value)}
-                className="border rounded px-3 py-2"
-              >
-                <option value="">All Status</option>
-                <option value="Active">Active</option>
-                <option value="Inactive">Inactive</option>
-              </select>
+              <div className="w-full sm:w-[200px]">
+                <select
+                  value={statusFilter}
+                  onChange={(e) => setStatusFilter(e.target.value)}
+                  className="border rounded px-3 py-2 sm:w-full focus:outline-none focus:ring-2 focus:ring-[#52b9b9]"
+                >
+                  <option value="">All Status</option>
+                  <option value="Active">Active</option>
+                  <option value="Inactive">Inactive</option>
+                </select>
+              </div>
             </div>
 
             {/* Booking Table */}

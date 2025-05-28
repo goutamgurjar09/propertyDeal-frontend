@@ -4,7 +4,7 @@ import { Link, useLocation, useNavigate } from "react-router-dom";
 import { getAuthToken, clearAuthSession } from "../../redux/slices/authUtlis";
 import { getCategories } from "../../redux/slices/categorySlice";
 import { useDispatch, useSelector } from "react-redux";
-import Logo from "../../assets/Image/logo.png";
+import Logo from "../../assets/Image/logo.png.png";
 import ProfileMenu from "../../CommonComponent/ProfileMenu";
 import Chatbot from "./Chatbox";
 
@@ -53,14 +53,13 @@ function Navbar() {
       <div className="mx-auto flex items-center justify-between">
         {!isDashboard ? (
           <>
-            {/* Logo */}
-            <Link to="/" className="flex items-center">
+            <div className="flex items-center">
               <img
                 src={Logo}
                 alt="Company Logo"
                 className="h-10 w-auto sm:h-12 object-contain"
               />
-            </Link>
+            </div>
 
             {/* Mobile Menu Button */}
             <button
@@ -79,11 +78,12 @@ function Navbar() {
             >
               <Link
                 to="/"
+                onClick={() => setIsMenuOpen(false)}
                 className="text-[#005555] hover:text-[#52b9b9] transition"
               >
                 Home
               </Link>
-              <li
+              {/* <li
                 className="relative list-none"
                 onMouseEnter={() => setDropdownOpen("properties")}
                 onMouseLeave={() => setDropdownOpen(null)}
@@ -115,11 +115,88 @@ function Navbar() {
                     ))}
                   </div>
                 )}
+              </li> */}
+
+              <li
+                className={`relative list-none ${
+                  isMenuOpen ? "block" : "md:inline-block"
+                }`}
+                onMouseEnter={() =>
+                  !isMenuOpen && setDropdownOpen("properties")
+                }
+                onMouseLeave={() => !isMenuOpen && setDropdownOpen(null)}
+              >
+                <button
+                  className="hover:text-[#52b9b9] text-[#005555] transition-colors duration-300 focus:outline-none appearance-none flex items-center"
+                  onClick={() =>
+                    isMenuOpen &&
+                    setDropdownOpen(
+                      dropdownOpen === "properties" ? null : "properties"
+                    )
+                  }
+                  type="button"
+                >
+                  Properties
+                  <span className="ml-1"></span>
+                </button>
+                {/* Desktop Dropdown */}
+                {!isMenuOpen && dropdownOpen === "properties" && (
+                  <div className="absolute top-full left-0 bg-gray-800 text-white rounded-md shadow-lg w-64 z-50">
+                    {categories.map((cat) => (
+                      <div key={cat._id} className="group relative">
+                        <button className="w-full text-left px-4 py-2 hover:bg-gray-700">
+                          {cat.categoryName}
+                        </button>
+                        {cat.subCategories.length > 0 && (
+                          <div className="absolute top-0 left-full bg-gray-700 text-white rounded-md shadow-lg w-48 hidden group-hover:block">
+                            {cat.subCategories.map((sub) => (
+                              <Link
+                                key={sub.name}
+                                to={`/property?category=${cat._id}&subCategory=${sub.name}`}
+                                className="block px-4 py-2 hover:bg-gray-600"
+                                onClick={() => setIsMenuOpen(false)}
+                              >
+                                {sub.name}
+                              </Link>
+                            ))}
+                          </div>
+                        )}
+                      </div>
+                    ))}
+                  </div>
+                )}
+                {/* Mobile Dropdown */}
+                {isMenuOpen && dropdownOpen === "properties" && (
+                  <div className="bg-gray-100 text-[#005555] rounded-md shadow-lg mt-2 w-full max-h-64 overflow-y-auto">
+                    {categories.map((cat) => (
+                      <div key={cat._id} className="border-b last:border-b-0">
+                        <div className="px-4 py-2 font-semibold">
+                          {cat.categoryName}
+                        </div>
+                        {cat.subCategories.length > 0 && (
+                          <div className="pl-6">
+                            {cat.subCategories.map((sub) => (
+                              <Link
+                                key={sub.name}
+                                onClick={() => setIsMenuOpen(false)}
+                                to={`/property?category=${cat._id}&subCategory=${sub.name}`}
+                                className="block px-4 py-2 hover:bg-gray-200"
+                              >
+                                {sub.name}
+                              </Link>
+                            ))}
+                          </div>
+                        )}
+                      </div>
+                    ))}
+                  </div>
+                )}
               </li>
 
               <Link
                 to="/About"
                 className="text-[#005555] hover:text-[#52b9b9] transition"
+                onClick={() => setIsMenuOpen(false)}
               >
                 About
               </Link>
@@ -127,25 +204,28 @@ function Navbar() {
               <Link
                 to="/contact"
                 className="text-[#005555] hover:text-[#52b9b9] transition"
+                onClick={() => setIsMenuOpen(false)}
               >
                 Contact Us
               </Link>
 
               {/* Auth Buttons for mobile */}
-              <div className="flex flex-col md:hidden gap-3 mt-4">
+              <div className="flex flex-col md:hidden gap-3 mt-2">
                 {token ? (
                   <ProfileMenu />
                 ) : (
                   <>
                     <Link
                       to="/login"
-                      className="bg-[#005555] text-white px-5 py-2 rounded-md font-medium hover:text-[#52b9b9] transition"
+                      className="bg-[#005555] text-white px-3 w-25 py-1 text-sm rounded-md font-medium hover:text-[#52b9b9] transition md:px-5 md:py-2 md:text-base"
+                      onClick={() => setIsMenuOpen(false)}
                     >
                       LogIn
                     </Link>
                     <Link
                       to="/signup"
-                      className="bg-[#005555] text-white px-5 py-2 rounded-md font-medium hover:text-[#52b9b9] transition"
+                      className="bg-[#005555] w-25 text-white px-3 py-1 text-sm rounded-md font-medium hover:text-[#52b9b9] transition md:px-5 md:py-2 md:text-base"
+                      onClick={() => setIsMenuOpen(false)}
                     >
                       Sign Up
                     </Link>
@@ -187,7 +267,7 @@ function Navbar() {
           </div>
         )}
       </div>
-      <Chatbot/>
+      <Chatbot />
     </nav>
   );
 }

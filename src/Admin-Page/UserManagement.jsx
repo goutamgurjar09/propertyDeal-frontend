@@ -153,15 +153,15 @@ const UserManagement = ({ setUser }) => {
         <div className="mt-6 mb-6 bg-gray-100 p-4 shadow-md w-[96%] ml-4">
           <h2 className="text-2xl font-bold mb-6 text-slate-700">Users List</h2>
 
-          <div className="flex gap-4 mb-4">
+          <div className="flex flex-col sm:flex-row sm:items-center sm:gap-4 gap-2 mb-4 w-full">
             {/* Search Input with clear icon */}
-            <div className="relative">
+            <div className="relative w-full sm:w-auto">
               <input
                 type="text"
                 placeholder="Search by name or email"
                 value={search}
                 onChange={(e) => setSearch(e.target.value)}
-                className="border rounded px-3 py-2 pr-8"
+                className="border rounded px-3 py-2 pr-8 w-full sm:w-[250px]"
               />
               {search && (
                 <button
@@ -174,17 +174,20 @@ const UserManagement = ({ setUser }) => {
                 </button>
               )}
             </div>
+
             {/* Role Filter */}
-            <select
-              value={roleFilter}
-              onChange={(e) => setRoleFilter(e.target.value)}
-              className="border rounded px-3 py-2"
-            >
-              <option value="">All Roles</option>
-              <option value="admin">Admin</option>
-              <option value="seller">Seller</option>
-              <option value="buyer">Buyer</option>
-            </select>
+            <div className="w-full sm:w-[200px]">
+              <select
+                value={roleFilter}
+                onChange={(e) => setRoleFilter(e.target.value)}
+                className="border rounded px-3 py-2 sm:w-full"
+              >
+                <option value="">All Roles</option>
+                <option value="admin">Admin</option>
+                <option value="seller">Seller</option>
+                <option value="buyer">Buyer</option>
+              </select>
+            </div>
           </div>
 
           {/* User Table */}

@@ -17,6 +17,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import { getCategories } from "../redux/slices/categorySlice";
 import { InputField } from "../CommonComponent/InputField";
 import { SelectField } from "../CommonComponent/SelectField";
+import Loader from "../CommonComponent/Loader";
 const facilityOptions = [
   { value: "Wifi", label: "Wifi" },
   { value: "RO", label: "RO" },
@@ -92,7 +93,6 @@ const AddProperty = ({ id, setIsModalOpen, onSuccess }) => {
     property.propertyImages &&
     property.propertyImages.length > 0
   );
-
   const { categories } = useSelector((state) => state.category);
 
   useEffect(() => {
@@ -502,7 +502,9 @@ const AddProperty = ({ id, setIsModalOpen, onSuccess }) => {
           <button
             type="submit"
             disabled={loading}
-            className="w-75 p-6 bg-[#005555] hover:bg-[#004444] transition-all duration-300 text-white py-3 rounded-lg font-semibold shadow-md"
+            className={` ${
+              loading ? "opacity-40" : ""
+            } w-75 p-6 bg-[#005555] hover:bg-[#004444] transition-all duration-300 text-white py-3 rounded-lg font-semibold shadow-md`}
           >
             {id ? "Update Property" : "Create Property"}
           </button>

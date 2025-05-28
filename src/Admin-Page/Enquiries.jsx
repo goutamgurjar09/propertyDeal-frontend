@@ -114,7 +114,7 @@ export const Enquiries = ({ setUser }) => {
             <div className="relative">
               <input
                 type="text"
-                placeholder="Search by category name"
+                placeholder="Search by category & sub category name"
                 value={search}
                 onChange={(e) => setSearch(e.target.value)}
                 className="border rounded px-3 py-2 pr-8"

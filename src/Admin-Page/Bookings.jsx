@@ -183,19 +183,20 @@ const Booking = ({ setUser }) => {
         <div className="mt-6 mb-6 bg-gray-100 p-4 shadow-md w-[96%] ml-4">
           <h2 className="text-2xl  font-bold mb-6 text-slate-700">Bookings</h2>
 
-          <div className="flex gap-4 mb-4">
-            <div className="relative">
+          <div className="flex flex-col sm:flex-row sm:items-center sm:gap-4 gap-3 mb-4 w-full">
+            {/* Search Input with clear icon */}
+            <div className="relative w-full sm:w-auto">
               <input
                 type="text"
                 placeholder="Search by Name"
                 value={nameFilter}
                 onChange={(e) => setNameFilter(e.target.value)}
-                className="border rounded px-3 py-2 pr-8" // pr-8 for icon space
+                className="border rounded px-3 py-2 pr-8 w-full sm:w-[250px] focus:outline-none focus:ring-2 focus:ring-[#52b9b9]"
               />
               {nameFilter && (
                 <button
                   type="button"
-                  className="absolute right-2 top-1/2 -translate-y-1/2 text-gray-400 hover:text-red-500"
+                  className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-red-500"
                   onClick={() => setNameFilter("")}
                   tabIndex={-1}
                 >
@@ -203,16 +204,20 @@ const Booking = ({ setUser }) => {
                 </button>
               )}
             </div>
-            <select
-              value={statusFilter}
-              onChange={(e) => setStatusFilter(e.target.value)}
-              className="border rounded px-3 py-2"
-            >
-              <option value="">All Status</option>
-              <option value="pending">Pending</option>
-              <option value="confirmed">Confirmed</option>
-              <option value="cancelled">Cancelled</option>
-            </select>
+
+            {/* Status Filter */}
+            <div className="w-full sm:w-[200px]">
+              <select
+                value={statusFilter}
+                onChange={(e) => setStatusFilter(e.target.value)}
+                className="border rounded px-3 py-2 sm:w-50 xl:w-full focus:outline-none focus:ring-2 focus:ring-[#52b9b9]"
+              >
+                <option value="">All Status</option>
+                <option value="pending">Pending</option>
+                <option value="confirmed">Confirmed</option>
+                <option value="cancelled">Cancelled</option>
+              </select>
+            </div>
           </div>
 
           {/* Booking Table */}
