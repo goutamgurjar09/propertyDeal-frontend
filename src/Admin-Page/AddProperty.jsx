@@ -149,8 +149,6 @@ const AddProperty = ({ id, setIsModalOpen, onSuccess }) => {
         subCategory,
       } = property;
 
-      console.log(location, "location");
-
       reset({
         title,
         price,
@@ -219,7 +217,7 @@ const AddProperty = ({ id, setIsModalOpen, onSuccess }) => {
 
     // ✅ Frontend image type/size validation
     const allowedTypes = ["image/jpeg", "image/png", "image/jpg"];
-    const maxFileSize = 10 * 1024 * 1024; // 10MB
+    const maxFileSize = 20 * 1024 * 1024;
 
     for (const img of data.propertyImages) {
       if (!allowedTypes.includes(img.type)) {
