@@ -216,6 +216,26 @@ const AddProperty = ({ id, setIsModalOpen, onSuccess }) => {
     if (!locality?.label) {
       return setError("Locality is required");
     }
+
+    // ✅ Frontend image type/size validation
+    const allowedTypes = ["image/jpeg", "image/png", "image/jpg"];
+    const maxFileSize = 10 * 1024 * 1024; // 10MB
+
+    for (const img of data.propertyImages) {
+      if (!allowedTypes.includes(img.type)) {
+        showError("Only JPEG, PNG, and JPG images are allowed");
+        return;
+      }
+      if (img.size > maxFileSize) {
+        showError("Each image must be less than 20MB");
+        return;
+      }
+      if(data?.propertyImages?.length + remainingImages?.length > 5) {
+        showError("You can upload a maximum of 5 images");
+        return;
+      }
+    }
+
     const formData = new FormData();
     formData.append("title", data.title);
     formData.append("description", data.description);
