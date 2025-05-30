@@ -12,7 +12,7 @@ export const createProperty = createAsyncThunk(
         `${API_URL}/properties/create-properties`,
         formData,
         {
-          headers: { "Content-Type": "multipart/form-data" },
+          // headers: { "Content-Type": "multipart/form-data" },
           withCredentials: true,
         }
       );
