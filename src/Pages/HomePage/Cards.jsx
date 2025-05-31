@@ -13,11 +13,11 @@ function Cards() {
           />
         </div>
         <div className="space-y-10">
-          <h2 className="text-4xl font-extrabold text-[#005555] font-serif border-b-2 border-[#005555] pb-2">
+          <h2 className="text-4xl font-extrabold text-[#112757] font-serif border-b-2 border-[#112757] pb-2">
             Why Choose ...........
           </h2>
           <div>
-            <h3 className="text-xl font-semibold text-[#005555] flex items-center">
+            <h3 className="text-xl font-semibold text-[#112757] flex items-center">
               <span className="mr-2 text-2xl">💬</span> We Are Professional
             </h3>
             <p className="text-black mt-1 leading-relaxed">
@@ -27,7 +27,7 @@ function Cards() {
             </p>
           </div>
           <div>
-            <h3 className="text-xl font-semibold text-[#005555] flex items-center">
+            <h3 className="text-xl font-semibold text-[#112757] flex items-center">
               <span className="mr-2 text-2xl">🎨</span> We Are Creative
             </h3>
             <p className="text-black mt-1 leading-relaxed">
@@ -38,7 +38,7 @@ function Cards() {
             </p>
           </div>
           <div>
-            <h3 className="text-xl font-semibold text-[#005555] flex items-center">
+            <h3 className="text-xl font-semibold text-[#112757] flex items-center">
               <span className="mr-2 text-2xl">⏰</span> 24/7 Great Support
             </h3>
             <p className="text-black mt-1 leading-relaxed">

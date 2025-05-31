@@ -522,7 +522,7 @@ const AddProperty = ({ id, setIsModalOpen, onSuccess }) => {
             disabled={loading}
             className={` ${
               loading ? "opacity-40" : ""
-            } w-75 p-6 bg-[#005555] hover:bg-[#004444] transition-all duration-300 text-white py-3 rounded-lg font-semibold shadow-md`}
+            } w-75 p-6 bg-[#112757] hover:bg-[#004444] transition-all duration-300 text-white py-3 rounded-lg font-semibold shadow-md`}
           >
             {id ? "Update Property" : "Create Property"}
           </button>

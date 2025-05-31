@@ -12,6 +12,7 @@ function Navbar() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [dropdownOpen, setDropdownOpen] = useState(null);
   const [isScrolled, setIsScrolled] = useState(false);
+  const [expandedCategory, setExpandedCategory] = useState(null);
   const token = getAuthToken();
   const location = useLocation();
   const navigate = useNavigate();
@@ -62,13 +63,13 @@ function Navbar() {
             </div>
 
             {/* Mobile Menu Button */}
-            <button
+            <span
               onClick={() => setIsMenuOpen(!isMenuOpen)}
-              className="md:hidden text-3xl text-[#005555]"
+              className="md:hidden text-3xl text-[#112757]"
               aria-label="Toggle menu"
             >
               {isMenuOpen ? <IoClose /> : <IoMenu />}
-            </button>
+            </span>
 
             {/* Navbar Links */}
             <div
@@ -79,43 +80,10 @@ function Navbar() {
               <Link
                 to="/"
                 onClick={() => setIsMenuOpen(false)}
-                className="text-[#005555] hover:text-[#52b9b9] transition"
+                className="text-[#112757] hover:text-[#52b9b9] transition"
               >
                 Home
               </Link>
-              {/* <li
-                className="relative list-none"
-                onMouseEnter={() => setDropdownOpen("properties")}
-                onMouseLeave={() => setDropdownOpen(null)}
-              >
-                <button className="hover:text-[#52b9b9] text-[#005555] transition-colors duration-300 focus:outline-none appearance-none">
-                  Properties
-                </button>
-                {dropdownOpen === "properties" && (
-                  <div className="absolute top-full left-0 bg-gray-800 text-white rounded-md shadow-lg w-64">
-                    {categories.map((cat) => (
-                      <div key={cat._id} className="group relative">
-                        <button className="w-full text-left px-4 py-2 hover:bg-gray-700">
-                          {cat.categoryName}
-                        </button>
-                        {cat.subCategories.length > 0 && (
-                          <div className="absolute top-0 left-full bg-gray-700 text-white rounded-md shadow-lg w-48 hidden group-hover:block">
-                            {cat.subCategories.map((sub) => (
-                              <Link
-                                key={sub.name}
-                                to={`/property?category=${cat._id}&subCategory=${sub.name}`}
-                                className="block px-4 py-2 hover:bg-gray-600"
-                              >
-                                {sub.name}
-                              </Link>
-                            ))}
-                          </div>
-                        )}
-                      </div>
-                    ))}
-                  </div>
-                )}
-              </li> */}
 
               <li
                 className={`relative list-none ${
@@ -126,8 +94,8 @@ function Navbar() {
                 }
                 onMouseLeave={() => !isMenuOpen && setDropdownOpen(null)}
               >
-                <button
-                  className="hover:text-[#52b9b9] text-[#005555] transition-colors duration-300 focus:outline-none appearance-none flex items-center"
+                <Link
+                  className="hover:text-[#52b9b9] text-[#112757] transition-colors duration-300 focus:outline-none appearance-none flex items-center"
                   onClick={() =>
                     isMenuOpen &&
                     setDropdownOpen(
@@ -138,22 +106,22 @@ function Navbar() {
                 >
                   Properties
                   <span className="ml-1"></span>
-                </button>
+                </Link>
                 {/* Desktop Dropdown */}
                 {!isMenuOpen && dropdownOpen === "properties" && (
                   <div className="absolute top-full left-0 bg-gray-800 text-white rounded-md shadow-lg w-64 z-50">
                     {categories.map((cat) => (
                       <div key={cat._id} className="group relative">
-                        <button className="w-full text-left px-4 py-2 hover:bg-gray-700">
+                        <button className="underline decoration-[3px] underline-offset-4 w-full text-left px-4 py-[3px] hover:bg-gray-700">
                           {cat.categoryName}
                         </button>
                         {cat.subCategories.length > 0 && (
-                          <div className="absolute top-0 left-full bg-gray-700 text-white rounded-md shadow-lg w-48 hidden group-hover:block">
+                          <div className="absolute top-0 left-full bg-[#112757] text-white rounded-md shadow-lg w-48 hidden group-hover:block">
                             {cat.subCategories.map((sub) => (
                               <Link
                                 key={sub.name}
                                 to={`/property?category=${cat._id}&subCategory=${sub.name}`}
-                                className="block px-4 py-2 hover:bg-gray-600"
+                                className="underline decoration-[3px] underline-offset-4 block px-4 py-2"
                                 onClick={() => setIsMenuOpen(false)}
                               >
                                 {sub.name}
@@ -166,27 +134,41 @@ function Navbar() {
                   </div>
                 )}
                 {/* Mobile Dropdown */}
+
                 {isMenuOpen && dropdownOpen === "properties" && (
-                  <div className="bg-gray-100 text-[#005555] rounded-md shadow-lg mt-2 w-full max-h-64 overflow-y-auto">
+                  <div className="bg-gray-100 text-[#112757] rounded-md shadow-lg mt-2 w-full max-h-64 overflow-y-auto">
                     {categories.map((cat) => (
                       <div key={cat._id} className="border-b last:border-b-0">
-                        <div className="px-4 py-2 font-semibold">
-                          {cat.categoryName}
-                        </div>
-                        {cat.subCategories.length > 0 && (
-                          <div className="pl-6">
-                            {cat.subCategories.map((sub) => (
-                              <Link
-                                key={sub.name}
-                                onClick={() => setIsMenuOpen(false)}
-                                to={`/property?category=${cat._id}&subCategory=${sub.name}`}
-                                className="block px-4 py-2 hover:bg-gray-200"
-                              >
-                                {sub.name}
-                              </Link>
-                            ))}
-                          </div>
-                        )}
+                        <button
+                          className="flex items-center justify-between w-50 px-4 py-2 font-semibold focus:outline-none"
+                          onClick={() =>
+                            setExpandedCategory(
+                              expandedCategory === cat._id ? null : cat._id
+                            )
+                          }
+                        >
+                          <span>{cat.categoryName}</span>
+                          {cat.subCategories.length > 0 && (
+                            <span className="ml-2">
+                              {expandedCategory === cat._id ? "▲" : "▼"}
+                            </span>
+                          )}
+                        </button>
+                        {cat.subCategories.length > 0 &&
+                          expandedCategory === cat._id && (
+                            <div className="pl-6">
+                              {cat.subCategories.map((sub) => (
+                                <Link
+                                  key={sub.name}
+                                  onClick={() => setIsMenuOpen(false)}
+                                  to={`/property?category=${cat._id}&subCategory=${sub.name}`}
+                                  className="block px-4 py-2 hover:bg-gray-200"
+                                >
+                                  {sub.name}
+                                </Link>
+                              ))}
+                            </div>
+                          )}
                       </div>
                     ))}
                   </div>
@@ -195,7 +177,7 @@ function Navbar() {
 
               <Link
                 to="/About"
-                className="text-[#005555] hover:text-[#52b9b9] transition"
+                className="text-[#112757] hover:text-[#52b9b9] transition"
                 onClick={() => setIsMenuOpen(false)}
               >
                 About
@@ -203,7 +185,7 @@ function Navbar() {
 
               <Link
                 to="/contact"
-                className="text-[#005555] hover:text-[#52b9b9] transition"
+                className="text-[#112757] hover:text-[#52b9b9] transition"
                 onClick={() => setIsMenuOpen(false)}
               >
                 Contact Us
@@ -217,14 +199,14 @@ function Navbar() {
                   <>
                     <Link
                       to="/login"
-                      className="bg-[#005555] text-white px-3 w-25 py-1 text-sm rounded-md font-medium hover:text-[#52b9b9] transition md:px-5 md:py-2 md:text-base"
+                      className="bg-[#112757] text-white px-3 w-25 py-1 text-sm rounded-md font-medium hover:text-[#52b9b9] transition md:px-5 md:py-2 md:text-base"
                       onClick={() => setIsMenuOpen(false)}
                     >
                       LogIn
                     </Link>
                     <Link
                       to="/signup"
-                      className="bg-[#005555] w-25 text-white px-3 py-1 text-sm rounded-md font-medium hover:text-[#52b9b9] transition md:px-5 md:py-2 md:text-base"
+                      className="bg-[#112757] w-25 text-white px-3 py-1 text-sm rounded-md font-medium hover:text-[#52b9b9] transition md:px-5 md:py-2 md:text-base"
                       onClick={() => setIsMenuOpen(false)}
                     >
                       Sign Up
@@ -242,13 +224,13 @@ function Navbar() {
                 <>
                   <Link
                     to="/login"
-                    className="bg-[#005555] text-white px-5 py-2 rounded-md font-medium hover:text-[#52b9b9] transition shadow-md"
+                    className="bg-[#112757] text-white px-5 py-2 rounded-md font-medium hover:text-[#52b9b9] transition shadow-md"
                   >
                     LogIn
                   </Link>
                   <Link
                     to="/signup"
-                    className="bg-[#005555] text-white px-5 py-2 rounded-md font-medium hover:text-[#52b9b9] transition shadow-md"
+                    className="bg-[#112757] text-white px-5 py-2 rounded-md font-medium hover:text-[#52b9b9] transition shadow-md"
                   >
                     Sign Up
                   </Link>
@@ -260,7 +242,7 @@ function Navbar() {
           <div className="flex justify-end w-full">
             <button
               onClick={handleLogout}
-              className="bg-[#005555] text-white px-5 py-2 rounded-md font-medium hover:text-[#52b9b9] transition-colors duration-300 shadow-md"
+              className="bg-[#112757] text-white px-5 py-2 rounded-md font-medium hover:text-[#52b9b9] transition-colors duration-300 shadow-md"
             >
               Logout
             </button>

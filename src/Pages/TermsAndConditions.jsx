@@ -4,7 +4,7 @@ const TermsAndConditions = () => {
   return (
     <div className="font-serif mt-10">
       <div className=" bg-gray-50 rounded-3xl shadow-2xl p-10 sm:p-16">
-        <h1 className="text-4xl sm:text-5xl font-bold text-center text-[#005555] mb-12">
+        <h1 className="text-4xl sm:text-5xl font-bold text-center text-[#112757] mb-12">
           Terms & Conditions
         </h1>
 
@@ -15,7 +15,7 @@ const TermsAndConditions = () => {
         </p>
 
         {/* 1. Website Use */}
-        <h2 className="text-2xl font-semibold text-[#005555] mt-8 mb-4">
+        <h2 className="text-2xl font-semibold text-[#112757] mt-8 mb-4">
           1. Use of the Website
         </h2>
         <p className="text-gray-700">
@@ -25,7 +25,7 @@ const TermsAndConditions = () => {
         </p>
 
         {/* 2. Property Information */}
-        <h2 className="text-2xl font-semibold text-[#005555] mt-8 mb-4">
+        <h2 className="text-2xl font-semibold text-[#112757] mt-8 mb-4">
           2. Property Listings & Content
         </h2>
         <p className="text-gray-700">
@@ -36,7 +36,7 @@ const TermsAndConditions = () => {
         </p>
 
         {/* 3. User Accounts */}
-        <h2 className="text-2xl font-semibold text-[#005555] mt-8 mb-4">
+        <h2 className="text-2xl font-semibold text-[#112757] mt-8 mb-4">
           3. User Accounts
         </h2>
         <p className="text-gray-700">
@@ -46,7 +46,7 @@ const TermsAndConditions = () => {
         </p>
 
         {/* 4. Intellectual Property */}
-        <h2 className="text-2xl font-semibold text-[#005555] mt-8 mb-4">
+        <h2 className="text-2xl font-semibold text-[#112757] mt-8 mb-4">
           4. Intellectual Property
         </h2>
         <p className="text-gray-700">
@@ -56,7 +56,7 @@ const TermsAndConditions = () => {
         </p>
 
         {/* 5. Third-Party Links */}
-        <h2 className="text-2xl font-semibold text-[#005555] mt-8 mb-4">
+        <h2 className="text-2xl font-semibold text-[#112757] mt-8 mb-4">
           5. Third-Party Links
         </h2>
         <p className="text-gray-700">
@@ -66,7 +66,7 @@ const TermsAndConditions = () => {
         </p>
 
         {/* 6. Limitation of Liability */}
-        <h2 className="text-2xl font-semibold text-[#005555] mt-8 mb-4">
+        <h2 className="text-2xl font-semibold text-[#112757] mt-8 mb-4">
           6. Limitation of Liability
         </h2>
         <p className="text-gray-700">
@@ -76,7 +76,7 @@ const TermsAndConditions = () => {
         </p>
 
         {/* 7. Account Termination */}
-        <h2 className="text-2xl font-semibold text-[#005555] mt-8 mb-4">
+        <h2 className="text-2xl font-semibold text-[#112757] mt-8 mb-4">
           7. Termination
         </h2>
         <p className="text-gray-700">
@@ -86,7 +86,7 @@ const TermsAndConditions = () => {
         </p>
 
         {/* 8. Changes to Terms */}
-        <h2 className="text-2xl font-semibold text-[#005555] mt-8 mb-4">
+        <h2 className="text-2xl font-semibold text-[#112757] mt-8 mb-4">
           8. Updates to Terms
         </h2>
         <p className="text-gray-700">
@@ -95,7 +95,7 @@ const TermsAndConditions = () => {
         </p>
 
         {/* 9. Contact Info */}
-        <h2 className="text-2xl font-semibold text-[#005555] mt-8 mb-4">
+        <h2 className="text-2xl font-semibold text-[#112757] mt-8 mb-4">
           9. Contact Us
         </h2>
         <p className="text-gray-700">

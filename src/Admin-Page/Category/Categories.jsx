@@ -263,7 +263,7 @@ export const Categories = ({ setUser }) => {
         isOpen={isModalOpen}
         onClose={() => setIsModalOpen(false)}
         title="Add Category"
-        size="w-[30%] h-[55%]"
+        size="h-[55%]  w-[90%] md:w-[60%] lg:w-[50%] xl:w-[40%] 2xl:w-[30%]"
       >
         <AddCategoryForm
           setIsModalOpen={setIsModalOpen}

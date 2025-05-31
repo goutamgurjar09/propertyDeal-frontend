@@ -14,9 +14,9 @@ function AboutUs() {
     <div className="bg-white mt-12 font-serif">
       <div className=" bg-gray-50 rounded-3xl shadow-xl p-8 sm:p-16">
         {/* Heading */}
-        <h2 className="text-4xl sm:text-5xl font-bold text-center text-[#005555] mb-14 relative">
+        <h2 className="text-4xl sm:text-5xl font-bold text-center text-[#112757] mb-14 relative">
           About Us
-          <span className="block w-20 h-1 bg-[#005555] mt-4 mx-auto rounded-full"></span>
+          <span className="block w-20 h-1 bg-[#112757] mt-4 mx-auto rounded-full"></span>
         </h2>
 
         {/* Intro Text */}
@@ -91,7 +91,7 @@ function AboutUs() {
 
         {/* Mission & Vision */}
         <div className="bg-gray-100 p-8 rounded-xl shadow-inner mb-16">
-          <h3 className="text-3xl font-semibold text-[#005555] mb-6">
+          <h3 className="text-3xl font-semibold text-[#112757] mb-6">
             Our Mission & Vision
           </h3>
           <p className="text-gray-700 text-md leading-loose">
@@ -104,12 +104,12 @@ function AboutUs() {
 
         {/* How We Work */}
         <div className="mb-16">
-          <h3 className="text-3xl font-semibold text-[#005555] mb-10 text-center">
+          <h3 className="text-3xl font-semibold text-[#112757] mb-10 text-center">
             How We Work
           </h3>
           <div className="grid md:grid-cols-3 gap-8 text-center">
             <div className="p-6 bg-white rounded-xl shadow-md hover:shadow-lg transition-all">
-              <FaMapMarkedAlt className="text-4xl text-[#005555] mx-auto mb-4" />
+              <FaMapMarkedAlt className="text-4xl text-[#112757] mx-auto mb-4" />
               <h4 className="text-xl font-bold mb-2">Discover Properties</h4>
               <p className="text-gray-600">
                 Browse listings with detailed insights, photos, and amenities in
@@ -117,7 +117,7 @@ function AboutUs() {
               </p>
             </div>
             <div className="p-6 bg-white rounded-xl shadow-md hover:shadow-lg transition-all">
-              <FaHandshake className="text-4xl text-[#005555] mx-auto mb-4" />
+              <FaHandshake className="text-4xl text-[#112757] mx-auto mb-4" />
               <h4 className="text-xl font-bold mb-2">Schedule a Visit</h4>
               <p className="text-gray-600">
                 Book site visits with our agents and explore properties before
@@ -125,7 +125,7 @@ function AboutUs() {
               </p>
             </div>
             <div className="p-6 bg-white rounded-xl shadow-md hover:shadow-lg transition-all">
-              <FaPhoneAlt className="text-4xl text-[#005555] mx-auto mb-4" />
+              <FaPhoneAlt className="text-4xl text-[#112757] mx-auto mb-4" />
               <h4 className="text-xl font-bold mb-2">Get Expert Advice</h4>
               <p className="text-gray-600">
                 Consult with our team for legal help, valuation, and deal
@@ -142,7 +142,7 @@ function AboutUs() {
           </h3>
           <Link
             to="/contact"
-            className="inline-block mt-4 bg-[#005555] text-white px-8 py-3 rounded-lg font-medium hover:bg-[#007777] transition"
+            className="inline-block mt-4 bg-[#112757] text-white px-8 py-3 rounded-lg font-medium hover:bg-[#007777] transition"
           >
             Contact Us Now
           </Link>

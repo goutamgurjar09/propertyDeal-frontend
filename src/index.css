@@ -44,4 +44,6 @@ html.no-scroll {
 
 button {
   cursor: pointer;
+  background-color: #112757;
+  color: white;
 }

@@ -45,9 +45,9 @@ function FAQ() {
       <div className="max-w-5xl mx-auto w-full">
        
         <div className="flex justify-center">
-          <h2 className="text-4xl font-bold text-center text-[#005555] font-serif mb-12 relative">
+          <h2 className="text-4xl font-bold text-center text-[#112757] font-serif mb-12 relative">
             Frequently Asked Questions
-            <span className="block w-24 h-1 bg-[#005555] mt-2 mx-auto rounded-full"></span>
+            <span className="block w-24 h-1 bg-[#112757] mt-2 mx-auto rounded-full"></span>
           </h2>
         </div>
 
@@ -58,7 +58,7 @@ function FAQ() {
               className={`shadow-md rounded-xl overflow-hidden transition-all duration-300 ${faq.bgColor}`}
             >
               <button
-                className="w-full text-left p-6 text-[#005555] font-semibold focus:outline-none hover:bg-blue-50 transition-colors duration-300"
+                className="w-full text-left p-6 text-[#112757] font-semibold focus:outline-none hover:bg-blue-50 transition-colors duration-300"
                 onClick={() => toggleAccordion(index)}
               >
                 <div className="flex justify-between items-center">

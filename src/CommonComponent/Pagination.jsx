@@ -6,7 +6,7 @@ const Pagination = ({ currentPage, totalPages, onPageChange, hasPrevPage, hasNex
       <div className="text-sm text-slate-500">
         Page <b>{currentPage}</b> of <b>{totalPages}</b>
       </div>
-      <div className="flex flex-wrap gap-2">
+      <div className="flex ml-1.5 gap-2">
         {/* Previous Button */}
         <button
           onClick={() => onPageChange(currentPage - 1)}

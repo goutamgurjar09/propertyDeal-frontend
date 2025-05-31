@@ -115,7 +115,7 @@ const BookingPage = ({ propertyId, setIsModalOpen }) => {
             disabled={loading}
             className={`w-75 p-6 ${
               loading ? "opacity-40" : ""
-            } bg-[#005555] hover:bg-[#004444] transition-all duration-300 text-white py-3 rounded-lg font-semibold shadow-md`}
+            } bg-[#112757] hover:bg-[#004444] transition-all duration-300 text-white py-3 rounded-lg font-semibold shadow-md`}
           >
             Book Now
           </button>

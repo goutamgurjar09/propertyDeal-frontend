@@ -70,7 +70,7 @@ const Chatbot = () => {
               fontSize: "1rem",
             }}
           >
-            <p className="text-[#005555]">Welcome! How can I help you?</p>
+            <p className="text-[#112757]">Welcome! How can I help you?</p>
           </div>
           <div
             style={{
@@ -107,7 +107,7 @@ const Chatbot = () => {
             <button
               className="btn btn text-white p-1 rounded"
               style={{
-                backgroundColor: "#005555",
+                backgroundColor: "#112757",
                 borderRadius: "6px",
                 padding: "0 16px",
                 fontSize: "1rem",

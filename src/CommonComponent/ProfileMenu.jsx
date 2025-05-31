@@ -40,7 +40,7 @@ const ProfileMenu = ({ setUser = null }) => {
 
   return (
     <div className="relative" ref={dropdownRef}>
-      <button
+      <span
         onClick={toggleMenu}
         className="flex items-center gap-2 text-gray-800 font-medium hover:text-black focus:outline-none"
       >
@@ -64,7 +64,7 @@ const ProfileMenu = ({ setUser = null }) => {
           </div>
         )}
         <FaChevronDown className="text-xs cursor-pointer" />
-      </button>
+      </span>
 
       {open && (
         <div className="absolute right-0 mt-4 border-gray-500 w-40 bg-white  rounded shadow-lg z-50">

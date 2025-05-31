@@ -99,7 +99,7 @@ export const FilterProperty = ({ setUser }) => {
           <Navbar />
           {/* Properties Grid */}
           <div className="mt-16 mb-8 flex justify-start">
-            <div className="bg-gradient-to-r from-[#005555] to-[#00baba] px-8 py-4 rounded-2xl shadow-lg">
+            <div className="bg-gradient-to-r from-[#112757] to-[#00baba] px-8 py-4 rounded-2xl shadow-lg">
               <h1 className="text-4xl font-bold text-white tracking-wide drop-shadow">
                 {categories?.category?.categoryName
                   ? categories.category.categoryName.charAt(0).toUpperCase() +
@@ -135,7 +135,7 @@ export const FilterProperty = ({ setUser }) => {
                   </p>
                 </div>
                 <button
-                  className="mt-4 bg-[#005555] text-white px-4 py-2 rounded-lg hover:bg-[#007777] transition"
+                  className="mt-4 bg-[#112757] text-white px-4 py-2 rounded-lg hover:bg-[#007777] transition"
                   onClick={() => navigate(`/propertyDetails/${property?._id}`)}
                 >
                   View

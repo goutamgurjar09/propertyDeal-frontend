@@ -118,7 +118,7 @@ const Services = () => {
    
 
     <div className="max-w-7xl mx-auto  px-4 sm:px-8 bg-gradient-to-r from-white via-[#f0fdfa]">
-      <h2 className="text-4xl font-bold text-center text-[#005555] font-serif mb-8 mt-8">
+      <h2 className="text-4xl font-bold text-center text-[#112757] font-serif mb-8 mt-8">
         Explore Our Categories
       </h2>
 
@@ -133,7 +133,7 @@ const Services = () => {
                 onClick={() => setSelected(service.title)}
                 className={`cursor-pointer flex flex-col items-center justify-center rounded-xl p-6 text-center transition-all duration-300 border transform hover:scale-105 ${
                   isSelected
-                    ? "bg-gradient-to-br from-[#005555] to-[#007777] text-white border-[#005555] shadow-2xl"
+                    ? "bg-[#112757] text-white border-[#112757] shadow-2xl"
                     : "bg-white text-gray-800 hover:shadow-lg"
                 }`}
               >
@@ -155,7 +155,7 @@ const Services = () => {
                 alt={selectedService.title}
                 className="w-full max-h-64 object-cover rounded-xl mb-6"
               />
-              <h3 className="text-2xl font-bold text-[#005555]">
+              <h3 className="text-2xl font-bold text-[#112757]">
                 {selectedService.title}
               </h3>
               <p className="text-gray-500 mt-2 text-sm">

@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 
 const Footer = () => {
   return (
-    <footer className="bg-[#005555] text-white py-10 px-4 sm:px-8">
+    <footer className="bg-[#030c20] text-white py-10 px-4 sm:px-8">
       <div className="max-w-7xl font-serif mx-auto grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-10">
         {/* About Section */}
         <div>
@@ -15,7 +15,7 @@ const Footer = () => {
             We are a platform providing high-quality content across various
             genres, helping you discover the best movies, shows, and more.
           </p>
-          <button className="mt-4 bg-white text-[#005555] px-4 py-2 rounded-lg transition cursor-pointer text-sm font-semibold">
+          <button className="mt-4 bg-white text-[#112757] px-4 py-2 rounded-lg transition cursor-pointer text-sm font-semibold">
             Learn More
           </button>
         </div>

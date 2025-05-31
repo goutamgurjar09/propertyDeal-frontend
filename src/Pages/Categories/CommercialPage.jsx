@@ -59,7 +59,7 @@ const CommercialPage = () => {
 
   return (
     <div className="container mx-auto px-4 py-8 mt-20">
-      <h2 className="text-3xl font-bold text-gray-900 mb-8 border-b-4 border-[#005555] inline-block pb-2">
+      <h2 className="text-3xl font-bold text-gray-900 mb-8 border-b-4 border-[#112757] inline-block pb-2">
         Commercial Properties
       </h2>
 
@@ -88,10 +88,10 @@ const CommercialPage = () => {
               </p>
               <div className="flex justify-between items-center mt-4 text-gray-900 font-semibold">
                 <span>Size: {property.size}</span>
-                <span className="text-[#005555]">{property.price}</span>
+                <span className="text-[#112757]">{property.price}</span>
               </div>
               <button
-                className="mt-6 bg-[#005555] text-white py-2 rounded-lg font-semibold hover:bg-[#007777] transition-colors"
+                className="mt-6 bg-[#112757] text-white py-2 rounded-lg font-semibold hover:bg-[#007777] transition-colors"
                 type="button"
               >
                 View Details

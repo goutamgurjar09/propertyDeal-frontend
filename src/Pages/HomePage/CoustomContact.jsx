@@ -61,11 +61,11 @@ const CoustomContact = () => {
   }, [success, dispatch, reset]);
 
   return (
-    <div className="text-[#005555] py-12 px-10 md:px-32 mt-10">
+    <div className="text-[#112757] py-12 px-10 md:px-32 mt-10">
       <div className="max-w-8xl mx-auto">
         <div className="text-center mb-12">
           <h2 className="text-5xl font-bold font-serif mb-4">Get in Touch</h2>
-          <p className="text-lg text-[#005555]/80">
+          <p className="text-lg text-[#112757]/80">
             Send us a message and we will get back to you shortly.
           </p>
         </div>
@@ -80,7 +80,7 @@ const CoustomContact = () => {
                   <input
                     type="text"
                     {...register("fullname")}
-                    className="w-full px-5 py-3 rounded-lg bg-gray-50 border border-gray-400 focus:outline-none focus:ring-2 focus:ring-[#005555]"
+                    className="w-full px-5 py-3 rounded-lg bg-gray-50 border border-gray-400 focus:outline-none focus:ring-2 focus:ring-[#112757]"
                     placeholder="Enter your name"
                   />
                   {errors.fullname && (
@@ -95,7 +95,7 @@ const CoustomContact = () => {
                   <input
                     type="email"
                     {...register("email")}
-                    className="w-full px-5 py-3 rounded-lg bg-gray-50 border border-gray-400 focus:outline-none focus:ring-2 focus:ring-[#005555]"
+                    className="w-full px-5 py-3 rounded-lg bg-gray-50 border border-gray-400 focus:outline-none focus:ring-2 focus:ring-[#112757]"
                     placeholder="Enter your email"
                   />
                   {errors.email && (
@@ -111,7 +111,7 @@ const CoustomContact = () => {
                 <input
                   type="text"
                   {...register("mobile")}
-                  className="w-full px-5 py-3 rounded-lg bg-gray-50 border border-gray-400 focus:outline-none focus:ring-2 focus:ring-[#005555]"
+                  className="w-full px-5 py-3 rounded-lg bg-gray-50 border border-gray-400 focus:outline-none focus:ring-2 focus:ring-[#112757]"
                   placeholder="Enter Mobile Number"
                 />
                 {errors.mobile && (
@@ -126,7 +126,7 @@ const CoustomContact = () => {
                 <textarea
                   rows="4"
                   {...register("message")}
-                  className="w-full px-5 py-3 rounded-lg bg-gray-50 border border-gray-400 focus:outline-none focus:ring-2 focus:ring-[#005555]"
+                  className="w-full px-5 py-3 rounded-lg bg-gray-50 border border-gray-400 focus:outline-none focus:ring-2 focus:ring-[#112757]"
                   placeholder="Enter your message"
                 ></textarea>
                 {errors.message && (
@@ -139,7 +139,7 @@ const CoustomContact = () => {
               <button
                 type="submit"
                 disabled={loading}
-                className="w-full bg-[#005555] hover:bg-[#004444] transition-all duration-300 text-white py-3 rounded-lg font-semibold shadow-md"
+                className="w-full bg-[#112757] hover:bg-[#004444] transition-all duration-300 text-white py-3 rounded-lg font-semibold shadow-md"
               >
                 {loading ? "Submitting..." : "Submit"}
               </button>
@@ -149,7 +149,7 @@ const CoustomContact = () => {
           {/* Right - Contact Info + Map */}
           <div className="w-full md:w-1/2 flex flex-col items-center gap-6">
             <div className="bg-[#f5f5f5] w-full p-6 rounded-xl shadow-md border border-gray-300">
-              <h3 className="text-lg font-semibold text-[#005555] mb-2">
+              <h3 className="text-lg font-semibold text-[#112757] mb-2">
                 Contact Information
               </h3>
               <p className="text-sm">📍 123 Street, Mumbai, India</p>

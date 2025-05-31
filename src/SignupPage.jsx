@@ -81,7 +81,7 @@ function SignupPage() {
 
   return (
     <div className="flex min-h-screen items-center justify-center bg-[#e7e7e7] text-white p-4 relative mt-16">
-      <div className="w-full max-w-xl bg-white text-[#005555]  font-serif p-10 rounded-lg shadow-2xl border-gy-300 relative z-10">
+      <div className="w-full max-w-xl bg-white text-[#112757]  font-serif p-10 rounded-lg shadow-2xl border-gy-300 relative z-10">
         <h2 className="text-center text-3xl font-semibold mb-6">
           Create Your Account
         </h2>
@@ -129,13 +129,12 @@ function SignupPage() {
               placeholder="Password"
               className="w-full bg-transparent p-2 outline-none placeholder-gray-500 text-gray-900 pr-10"
             />
-            <button
-              type="button"
+            <span
               className="absolute right-2 top-2 text-gray-600"
               onClick={() => setShowPassword(!showPassword)}
             >
               {showPassword ? <FaEyeSlash /> : <FaEye />}
-            </button>
+            </span>
             {errors.password && (
               <p className="text-red-600 text-sm">{errors.password.message}</p>
             )}
@@ -148,13 +147,12 @@ function SignupPage() {
               placeholder="Confirm Password"
               className="w-full bg-transparent p-2 outline-none placeholder-gray-500 text-gray-900 pr-10"
             />
-            <button
-              type="button"
+            <span
               className="absolute right-2 top-2 text-gray-600"
               onClick={() => setShowConfirmPassword(!showConfirmPassword)}
             >
               {showConfirmPassword ? <FaEyeSlash /> : <FaEye />}
-            </button>
+            </span>
             {errors.confirmPassword && (
               <p className="text-red-600 text-sm">
                 {errors.confirmPassword.message}
@@ -174,7 +172,7 @@ function SignupPage() {
           <div className="flex justify-center">
             <button
               type="submit"
-              className="w-3/4 bg-[#005555] hover:bg-[#007777] py-2 my-4 rounded-full font-bold text-white transition duration-300"
+              className="w-3/4 bg-[#112757] hover:bg-[#007777] py-2 my-4 rounded-full font-bold text-white transition duration-300"
               disabled={loading}
             >
               {loading ? "Signing Up..." : "Sign Up"}
@@ -184,7 +182,7 @@ function SignupPage() {
 
         <p className="text-center text-sm mt-4">
           Already have an account?
-          <a href="/login" className="text-[#005555] hover:underline ml-1">
+          <a href="/login" className="text-[#112757] hover:underline ml-1">
             Log in
           </a>
         </p>

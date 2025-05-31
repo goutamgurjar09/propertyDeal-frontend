@@ -29,7 +29,7 @@ const HowItWorks = () => {
     <section className="bg-white py-16 px-6 sm:px-10 font-serif">
       <div className="max-w-7xl mx-auto text-center">
         <motion.h2
-          className="text-4xl font-serif font-bold text-[#005555] mb-4"
+          className="text-4xl font-serif font-bold text-[#112757] mb-4"
           initial={{ opacity: 0, y: 30 }}
           whileInView={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6 }}
@@ -38,7 +38,7 @@ const HowItWorks = () => {
           How It Works
         </motion.h2>
         <motion.p
-          className="text-[#005555] max-w-2xl mx-auto mb-12"
+          className="text-[#112757] max-w-2xl mx-auto mb-12"
           initial={{ opacity: 0, y: 30 }}
           whileInView={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.2, duration: 0.6 }}
@@ -52,7 +52,7 @@ const HowItWorks = () => {
           {steps.map((step, index) => (
             <motion.div
               key={index}
-              className="bg-[#005555] p-8 rounded-2xl shadow-md hover:shadow-xl transition-all"
+              className="bg-[#112757] p-8 rounded-2xl shadow-md hover:shadow-xl transition-all"
               initial={{ opacity: 0, y: 50 }}
               whileInView={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6, delay: index * 0.2 }}

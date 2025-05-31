@@ -20,7 +20,7 @@ const PropertyCard = ({ property }) => (
         <p className="text-gray-600 flex items-center">{property.location}</p>
         <p className="text-gray-600 flex items-center">{property.type}</p>
         <p className="text-gray-600 flex items-center">${property.price}</p>
-        <button className="mt-4 px-6 py-3 bg-[#005555] hover:bg-gray-700 text-white rounded-lg font-semibold hover:opacity-90 transition-all transform hover:-translate-y-1">
+        <button className="mt-4 px-6 py-3 bg-[#112757] hover:bg-gray-700 text-white rounded-lg font-semibold hover:opacity-90 transition-all transform hover:-translate-y-1">
           View Details
         </button>
       </div>

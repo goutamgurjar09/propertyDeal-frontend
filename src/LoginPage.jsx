@@ -96,7 +96,7 @@ function LoginPage({ setUser }) {
       <div className="absolute inset-0 bg-[url('/path-to-your-image.jpg')] bg-cover bg-center blur-lg opacity-30"></div>
 
       <div className="w-full max-w-md bg-white p-8 rounded-lg shadow-xl border border-gray-300 relative z-10">
-        <h2 className="text-center text-3xl font-serif font-semibold mb-6 text-[#005555]">
+        <h2 className="text-center text-3xl font-serif font-semibold mb-6 text-[#112757]">
           Log In
         </h2>
 
@@ -122,13 +122,12 @@ function LoginPage({ setUser }) {
               {...register("password")}
               className="w-full bg-transparent p-2 outline-none text-gray-800 placeholder-gray-500 pr-10"
             />
-            <button
-              type="button"
+            <span
               className="absolute right-2 top-2 text-gray-500"
               onClick={() => setShowPassword(!showPassword)}
             >
               {showPassword ? <FaEyeSlash /> : <FaEye />}
-            </button>
+            </span>
             {errors.password && (
               <p className="text-red-500 text-sm mt-1">
                 {errors.password.message}
@@ -138,7 +137,7 @@ function LoginPage({ setUser }) {
 
           <Link
             to="/forgetPassword"
-            className="block text-end text-sm font-semibold text-[#005555] hover:text-gray-600 mt-4"
+            className="block text-end text-sm font-semibold text-[#112757] hover:text-gray-600 mt-4"
           >
             FORGOT PASSWORD?
           </Link>
@@ -146,7 +145,7 @@ function LoginPage({ setUser }) {
           <div className="flex justify-center">
             <button
               type="submit"
-              className="w-3/4 bg-[#005555] hover:bg-[#007777]  py-2 mt-4 rounded-full font-bold text-white transition duration-300 "
+              className="w-3/4 bg-[#112757] hover:bg-[#007777]  py-2 mt-4 rounded-full font-bold text-white transition duration-300 "
             >
               LOGIN
             </button>
@@ -155,7 +154,7 @@ function LoginPage({ setUser }) {
 
         <p className="text-center text-sm mt-4 text-gray-600">
           No account?
-          <Link to="/signup" className="text-[#005555] hover:underline ml-1">
+          <Link to="/signup" className="text-[#112757] hover:underline ml-1">
             Create One
           </Link>
         </p>
