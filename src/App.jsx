@@ -37,6 +37,7 @@ import HowItWorks from "./Pages/HomePage/HowItWorks";
 import ScrollToTop from "./Pages/ScrollToTop";
 import AdminProfile from "./Admin-Page/Profile"
 import BuyerProfile from "./Buyer/Profile";
+import Chatbot from "./Pages/Layout/Chatbox";
 
 function App() {
   const CLIENT_ID =

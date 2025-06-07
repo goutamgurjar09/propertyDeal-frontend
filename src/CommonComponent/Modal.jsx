@@ -1,4 +1,4 @@
-import React from "react";
+import { RxCross2 } from "react-icons/rx";
 
 const Modal = ({ isOpen, onClose, title, children, size }) => {
   if (!isOpen) return null;
@@ -10,12 +10,12 @@ const Modal = ({ isOpen, onClose, title, children, size }) => {
         className={`relative ${size} w-[30%] max-w-4xl h-[30%] bg-gradient-to-br from-white to-blue-50 rounded-2xl shadow-2xl overflow-y-auto p-6 transition-all duration-300`}
       >
         {/* Close Button */}
-        <button
+        <span
           onClick={onClose}
-          className="absolute top-4 right-4 text-gray-500 hover:text-black text-3xl font-bold"
+          className="absolute top-4 right-4 text-3xl font-bold cursor-pointer"
         >
-          &times;
-        </button>
+         <RxCross2 size={24} />
+        </span>
 
         {/* Title */}
         {title && (

@@ -1,10 +1,11 @@
-import { createRoot } from 'react-dom/client';
+import { createRoot } from "react-dom/client";
 import { Provider } from "react-redux";
 import store from "./redux/store/store";
-import './index.css';
-import App from './App';
+import "./index.css";
+import App from "./App";
+import { SocketProvider } from "./Protected/SocketContext";
 
-const root = document.getElementById('root');
+const root = document.getElementById("root");
 
 if (root) {
   createRoot(root).render(
@@ -15,6 +16,3 @@ if (root) {
 } else {
   console.error("Root element not found");
 }
-
-
-

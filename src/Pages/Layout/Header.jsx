@@ -1,6 +1,4 @@
-import React from "react";
 import { FaBars } from "react-icons/fa";
-import { useNavigate } from "react-router-dom";
 import ProfileMenu from "../../CommonComponent/ProfileMenu";
 import Sidebar from "./Sidebar";
 
@@ -8,12 +6,12 @@ const Header = ({ sidebarOpen, setSidebarOpen, setUser = null }) => {
   return (
     <>
       <header className="flex items-center justify-between p-6 bg-white shadow-md">
-        <button
-          onClick={() => setSidebarOpen(!sidebarOpen)}
+        <span
+          onClick={() => setSidebarOpen(prev => !prev)}
           className="text-xl text-gray-900 cursor-pointer"
         >
           <FaBars />
-        </button>
+        </span>
         <div className="flex items-center gap-4">
           <ProfileMenu setUser={setUser} />
         </div>
@@ -34,7 +32,7 @@ const Header = ({ sidebarOpen, setSidebarOpen, setUser = null }) => {
               setUser={setUser}
             />
           </div>
-        </>
+      </>
       )}
     </>
   );

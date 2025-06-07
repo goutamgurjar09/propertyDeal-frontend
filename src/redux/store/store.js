@@ -7,6 +7,7 @@ import bookingReducer from "../slices/bookingSlice";
 import EnquiryFormReducer from "../slices/enquirySlices";
 import categoryReducer from "../slices/categorySlice";
 import viewersReducer from "../slices/trackViewers";
+import messageReducer from "../slices/messageSlice";
 
 const store = configureStore({
   reducer: {
@@ -17,6 +18,7 @@ const store = configureStore({
     enquiry: EnquiryFormReducer,
     category: categoryReducer,
     viewers: viewersReducer,
+    chat: messageReducer,
   },
 });
 

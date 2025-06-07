@@ -7,12 +7,15 @@ import {
   FaUser,
 } from "react-icons/fa";
 import { clearAuthSession, getInitials, getUserDetail } from "../redux/slices/authUtlis";
+import { useDispatch, useSelector } from "react-redux";
+import { getUserDetailById } from "../redux/slices/authSlice";
 
 const ProfileMenu = ({ setUser = null }) => {
   const [open, setOpen] = useState(false);
   const dropdownRef = useRef(null);
-  const user = getUserDetail();
+  const userData = getUserDetail();
   const navigate = useNavigate();
+  const dispatch = useDispatch();
 
   const toggleMenu = () => setOpen(!open);
 
@@ -38,6 +41,11 @@ const ProfileMenu = ({ setUser = null }) => {
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
+    const { user } = useSelector((state) => state.auth);
+  useEffect(() => {
+    dispatch(getUserDetailById(userData?.userId));
+  }, [dispatch, userData?.userId]);
+
   return (
     <div className="relative" ref={dropdownRef}>
       <span
@@ -47,8 +55,8 @@ const ProfileMenu = ({ setUser = null }) => {
         <span className="text-black font-bold">Welcome,</span>
         <span>
           {`${
-            user?.full_name
-              ? user.full_name.charAt(0).toUpperCase() + user.full_name.slice(1)
+            user?.fullname
+              ? user.fullname.charAt(0).toUpperCase() + user.fullname.slice(1)
               : "User"
           }`}
         </span>
@@ -60,7 +68,7 @@ const ProfileMenu = ({ setUser = null }) => {
           />
         ) : (
           <div className="w-8 h-8 rounded-full bg-gray-300 flex items-center justify-center text-2xl font-bold text-gray-700">
-            {getInitials(user?.full_name || "U")}
+            {getInitials(user?.fullname || "U")}
           </div>
         )}
         <FaChevronDown className="text-xs cursor-pointer" />

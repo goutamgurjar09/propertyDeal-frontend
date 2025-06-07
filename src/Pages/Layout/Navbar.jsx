@@ -6,7 +6,6 @@ import { getCategories } from "../../redux/slices/categorySlice";
 import { useDispatch, useSelector } from "react-redux";
 import Logo from "../../assets/Image/logo.png.png";
 import ProfileMenu from "../../CommonComponent/ProfileMenu";
-import Chatbot from "./Chatbox";
 
 function Navbar() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -249,7 +248,6 @@ function Navbar() {
           </div>
         )}
       </div>
-      <Chatbot />
     </nav>
   );
 }

@@ -11,6 +11,7 @@ import Loader from "../CommonComponent/Loader";
 import { getUserDetail } from "../redux/slices/authUtlis";
 import { GoogleMap, Marker, useJsApiLoader } from "@react-google-maps/api";
 import { showError } from "../Alert";
+import Chatbot from "./Layout/Chatbox";
 
 const PropertyDetails = () => {
   const { id } = useParams();
@@ -103,161 +104,166 @@ const PropertyDetails = () => {
   }
 
   return (
-    <div className="bg-gray-50 min-h-screen">
-      <div className="max-w-7xl mx-auto px-4 py-6 mt-16">
-        <Link
-          to={
-            user.role === "admin" || user.role === "seller"
-              ? "/properties"
-              : user.role === "buyer"
-              ? "/properties-list"
-              : "/"
-          }
-        >
-          <button className="mb-6 flex items-center gap-2 px-5 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 transition">
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              className="h-5 w-5"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke="currentColor"
-              strokeWidth={2}
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                d="M15 19l-7-7 7-7"
-              />
-            </svg>
-            Back
-          </button>
-        </Link>
-
-        {/* Image Slider */}
-        <div className="rounded-lg overflow-hidden mb-10">
-          <Slider {...settings}>
-            {(property.propertyImages || []).map((img, index) => (
-              <div key={index}>
-                <img
-                  src={img}
-                  alt={`Slide ${index + 1}`}
-                  className="w-full h-[400px] object-cover"
+    <>
+      <div className="bg-gray-50 min-h-screen">
+        <div className="max-w-7xl mx-auto px-4 py-6 mt-16">
+          <Link
+            to={
+              user.role === "admin" || user.role === "seller"
+                ? "/properties"
+                : user.role === "buyer"
+                ? "/properties-list"
+                : "/"
+            }
+          >
+            <button className="mb-6 flex items-center gap-2 px-5 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 transition">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                className="h-5 w-5"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+                strokeWidth={2}
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  d="M15 19l-7-7 7-7"
                 />
-              </div>
-            ))}
-          </Slider>
-        </div>
-
-        <div className="grid lg:grid-cols-3 gap-6">
-          {/* Details */}
-          <div className="lg:col-span-2 bg-white p-6 rounded-lg shadow">
-            <h2 className="text-2xl font-bold mb-4 text-gray-900">
-              {property.title}
-            </h2>
-
-            <div className="text-gray-700 space-y-1 mb-4">
-              <p>City: {property.location?.city?.name || "N/A"}</p>
-              <p>Locality: {property.location?.locality || "N/A"}</p>
-              <p>State: {property.location?.state || "N/A"}</p>
-              <p>Country: {property.location?.country || "N/A"}</p>
-            </div>
-
-            <p className="text-gray-600 mb-4 leading-relaxed">
-              {property.description}
-            </p>
-
-            <div className="flex flex-wrap gap-2 mb-4">
-              {(property.facilities || []).map((item, idx) => (
-                <span
-                  key={idx}
-                  className="bg-blue-100 text-blue-700 px-3 py-1 text-sm rounded-full"
-                >
-                  {item}
-                </span>
-              ))}
-            </div>
-
-            <button
-              onClick={handleBooking}
-              className="mt-6 px-6 py-3 bg-emerald-600 text-white rounded shadow hover:bg-emerald-700 transition"
-            >
-              Book Now
+              </svg>
+              Back
             </button>
+          </Link>
 
-            <Modal
-              isOpen={isModalOpen}
-              onClose={() => setIsModalOpen(false)}
-              title="Book Property"
-              size="h-[75%]  w-[90%] md:w-[60%] lg:w-[50%] xl:w-[40%] 2xl:w-[30%]"
-            >
-              <BookingPage propertyId={id} setIsModalOpen={setIsModalOpen} />
-            </Modal>
+          {/* Image Slider */}
+          <div className="rounded-lg overflow-hidden mb-10">
+            <Slider {...settings}>
+              {(property.propertyImages || []).map((img, index) => (
+                <div key={index}>
+                  <img
+                    src={img}
+                    alt={`Slide ${index + 1}`}
+                    className="w-full h-[400px] object-cover"
+                  />
+                </div>
+              ))}
+            </Slider>
           </div>
 
-          <div className="bg-white p-6 rounded-lg shadow space-y-4">
-            <div className="text-2xl font-semibold text-gray-900">
-              ₹{property.price.toLocaleString()}
-            </div>
-            <div className="text-gray-700">Type: {property.propertyType}</div>
-            <div className="text-gray-700">
-              Category: {property.category?.categoryName}
-            </div>
-            <div className="text-gray-700">
-              Sub Categories:
-              <div className="flex flex-wrap gap-2 mt-1">
-                {(property.subCategory || []).map((sub, idx) => (
+          <div className="grid lg:grid-cols-3 gap-6">
+            {/* Details */}
+            <div className="lg:col-span-2 bg-white p-6 rounded-lg shadow">
+              <h2 className="text-2xl font-bold mb-4 text-gray-900">
+                {property.title}
+              </h2>
+
+              <div className="text-gray-700 space-y-1 mb-4">
+                <p>City: {property.location?.city?.name || "N/A"}</p>
+                <p>Locality: {property.location?.locality || "N/A"}</p>
+                <p>State: {property.location?.state || "N/A"}</p>
+                <p>Country: {property.location?.country || "N/A"}</p>
+              </div>
+
+              <p className="text-gray-600 mb-4 leading-relaxed">
+                {property.description}
+              </p>
+
+              <div className="flex flex-wrap gap-2 mb-4">
+                {(property.facilities || []).map((item, idx) => (
                   <span
                     key={idx}
-                    className="bg-green-100 text-green-700 text-sm px-3 py-1 rounded-full"
+                    className="bg-blue-100 text-blue-700 px-3 py-1 text-sm rounded-full"
                   >
-                    {sub}
+                    {item}
                   </span>
                 ))}
               </div>
-            </div>
-            <div className="text-gray-700">
-              Status:
-              <span
-                className={`ml-1 font-medium ${
-                  property.status === "Available"
-                    ? "text-green-600"
-                    : property.status === "Sold"
-                    ? "text-red-600"
-                    : "text-gray-600"
-                }`}
-              >
-                {property.status}
-              </span>
-            </div>
-            <div className="text-gray-700">Size: {property.size} sqft</div>
-            <div className="text-gray-700">Bedrooms: {property.bedrooms}</div>
-            <div className="text-gray-700">Bathrooms: {property.bathrooms}</div>
-            <div className="text-sm text-gray-500">
-              Posted on: {new Date(property.postedAt).toLocaleDateString()}
-            </div>
-            <div className="text-sm text-gray-500">
-              Posted by: {property.owner?.name || "Unknown"}
-            </div>
-          </div>
-        </div>
 
-        {/* Google Map */}
-        {isLoaded && lat && lng && (
-          <div className="mt-10">
-            <h3 className="text-lg font-semibold mb-4 text-gray-900">
-              Location on Map
-            </h3>
-            <GoogleMap
-              mapContainerStyle={containerStyle}
-              center={{ lat, lng }}
-              zoom={15}
-            >
-              <Marker position={{ lat, lng }} />
-            </GoogleMap>
+              <button
+                onClick={handleBooking}
+                className="mt-6 px-6 py-3 bg-emerald-600 text-white rounded shadow hover:bg-emerald-700 transition"
+              >
+                Book Now
+              </button>
+
+              <Modal
+                isOpen={isModalOpen}
+                onClose={() => setIsModalOpen(false)}
+                title="Book Property"
+                size="h-[75%]  w-[90%] md:w-[60%] lg:w-[50%] xl:w-[40%] 2xl:w-[30%]"
+              >
+                <BookingPage propertyId={id} setIsModalOpen={setIsModalOpen} />
+              </Modal>
+            </div>
+
+            <div className="bg-white p-6 rounded-lg shadow space-y-4">
+              <div className="text-2xl font-semibold text-gray-900">
+                ₹{property.price.toLocaleString()}
+              </div>
+              <div className="text-gray-700">Type: {property.propertyType}</div>
+              <div className="text-gray-700">
+                Category: {property.category?.categoryName}
+              </div>
+              <div className="text-gray-700">
+                Sub Categories:
+                <div className="flex flex-wrap gap-2 mt-1">
+                  {(property.subCategory || []).map((sub, idx) => (
+                    <span
+                      key={idx}
+                      className="bg-green-100 text-green-700 text-sm px-3 py-1 rounded-full"
+                    >
+                      {sub}
+                    </span>
+                  ))}
+                </div>
+              </div>
+              <div className="text-gray-700">
+                Status:
+                <span
+                  className={`ml-1 font-medium ${
+                    property.status === "Available"
+                      ? "text-green-600"
+                      : property.status === "Sold"
+                      ? "text-red-600"
+                      : "text-gray-600"
+                  }`}
+                >
+                  {property.status}
+                </span>
+              </div>
+              <div className="text-gray-700">Size: {property.size} sqft</div>
+              <div className="text-gray-700">Bedrooms: {property.bedrooms}</div>
+              <div className="text-gray-700">
+                Bathrooms: {property.bathrooms}
+              </div>
+              <div className="text-sm text-gray-500">
+                Posted on: {new Date(property.postedAt).toLocaleDateString()}
+              </div>
+              <div className="text-sm text-gray-500">
+                Posted by: {property.owner?.name || "Unknown"}
+              </div>
+            </div>
           </div>
-        )}
+
+          {/* Google Map */}
+          {isLoaded && lat && lng && (
+            <div className="mt-10">
+              <h3 className="text-lg font-semibold mb-4 text-gray-900">
+                Location on Map
+              </h3>
+              <GoogleMap
+                mapContainerStyle={containerStyle}
+                center={{ lat, lng }}
+                zoom={15}
+              >
+                <Marker position={{ lat, lng }} />
+              </GoogleMap>
+            </div>
+          )}
+        </div>
       </div>
-    </div>
+      <Chatbot propertyId={id} ownerId={property?.owner?.id} />
+    </>
   );
 };
 

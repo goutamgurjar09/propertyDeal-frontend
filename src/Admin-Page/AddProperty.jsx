@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { useForm, Controller } from "react-hook-form";
+import { useForm, Controller, get } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
 import Select from "react-select";
@@ -18,6 +18,7 @@ import { getCategories } from "../redux/slices/categorySlice";
 import { InputField } from "../CommonComponent/InputField";
 import { SelectField } from "../CommonComponent/SelectField";
 import Loader from "../CommonComponent/Loader";
+import { getUserDetail } from "../redux/slices/authUtlis";
 const facilityOptions = [
   { value: "Wifi", label: "Wifi" },
   { value: "RO", label: "RO" },
@@ -70,6 +71,7 @@ const AddProperty = ({ id, setIsModalOpen, onSuccess }) => {
   const [lat, setLat] = useState("");
   const [lng, setLng] = useState("");
   const [remainingImages, setRemainingImages] = useState([]);
+  const user = getUserDetail();
 
   const initialValues = {
     title: "",
@@ -243,6 +245,7 @@ const AddProperty = ({ id, setIsModalOpen, onSuccess }) => {
     formData.append("bedrooms", data.bedrooms);
     formData.append("bathrooms", data.bathrooms);
     formData.append("owner.name", data.owner);
+    formData.append("owner.id", user?.userId);
     formData.append("location.city", data.city);
     formData.append("location.locality", locality?.label || "");
     formData.append("location.lat", lat);

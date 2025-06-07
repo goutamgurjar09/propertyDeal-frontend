@@ -11,14 +11,10 @@ export const signupUser = createAsyncThunk(
   "auth/signup",
   async (userData, { rejectWithValue }) => {
     try {
-      const response = await axios.post(
-        `${BASE_URL}/auth/signup`,
-        userData,
-        {
-          withCredentials: true,
-          headers: { "Content-Type": "multipart/form-data" },
-        }
-      );
+      const response = await axios.post(`${BASE_URL}/auth/signup`, userData, {
+        withCredentials: true,
+        headers: { "Content-Type": "multipart/form-data" },
+      });
       return response.data;
     } catch (error) {
       return rejectWithValue(error.response?.data || "Signup failed");
@@ -69,13 +65,9 @@ export const loginUser = createAsyncThunk(
   "auth/login",
   async (userData, { rejectWithValue }) => {
     try {
-      const response = await axios.post(
-        `${BASE_URL}/auth/login`,
-        userData,
-        {
-          withCredentials: true,
-        }
-      );
+      const response = await axios.post(`${BASE_URL}/auth/login`, userData, {
+        withCredentials: true,
+      });
       return response.data;
     } catch (error) {
       return rejectWithValue(error.response?.data || "Login failed");
@@ -146,15 +138,47 @@ export const deleteUser = createAsyncThunk(
   "auth/deleteUser",
   async (userId, { rejectWithValue }) => {
     try {
-      const response = await axios.delete(
-        `${BASE_URL}/auth/users/${userId}`,
+      const response = await axios.delete(`${BASE_URL}/auth/users/${userId}`, {
+        withCredentials: true,
+      });
+      return response.data;
+    } catch (error) {
+      return rejectWithValue(error.response?.data || "User deletion failed");
+    }
+  }
+);
+
+export const updateUserDetails = createAsyncThunk(
+  "auth/updateUserDetails",
+  async (formData, { rejectWithValue }) => {
+    try {
+      const _id = formData.get("_id");
+      const response = await axios.patch(
+        `${BASE_URL}/auth/users/${_id}`,
+        formData,
         {
           withCredentials: true,
+          headers: { "Content-Type": "multipart/form-data" },
         }
       );
       return response.data;
     } catch (error) {
-      return rejectWithValue(error.response?.data || "User deletion failed");
+      return rejectWithValue(error.response?.data || "User update failed");
+    }
+  }
+);
+
+export const getUserDetailById = createAsyncThunk(
+  "auth/getUserDetails",
+  async (id, { rejectWithValue }) => {
+    try {
+      const response = await axios.get(`${BASE_URL}/auth/users/${id}`, {
+        withCredentials: true,
+        headers: { "Content-Type": "multipart/form-data" },
+      });
+      return response.data;
+    } catch (error) {
+      return rejectWithValue(error.response?.data || "User update failed");
     }
   }
 );
@@ -164,13 +188,9 @@ export const sendSms = createAsyncThunk(
   "auth/sendSms",
   async (userData, { rejectWithValue }) => {
     try {
-      const response = await axios.post(
-        `${BASE_URL}/auth/send-sms`,
-        userData,
-        {
-          withCredentials: true,
-        }
-      );
+      const response = await axios.post(`${BASE_URL}/auth/send-sms`, userData, {
+        withCredentials: true,
+      });
       return response.data;
     } catch (error) {
       return rejectWithValue(error.response?.data || "SMS sending failed");
@@ -181,7 +201,7 @@ export const sendSms = createAsyncThunk(
 // Update User Role
 export const updateUserRole = createAsyncThunk(
   "auth/updateUserRole",
-  async ({userId, newRole}, { rejectWithValue }) => {
+  async ({ userId, newRole }, { rejectWithValue }) => {
     try {
       const response = await axios.patch(
         `${BASE_URL}/auth/update/user-role`,
@@ -364,6 +384,33 @@ const authSlice = createSlice({
         state.user = action.payload.data;
       })
       .addCase(updateUserRole.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload;
+      })
+      // Update User Details
+      .addCase(updateUserDetails.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(updateUserDetails.fulfilled, (state, action) => {
+        state.loading = false;
+        state.user = action.payload.data;
+        setAuthSession(action.payload.data);
+      })
+      .addCase(updateUserDetails.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload;
+      })
+      // Get User Detail By ID
+      .addCase(getUserDetailById.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(getUserDetailById.fulfilled, (state, action) => {
+        state.loading = false;
+        state.user = action.payload.data;
+      })
+      .addCase(getUserDetailById.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload;
       });
